@@ -40,6 +40,7 @@ from FetchBooking import fetchbooking
 from phonenumber import phonenumbers_country
 from PromotionalCancelMessage import insertcancelmessage
 from FetchRoomsAvailabilityandPrice import insertpromotionalmessage
+from RoomList import insertroomlist
 
 
 
@@ -150,6 +151,9 @@ def InsertCancelMessage():
 @app.route('/InsertPromotionalMessage',methods=['POST'])
 def InsertPromotionalMessage():
    return insertpromotionalmessage(request)
+@app.route('/InsertRoomList',methods=['POST'])
+def InsertRoomList():
+   return insertroomlist(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
