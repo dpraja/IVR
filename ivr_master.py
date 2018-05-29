@@ -38,6 +38,8 @@ from ValidateConfirmationNumber import validateconfirmationnumber
 from FetchBooking import fetchbooking
 #
 from phonenumber import phonenumbers_country
+from PromotionalCancelMessage import insertcancelmessage
+
 
 
 
@@ -141,6 +143,9 @@ def FetchBooking():
 @app.route('/Phonenumbers',methods=['POST'])
 def Phonenumbers():
    return phonenumbers_country(request)
+@app.route('/InsertCancelMessage',methods=['POST'])
+def InsertCancelMessage():
+   return insertcancelmessage(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
