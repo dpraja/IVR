@@ -116,6 +116,7 @@ def fetchpromotionalmessage(request):
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2))
 def insertpromotionalmessage(request):
     #e = request.json
+  try:  
     bus_id = request.json['business_id']
     message = request.json['message']
     st = request.json['message_date_start']
@@ -127,7 +128,7 @@ def insertpromotionalmessage(request):
     print(count)
     e = {}
     e['message'] = message
-    #print(type(message))
+    print(type(message))
     e['id'] = b_id[0]['id']
     e['message_date_start']= st
     e['message_date_end'] = ed
@@ -137,4 +138,7 @@ def insertpromotionalmessage(request):
             print(dbput("update ivr_promotional_message set message = '"+str(message)+"' , message_date_start = '"+st+"', message_date_end='"+ed+"' where id='"+str(b_id[0]['id'])+"' "))
     a = {"ServiceStatus":"Success","ServiceMessage":"Success"}
     return(json.dumps(a))
+  except:
+    a = {"ServiceStatus":"Success","ServiceMessage":"Failure"}
+    return(json.dumps(a)) 
      
