@@ -1,4 +1,4 @@
-from sqlwrapper import dbget
+from sqlwrapper import dbget,gensql,dbput
 import json
 import datetime
 def fetchroomsavailabilityandprice(request):
@@ -32,7 +32,7 @@ def fetchroomsavailabilityandprice(request):
         customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
         d['customer_depature_date'] = customer_depature_date
         #print(customer_arrival_date,customer_depature_date)
-        #print(d)
+        #print(d)  ,room_rate 
         res = json.loads(dbget("select available_count,room_type from extranet_availableroom join \
                                extranet_room_list on extranet_room_list.id = extranet_availableroom.id \
                                where room_date between '"+d['customer_arrival_date']+"' and \
@@ -45,12 +45,12 @@ def fetchroomsavailabilityandprice(request):
                  list2.append(list(i.values())[1:])
             if list(i.values())[1:] not in list1:  
                  list1.append(list(i.values())[1:])
-        #print(list1)
-        #print(list2)
+        print(list1)
+        print(list2)
         for i in list2:
             if i in list1:
                 list1.remove(i)
-        #print(list1)
+        print(list1)
         dict1 = {"count":len(list1)}
         rate_str = ''
         for i in list1:
@@ -60,8 +60,8 @@ def fetchroomsavailabilityandprice(request):
                rate_str +=','+ "'"+i[0]+"'"
             else:
                rate_str += "'"+i[0]+"'"
-        #print(dict1)       
-        #print(rate_str)
+        print(dict1)       
+        print(rate_str)
         st_rate = json.loads(dbget("select standard_rate from extranet_room_list where \
                                     room_type in ("+rate_str+") and business_id='"+bi_id[0]['business_id']+"' "))
         #print(st_rate,type(st_rate))
@@ -79,9 +79,9 @@ def fetchroomsavailabilityandprice(request):
 def fetchpromotionalmessage(request):
     try: 
         today_date = datetime.datetime.utcnow().date()
-        no = request.json['TFN']
-        #print(no)
-        b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+no+"' "))
+        tfn = request.json['TFN']
+        
+        b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
         print(b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
@@ -104,7 +104,7 @@ def fetchpromotionalmessage(request):
             result = result[0]
             #return(json.dumps({"Return":"Record Retrieved Successfully","Return Code":"RRS", "Status": "Success",
              #                 "Status Code": "200", "Return Value":result},indent=2))
-            dict1 = {"Return":"Record Retrieved Successfully","Return_Code":"RRS", "ServiceMessage": "Success",
+            dict1 = {"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
                               "Status_Code": "200"}
             print(dict1,type(dict1))
             dict1.update(result)
@@ -113,4 +113,28 @@ def fetchpromotionalmessage(request):
         else:
             return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2))
     except:
-        return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2))   
+        return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2))
+def insertpromotionalmessage(request):
+    #e = request.json
+    bus_id = request.json['business_id']
+    message = request.json['message']
+    st = request.json['message_date_start']
+    ed = request.json['message_date_end']
+    b_id = json.loads(dbget("select id from ivr_hotel_list where business_id='"+bus_id+"' "))
+    print(b_id[0]['id'])
+    count = json.loads(dbget("select count(*) from ivr_promotional_message where \
+                              id='"+str(b_id[0]['id'])+"' "))
+    print(count)
+    e = {}
+    e['message'] = message
+    #print(type(message))
+    e['id'] = b_id[0]['id']
+    e['message_date_start']= st
+    e['message_date_end'] = ed
+    if count[0]['count'] != 1:
+        print(gensql('insert','ivr_promotional_message',e))
+    else:
+            print(dbput("update ivr_promotional_message set message = '"+str(message)+"' , message_date_start = '"+st+"', message_date_end='"+ed+"' where id='"+str(b_id[0]['id'])+"' "))
+    a = {"ServiceStatus":"Success","ServiceMessage":"Success"}
+    return(json.dumps(a))
+     
