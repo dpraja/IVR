@@ -6,7 +6,7 @@ def roomlist(request):
     res = json.loads(dbget("select * from extranet_room_list where business_id='"+business_id+"' "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Room_List":res},indent=2))
 def insertroomlist(request):
-try:
+ try:
     d = request.json
     #for i in d:
         #print(i)
@@ -18,7 +18,8 @@ try:
      d['id']= id1
      rint(gensql('insert','extranet_room_list',d))
      return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
-  except:
+    
+   except:
      return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2)) 
 
 
