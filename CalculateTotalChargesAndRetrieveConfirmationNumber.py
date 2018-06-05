@@ -11,6 +11,8 @@ def calculatetotalcharges(request):
         customer_arrival_date = request.json["customer_arrival_date"]
         customer_depature_date = request.json["customer_depature_date"]
         customer_room_type = request.json["customer_room_type"]
+        customer_room_type = customer_room_type.title()
+        print(customer_room_type)
         customer_adult = request.json["customer_adult"]
         customer_child = request.json["customer_child"]
         d,e,d1,d2 = {},[],{},{}
