@@ -6,7 +6,7 @@ def insertcustomerroombooking(request):
      try: 
         d = request.json
         print(d)
-        e = { k : v for k,v in d.items() if k not in ('customer_name','TFN','customer_arrival_date','customer_depature_date','customer_expirydate')}
+        e = { k : v for k,v in d.items() if k not in ('customer_room_type','customer_name','TFN','customer_arrival_date','customer_depature_date','customer_expirydate')}
         print(e)
         tfn = request.json['TFN']
         b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
@@ -16,6 +16,9 @@ def insertcustomerroombooking(request):
             customer_name  = "Customer"
         e['customer_name'] = customer_name    
         #print(customer_name)
+        customer_room_type = request.json['customer_room_type']
+        customer_room_type = customer_room_type.title()
+        print(customer_room_type)
         customer_arrival_date = request.json["customer_arrival_date"]
         customer_depature_date = request.json["customer_depature_date"]
         customer_expirydate = request.json["customer_expirydate"]
@@ -56,7 +59,7 @@ def insertcustomerroombooking(request):
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
         id_bus = json.loads(dbget("select id from extranet_room_list where business_id ='"+bi_id[0]['business_id']+"' \
-                                   and room_type= '"+e['customer_room_type']+"' "))
+                                   and room_type= '"+customer_room_type+"' "))
         #print(id_bus[0]['id'])
         print(dbput("update extranet_availableroom set available_count = available_count-1 where \
                        id= "+str(id_bus[0]['id'])+" and room_date in ("+str_date+")"))
