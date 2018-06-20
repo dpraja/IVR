@@ -42,4 +42,4 @@ def QueryStatistics(request):
     d[""+calendar.month_name[today.month-2]+""+"-"+""+str(i.year)+""] = c
     
     print(a,b,c,d)        
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":sql},indent=2))
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":d},indent=2))
