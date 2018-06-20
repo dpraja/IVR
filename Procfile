@@ -31,3 +31,4 @@ worker: gunicorn InsertCustomerRoomBooking.py
 worker: gunicorn ValidateConfirmationNumber.py
 worker: gunicorn FetchBooking.py
 worker: gunicorn phonenumber.py
+worker: gunicorn InsertCancelPolicy.py
