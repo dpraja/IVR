@@ -42,7 +42,7 @@ from PromotionalCancelMessage import insertcancelmessage
 from FetchRoomsAvailabilityandPrice import insertpromotionalmessage
 from RoomList import insertroomlist
 from InsertCancelPolicy import insertcancelpolicy
-
+from InsertCancelPolicy import QueryStatistics
 
 
 app = Flask(__name__)
@@ -157,6 +157,9 @@ def InsertRoomList():
 @app.route('/InsertCancelPolicy',methods=['POST'])
 def InsertCancelPolicy():
    return insertcancelpolicy(request)
+@app.route('/QueryStatistics',methods=['POST'])
+def QueryStatisticsRecord():
+   return QueryStatistics(request)
 
 
 if __name__ == "__main__":
