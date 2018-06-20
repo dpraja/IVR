@@ -41,7 +41,7 @@ from phonenumber import phonenumbers_country
 from PromotionalCancelMessage import insertcancelmessage
 from FetchRoomsAvailabilityandPrice import insertpromotionalmessage
 from RoomList import insertroomlist
-
+from InsertCancelPolicy import insertcancelpolicy
 
 
 
@@ -154,6 +154,10 @@ def InsertPromotionalMessage():
 @app.route('/InsertRoomList',methods=['POST'])
 def InsertRoomList():
    return insertroomlist(request)
+@app.route('/InsertCancelPolicy',methods=['POST'])
+def InsertCancelPolicy():
+   return insertcancelpolicy(request)
+
 
 if __name__ == "__main__":
   app.run(debug=True)
