@@ -32,3 +32,4 @@ worker: gunicorn ValidateConfirmationNumber.py
 worker: gunicorn FetchBooking.py
 worker: gunicorn phonenumber.py
 worker: gunicorn InsertCancelPolicy.py
+worker: gunicorn Insert_Ivr_Reservation.py
