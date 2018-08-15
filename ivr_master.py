@@ -43,7 +43,7 @@ from FetchRoomsAvailabilityandPrice import insertpromotionalmessage
 from RoomList import insertroomlist
 from InsertCancelPolicy import insertcancelpolicy
 from InsertCancelPolicy import QueryStatistics
-
+from Insert_Ivr_Reservation import Insert_Ivr_Reservation
 
 app = Flask(__name__)
 CORS(app)
@@ -160,7 +160,9 @@ def InsertCancelPolicy():
 @app.route('/QueryStatistics',methods=['POST'])
 def QueryStatisticsRecord():
    return QueryStatistics(request)
-
+@app.route('/Insert_Ivr_Reservations',methods=['POST'])
+def Insert_Ivr_Reservationswer():
+   return Insert_Ivr_Reservation(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
