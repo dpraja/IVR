@@ -6,4 +6,5 @@ def Insert_Ivr_Reservation(request):
     d = request.json
     gensql('insert','ivr_resevation',d)
     confirmation = (random.randint(1000,9999))
-    return({"Return":"Record Inserted Successfully","ReturnCode":"RIS","ReturnMessage":"Success","Confirmation_Number":confirmation})
+    a = {"Return":"Record Inserted Successfully","ReturnCode":"RIS","ReturnMessage":"Success","Confirmation_Number":confirmation}
+    return(a)
