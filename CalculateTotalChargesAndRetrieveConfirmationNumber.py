@@ -1,6 +1,8 @@
 from sqlwrapper import gensql,dbget
 import json
 import datetime
+from decimal import Decimal
+
 def calculatetotalcharges(request):
     try:
         tfn = request.json['TFN']
@@ -58,21 +60,38 @@ def calculatetotalcharges(request):
         result = json.loads(dbget("select room_rate from extranet_availableroom where id in(select id from extranet_room_list where business_id = '"+str(bi_id[0]['business_id'])+"' \
                                    and room_type= '"+customer_room_type+"') and room_date between \
                                    '"+customer_arrival_date+"' and '"+str(date_to)+"' "))
-        print(result)
+        print("result",result)
         Total_amt = 0
         for rate in result:
+             print("rate",rate)
              Total_amt += rate['room_rate']
-        print(Total_amt)
+        print("total",Total_amt)
         no_of_rooms = 1
         customer_adult = int(customer_adult)
+        customer_child = int(customer_child)
+        total_pers = customer_adult+customer_child
+        if total_pers>4:
+            no_of_rooms = total_pers/4
+            str_count = str(no_of_rooms)
+            print("first",no_of_rooms)
+            a = str_count.split('.')
+            print("aaaa",a[1],type(a[1]))
+            if int(a[1]) != 0:  
+              no_of_rooms += 1
+              no_of_rooms = int(no_of_rooms)
+            #Decimal(no_of_rooms)
+              print("second",no_of_rooms)
+            
+        '''
         if customer_adult > 2:
            if customer_adult%2 > 0:
               customer_adult += 1
               no_of_rooms = customer_adult/2
            else:
               no_of_rooms = customer_adult/2
-           Total_amt = Total_amt * no_of_rooms
-        print(no_of_rooms)      
+        '''      
+        Total_amt = Total_amt * no_of_rooms
+        print(Total_amt)
         return(json.dumps({"ServiceMessage":"Success","Total_Amount":Total_amt,"currency":currency,"no_of_rooms":int(no_of_rooms)}))
     except:
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
