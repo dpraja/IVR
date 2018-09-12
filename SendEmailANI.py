@@ -80,7 +80,7 @@ def callexternalapi(request):
      re = result[0]
      print(re,type(re))     
      name = re['customer_name']
-     email = ['infocuit.raja@gmail.com','infocuit.daisy@gmail.com','i.sidhanee@iss-consultancy.co.uk','jazizahmed@gmail.com','infocuit.banupriya@gmail.com','r.ahamed@iss-consultancy.co.uk','infocuit.padmanabhan@gmail.com']
+     email = ['r.ahamed@konnect247.com','i.sidhanee@konnect247.com','jazizahmed@gmail.com','infocuit.daisy@gmail.com']
      #email = ['infocuit.daisy@gmail.com','infocuit.aravindh@gmail.com']
      message = "Booking Confirmed"
      conf_no = re['customer_confirmation_number']
