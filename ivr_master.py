@@ -44,7 +44,8 @@ from RoomList import insertroomlist
 from InsertCancelPolicy import insertcancelpolicy
 from InsertCancelPolicy import QueryStatistics
 from Insert_Ivr_Reservation import Insert_Ivr_Reservation
-
+from Getreservationcancelmodification import Getreservationcancelmodification
+from Getchannelcount import Getchannelcounts
 app = Flask(__name__)
 CORS(app)
 
@@ -163,7 +164,12 @@ def QueryStatisticsRecord():
 @app.route('/Insert_Ivr_Reservations',methods=['POST'])
 def Insert_Ivr_Reservationswer():
    return Insert_Ivr_Reservation(request)
-
+@app.route('/Getreservationcancelmodification',methods=['POST'])
+def dashboarddetails():
+   return Getreservationcancelmodification(request)
+@app.route('/Getchannelcounts',methods=['POST'])
+def Getchannelcounts_all():
+   return Getchannelcounts(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
