@@ -1,7 +1,8 @@
 from sqlwrapper import gensql,dbget,dbput
 import json
 import datetime
-import request
+from flask import Flask,request, jsonify
+
 def Getchannelcounts(request):
     
     
