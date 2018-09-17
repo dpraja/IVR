@@ -20,7 +20,7 @@ def Getchannelcounts(request):
     print(ivrcount)
 
     json_input = [{"title":"chatbot","value":channelchatbot[0]['count']},
-                  {"title":"ivr","value":channelivr[0]['count']}
+                  {"title":"ivr","value":ivrcount[0]['count']}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success",
                       "Status_Code": "200","Returnvalue":json_input },indent=2))
