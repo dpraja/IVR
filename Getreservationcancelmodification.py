@@ -23,12 +23,18 @@ def Getreservationcancelmodification(request):
     print(Totalreservationcount)
 
 
+    Modificationcount = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and modification in ('yes')"))
+
     totalivrcount = json.loads(dbget("select count (*) from public.ivr_room_customer_booked"))
+    print(totalivrcount)
+
     json_input = [
                    {"title":"reservationcount","value":reservationcount[0]['count'] + ivreservationcount[0]['count']},
                    {"title":"cancelcount","value":cancelcount[0]['count']},
-                   {"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']}
+                   {"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']},
+                   {"title":"Modificationcount","value":Modificationcount[0]['count']}
                    ]
+  
   
         
 
