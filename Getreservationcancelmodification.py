@@ -24,11 +24,16 @@ def Getreservationcancelmodification(request):
 
 
     totalivrcount = json.loads(dbget("select count (*) from public.ivr_room_customer_booked"))
-    json_input = {
-                "title":["reservationcount","cancelcount","Totalbookingcount"],
-                "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
+    json_input = {"reservationcount":reservationcount[0]['count'] + ivreservationcount[0]['count']},
+                {"cancelcount":cancelcount[0]['count']},
+                {"Totalbookingcount":Totalreservationcount[0]['count'] + totalivrcount[0]['count']}
+   # json_input = {
+      #          "title":["reservationcount","cancelcount","Totalbookingcount"],
+       #         "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
                 
-                }
+       #         }
+        
+
         
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
     
