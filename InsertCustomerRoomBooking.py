@@ -55,7 +55,8 @@ def insertcustomerroombooking(request):
         e['customer_booked_status'] = 'booked'
         e['customer_booked_date'] = today_date
         e['id'] = b_id[0]['id']
-        e['customer_room_type'] = customer_room_type  
+        e['customer_room_type'] = customer_room_type
+        e['ivr_language'] = d.get('ivr_language')
         print(gensql('insert','ivr_room_customer_booked',e))
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
