@@ -46,6 +46,7 @@ from InsertCancelPolicy import QueryStatistics
 from Insert_Ivr_Reservation import Insert_Ivr_Reservation
 from Getreservationcancelmodification import Getreservationcancelmodification
 from Getchannelcount import Getchannelcounts
+from Getreservationcancelmodification import GetBookingConfirmation
 app = Flask(__name__)
 CORS(app)
 
@@ -170,6 +171,9 @@ def dashboarddetails():
 @app.route('/Getchannelcounts',methods=['POST'])
 def Getchannelcounts_all():
    return Getchannelcounts(request)
+@app.route('/GetBookingConfirmation',methods=['POST'])
+def GetBookingConfirmation_all():
+   return GetBookingConfirmation(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
