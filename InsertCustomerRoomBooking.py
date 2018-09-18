@@ -22,6 +22,7 @@ def insertcustomerroombooking(request):
         customer_arrival_date = request.json["customer_arrival_date"]
         customer_depature_date = request.json["customer_depature_date"]
         customer_expirydate = request.json["customer_expirydate"]
+        language = request.json['ivr_language']
         customer_expirydate = customer_expirydate[0:2]+'/'+customer_expirydate[2:]
         e['customer_expirydate'] = customer_expirydate
         today_date = datetime.datetime.utcnow().date()
@@ -56,7 +57,7 @@ def insertcustomerroombooking(request):
         e['customer_booked_date'] = today_date
         e['id'] = b_id[0]['id']
         e['customer_room_type'] = customer_room_type
-        e['ivr_language'] = d.get('ivr_language')
+        e['ivr_language'] = language
         print(gensql('insert','ivr_room_customer_booked',e))
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
