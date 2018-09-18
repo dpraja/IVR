@@ -19,10 +19,9 @@ def Getreservationcancelmodification(request):
     cancelcount = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_booked_status in ('canceled')"))
     print(cancelcount)
 
-    Totalreservationcount = json.loads(dbget("select count(*) from public.ivr_resevation "))
-    print(Totalreservationcount)
-
-
+    #Totalreservationcount = json.loads(dbget("select count(*) from public.ivr_resevation "))
+    #print(Totalreservationcount)
+    
     Modificationcount = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and modification in ('yes')"))
 
     totalivrcount = json.loads(dbget("select count (*) from public.ivr_room_customer_booked"))
@@ -31,13 +30,39 @@ def Getreservationcancelmodification(request):
     json_input = [
                    {"title":"reservationcount","value":reservationcount[0]['count'] + ivreservationcount[0]['count']},
                    {"title":"cancelcount","value":cancelcount[0]['count']},
-                   {"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']},
+                   #{"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']},
                    {"title":"Modificationcount","value":Modificationcount[0]['count']}
                    ]
   
-  
+   # json_input = {
+      #          "title":["reservationcount","cancelcount","Totalbookingcount"],
+       #         "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
+                
+       #         }
         
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
+    
+def GetBookingConfirmation(request):
+    
+    date_from = request.json['arrival_from']
+    date_to = request.json['arrival_to']
+    sql_value = json.loads(dbget("SELECT count(customer_confirmation_number) FROM public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"'"))
+    print(sql_value)
 
+    ivreservationcount = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_booked_status in ('booked')"))
+    print(ivreservationcount)
+
+    json_input = [
+                   {"title":"Bookingcount","value":ivreservationcount[0]['count'] },
+                   
+                   {"title":"Confirmationcount","value":sql_value[0]['count']}
+                   ]
+  
+   # json_input = {
+      #          "title":["reservationcount","cancelcount","Totalbookingcount"],
+       #         "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
+                
+       #         }
         
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
     
