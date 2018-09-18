@@ -1,4 +1,4 @@
-from sqlwrapper import gensql
+from sqlwrapper import gensql,dbput
 import urllib.request
 import time
 import json
@@ -27,13 +27,11 @@ def sendsms(request):
 
 
       
-
-    
 def UpdateSMSmessage(request):
      sms = request.json['sms']
      confirmation = request.json['confirmation_number']
      
-     sql_value = ("update ivr_resevation set sms = '"+sms+"' where confirmation_number ='"+confirmation+"' ")
+     sql_value = dbput("update ivr_resevation set sms = '"+sms+"' where confirmation_number ='"+confirmation+"' ")
      print(sql_value)
     
      return(json.dumps({"Return":"Record Updated Successfully","Return_Code":"RUS","Status": "Success","Status_Code": "200"},indent =2))
