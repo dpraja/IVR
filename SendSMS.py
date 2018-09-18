@@ -35,3 +35,12 @@ def UpdateSMSmessage(request):
      print(sql_value)
     
      return(json.dumps({"Return":"Record Updated Successfully","Return_Code":"RUS","Status": "Success","Status_Code": "200"},indent =2))
+def Updateivrsmsmessage(request):
+     sms = request.json['send_sms']
+     confirmation = request.json['customer_confirmation_number']
+     sql_value = dbput("update ivr_room_customer_booked set send_sms = '"+sms+"' where customer_confirmation_number ='"+confirmation+"' ")
+     print(sql_value)
+    
+     return(json.dumps({"Return":"Record Updated Successfully","Return_Code":"RUS","Status": "Success","Status_Code": "200"},indent =2))
+
+
