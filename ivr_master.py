@@ -48,6 +48,7 @@ from Getreservationcancelmodification import Getreservationcancelmodification
 from Getchannelcount import Getchannelcounts
 from Getreservationcancelmodification import GetBookingConfirmation
 from SendSMS import UpdateSMSmessage
+from SendSMS import Updateivrsmsmessage
 app = Flask(__name__)
 CORS(app)
 
@@ -179,6 +180,10 @@ def GetBookingConfirmation_all():
 @app.route('/UpdateSMSmessage',methods=['POST'])
 def UpdateSMSmessage_all():
    return UpdateSMSmessage(request)
+
+@app.route('/Updateivrsmsmessage',methods=['POST'])
+def Updateivrsmsmessage_all():
+   return Updateivrsmsmessage(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
