@@ -72,3 +72,23 @@ def GetBookingConfirmation(request):
        #         }
         
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
+def Getsmscount(request):
+    date_from = request.json['arrival_from']
+    date_to = request.json['arrival_to']
+    ivreservationcount = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_booked_status in ('booked')"))
+    print(ivreservationcount)
+
+    
+    channel_count = json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"'"))
+    print(channel_count)
+    ivrsmscount = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and send_sms in ('success')"))
+    print(ivrsmscount)
+    channelsmscount = json.loads(dbget("select count(*) from ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and sms in ('success')"))
+    json_input = [
+                   {"title":"Bookingcount","value":ivreservationcount[0]['count'] + channel_count[0]['count'] },
+                   
+                   {"title":"smscount","value":ivrsmscount[0]['count'] + channelsmscount[0]['count']}
+                   ]
+  return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
+
+
