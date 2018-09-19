@@ -91,4 +91,22 @@ def Getsmscount(request):
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
 
+def GetLanguagecount(request):
+    date_from = request.json['arrival_from']
+    date_to = request.json['arrival_to']
+    arabic_count = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and ivr_language in ('1')"))
+    print(arabic_count)
+    ivr_englishcount = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and ivr_language in ('2')"))
+    print(ivr_englishcount)
+    
+    english_count = json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"'"))
+    print(english_count)
+    json_input = [
+                   {"title":"Arabic","value":arabic_count[0]['count']  },
+                   
+                   {"title":"English","value":english_count[0]['count'] +  ivr_englishcount[0]['count'] }
+                   ]
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
+
+
 
