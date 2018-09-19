@@ -107,6 +107,37 @@ def GetLanguagecount(request):
                    {"title":"English","value":english_count[0]['count'] +  ivr_englishcount[0]['count'] }
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
+def GetRoomOccupancy(request):
+    date_from = request.json['arrival_from']
+    date_to = request.json['arrival_to']
+
+    IVR_Standard_room = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_room_type in ('Standard Room')"))
+    print(IVR_Standard_room)
+    
+    IVR_deluxroom = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_room_type in ('Delux Room')"))
+    print(IVR_deluxroom)
+
+    IVR_superiorroom = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_room_type in ('Superior Room')"))
+    print(IVR_superiorroom)
+
+    IVR_deluxesuite = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where customer_arrival_date between '"+date_from+"' and '"+date_to+"' and customer_room_type in ('Deluxe Suite')"))
+    print(IVR_deluxesuite) 
+
+    channel_standard = json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and roomtype in ('Standard')"))
+    print(channel_standard)
+    channel_delux= json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and roomtype in ('Delux')"))
+    print(channel_delux)
+    channel_superior= json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and roomtype in ('Superior')"))
+    print(channel_superior)
+    channel_deluxe= json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and roomtype in ('Deluxe')"))
+    print(channel_deluxe)
+    json_input = [
+                   {"title":"StandardRoom","value":IVR_Standard_room[0]['count'] +channel_standard[0]['count'] },
+                   {"title":"DeluxRoom","value":IVR_deluxroom[0]['count'] + channel_delux[0]['count'] },
+                   {"title":"SuperiorRoom","value":IVR_superiorroom[0]['count'] + channel_superior[0]['count'] },
+                   {"title":"DeluxSuite","value":IVR_deluxesuite[0]['count'] + channel_deluxe[0]['count']}
+                   ]
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
 
 
 
