@@ -51,6 +51,7 @@ from SendSMS import UpdateSMSmessage
 from SendSMS import Updateivrsmsmessage
 from Getreservationcancelmodification import Getsmscount
 from Getreservationcancelmodification import GetLanguagecount
+from Getreservationcancelmodification import GetRoomOccupancy
 app = Flask(__name__)
 CORS(app)
 
@@ -192,6 +193,9 @@ def Getsmscount_all():
 @app.route('/GetLanguagecount',methods=['POST'])
 def GetLanguagecount_all():
    return GetLanguagecount(request)
+@app.route('/GetRoomOccupancyall',methods=['POST'])
+def GetRoomOccupancy_all():
+   return GetRoomOccupancy(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
