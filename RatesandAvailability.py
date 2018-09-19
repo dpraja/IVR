@@ -55,6 +55,53 @@ def ratesandavailability(request):
              #print(d) 
         day.append(d)
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":day},indent=2))
+
+def daterange(request):
+    res = request.json
+    print(res,type(res))
+    from_date = request.json['st_date']
+    to_date = request.json['ed_date']
+    from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
+    to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
+    #print(from_date,type(from_date))
+    id_room = json.loads(dbget("select id from extranet_room_list where business_id='"+request.json['business_id']+"' and room_type='"+request.json['room_type']+"' "))
+    #print(id_room)
+    days = request.json['days']
+    
+    im_day = { k : v for k,v in days.items() if v != 0 }
+    print(im_day,type(im_day))
+    
+    
+    while from_date <= to_date:
+      #print(from_date)
+      avail_day = from_date.strftime("%A")[0:3].lower()
+      if avail_day in im_day:
+        #print(avail_day)
+        
+        id1 = json.loads(dbget("select count(*) from extranet_availableroom where id="+str(id_room[0]['id'])+" and room_date='"+str(from_date)+"'"))
+        if id1[0]['count'] == 0:
+               e={}
+               e['id'] = id_room[0]['id']
+               e['available_count'] = request.json['room_to_sell']
+               e['room_rate'] = request.json['price']
+               e['room_date'] = from_date
+               print(True)
+               gensql('insert','extranet_availableroom',e)
+        else:
+               e,a={},{}
+               e['id'] = id_room[0]['id']
+               a['available_count'] = request.json['room_to_sell']
+               a['room_rate'] = request.json['price']
+               e['room_date'] = from_date 
+               print(False)
+               gensql('update','extranet_availableroom',a,e)
+      else:
+          pass
+          #print("no need",avail_day)
+      #print(im_day)    
+      from_date+=datetime.timedelta(days=1)
+        
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":""},indent=2))
     
 
 
