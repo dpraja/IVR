@@ -21,5 +21,9 @@ def insertroomlist(request):
  except:
      return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"},indent=2)) 
 
-
-
+def restriction(request):
+    res = request.json
+    a = { k : v for k,v in res.items() if v != '' if k  not in ('business_id','room_type')}
+    e = { k : v for k,v in res.items() if v != '' if k   in ('business_id','room_type')}
+    gensql('update','extranet_room_list',a,e)
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
