@@ -139,5 +139,79 @@ def GetRoomOccupancy(request):
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
 
+def GetYearbyyeareservationcount(request):
+    yearlist = []
+    dividendlist,dividendlist_add,fin_list  = [],[],[]
+    count_of_year = {}
+    Year1 = json.loads(dbget("select customer_arrival_date from public.ivr_room_customer_booked  order by customer_arrival_date"))
+    
+    for dividend_dict in Year1:
+     for key, value in dividend_dict.items():
+        #yearlist.append(key)
+        dividendlist.append(value)
+    
+    year_count = 0
+    for i in dividendlist:
+        year_count = year_count+1
+        j = datetime.datetime.strptime(i,'%Y-%m-%d').date()
+        year_j = j.year
+        sample = "'{}'".format(year_j)
+        if sample in dividendlist_add:
+            pass
+        else: 
+           dividendlist_add.append(sample)
+           year_count = 1
+        count_of_year[""+str(year_j)+""] = year_count
+
+        
+    print(count_of_year)
+    #for key,value in count_of_year.items():
+    for k,v in count_of_year.items():
+        fin_list.append({'title':k,'value':v})
+        #fin_list.append(fin_res['value'] = v)
+    print(fin_list)   
+        
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":fin_list},indent=2))
+
+
+
+def GetCountryreservation(request):
+    date_from = request.json['arrival_from']
+    date_to = request.json['arrival_to']
+    
+    dividendlist,a,a_add,total_count,fin_list  = [],[],[],{},[]
+
+    ivr_country_count = json.loads(dbget("SELECT ivr_room_customer_booked.cntry_code, country_list.country \
+                                         from ivr_room_customer_booked \
+                                         left join country_list on country_list.country_code = ivr_room_customer_booked.cntry_code where ivr_room_customer_booked.customer_arrival_date between '"+date_from+"' and '"+date_to+"'"))
+    
+    for res in ivr_country_count:
+        for k,v in res.items():
+            if k == 'country':
+                a.append(v)            
+    print(a)
+    country_count=0
+    for i in a:
+        country_count = country_count+1
+        if i in a_add:
+            pass
+        else:
+            a_add.append(i)
+            country_count = 1
+        total_count[""+str(i)+""] = country_count
+    print(total_count)
+    for k,v in total_count.items():
+        fin_list.append({'title':k,'value':v})
+        #fin_list.append(fin_res['value'] = v)
+    print(fin_list)    
+    '''
+    for dividend_dict in ivr_country_count[0]['cntry_code']:
+     for key, value in dividend_dict.items():
+        countrylist.append(key)
+        dividendlist.append(value)
+    print('countrylist',countrylist)
+    print('dividendlist',dividendlist)
+    '''
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":fin_list},indent=2))
 
 
