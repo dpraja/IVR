@@ -18,26 +18,26 @@ def insertratesandavailability(request):
              pass
          elif i['Available_Room_Count'] == "":
            dbput("INSERT INTO public.extranet_availableroom(\
-	        id, room_date,room_rate)\
-	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"',"+str(i['Price'])+")")
+	        id, room_date,room_rate,room_open)\
+	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"',"+str(i['Price'])+","+str(i['room_open'])+" )")
          elif i['Price'] == "":
            dbput("INSERT INTO public.extranet_availableroom(\
-	        id, room_date, available_count)\
-	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"', "+str(i['Available_Room_Count'])+")")
+	        id, room_date, available_count,room_open)\
+	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"', "+str(i['Available_Room_Count'])+","+str(i['room_open'])+")")
          else:
              dbput("INSERT INTO public.extranet_availableroom(\
-	        id, room_date, available_count, room_rate)\
-	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"', "+str(i['Available_Room_Count'])+", "+str(i['Price'])+")")
+	        id, room_date, available_count, room_rate,room_open)\
+	        VALUES ("+str(res[0]['id'])+", '"+i['date']+"', "+str(i['Available_Room_Count'])+", "+str(i['Price'])+","+str(i['room_open'])+")")
       else:
          if i['Available_Room_Count'] == "" and  i['Price'] == "":
              pass
          elif i['Available_Room_Count'] == "": 
-           dbput("UPDATE public.extranet_availableroom set room_rate="+str(i['Price'])+" WHERE  id="+str(res[0]['id'])+" and room_date='"+i['date']+"'") 
+           dbput("UPDATE public.extranet_availableroom set room_rate="+str(i['Price'])+",room_open="+i['room_open']+"  WHERE  id="+str(res[0]['id'])+" and room_date='"+i['date']+"'  ") 
          elif i['Price'] == "":
-            dbput("UPDATE public.extranet_availableroom set available_count="+str(i['Available_Room_Count'])+" WHERE  id="+str(res[0]['id'])+" and room_date='"+i['date']+"' ")
+            dbput("UPDATE public.extranet_availableroom set available_count="+str(i['Available_Room_Count'])+",room_open="+i['room_open']+" WHERE  id="+str(res[0]['id'])+" and room_date='"+i['date']+"'  ")
          else:
              dbput("UPDATE public.extranet_availableroom\
-	        set available_count="+str(i['Available_Room_Count'])+", room_rate="+str(i['Price'])+"\
+	        set available_count="+str(i['Available_Room_Count'])+", room_rate="+str(i['Price'])+",room_open="+str(i['room_open'])+"\
 	        WHERE  id="+str(res[0]['id'])+" and room_date='"+i['date']+"'")  
              
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
