@@ -138,13 +138,13 @@ def GetRoomOccupancy(request):
                    {"title":"DeluxSuite","value":IVR_deluxesuite[0]['count'] + channel_deluxe[0]['count']}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
-
 def GetYearbyyeareservationcount(request):
     yearlist = []
     dividendlist,dividendlist_add,fin_list  = [],[],[]
     count_of_year = {}
     Year1 = json.loads(dbget("select customer_arrival_date from public.ivr_room_customer_booked  order by customer_arrival_date"))
-    
+    Year2 = json.loads(dbget("select arrival_date as customer_arrival_date from public.ivr_resevation  order by arrival_date"))
+    Year1 = Year1 + Year2
     for dividend_dict in Year1:
      for key, value in dividend_dict.items():
         #yearlist.append(key)
@@ -179,11 +179,20 @@ def GetCountryreservation(request):
     date_from = request.json['arrival_from']
     date_to = request.json['arrival_to']
     
-    dividendlist,a,a_add,total_count,fin_list  = [],[],[],{},[]
+    dividendlist,a,a_add,total_count,fin_list,cn_reservation  = [],[],[],{},[],[]
 
     ivr_country_count = json.loads(dbget("SELECT ivr_room_customer_booked.cntry_code, country_list.country \
                                          from ivr_room_customer_booked \
-                                         left join country_list on country_list.country_code = ivr_room_customer_booked.cntry_code where ivr_room_customer_booked.customer_arrival_date between '"+date_from+"' and '"+date_to+"'"))
+                                         left join country_list on country_list.country_code = ivr_room_customer_booked.cntry_code where ivr_room_customer_booked.customer_arrival_date between '"+date_from+"' and '"+date_to+"'" ))
+    
+    channel_country_count = json.loads(dbget("SELECT ivr_resevation.countrycode as cntry_code, country_list.country \
+                                         from ivr_resevation \
+                                         left join country_list on country_list.country_code = ivr_resevation.countrycode where ivr_resevation.arrival_date between '"+date_from+"' and '"+date_to+"'"))
+    
+    #print("ivr",ivr_country_count)
+    #print("channel",channel_country_count)
+    ivr_country_count = ivr_country_count+channel_country_count
+    #print("final_ivr",ivr_country_count)
     
     for res in ivr_country_count:
         for k,v in res.items():
@@ -204,14 +213,6 @@ def GetCountryreservation(request):
         fin_list.append({'title':k,'value':v})
         #fin_list.append(fin_res['value'] = v)
     print(fin_list)    
-    '''
-    for dividend_dict in ivr_country_count[0]['cntry_code']:
-     for key, value in dividend_dict.items():
-        countrylist.append(key)
-        dividendlist.append(value)
-    print('countrylist',countrylist)
-    print('dividendlist',dividendlist)
-    '''
+    
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":fin_list},indent=2))
-
 
