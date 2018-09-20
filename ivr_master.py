@@ -52,6 +52,8 @@ from SendSMS import Updateivrsmsmessage
 from Getreservationcancelmodification import Getsmscount
 from Getreservationcancelmodification import GetLanguagecount
 from Getreservationcancelmodification import GetRoomOccupancy
+from Getreservationcancelmodification import GetYearbyyeareservationcount
+from Getreservationcancelmodification import GetCountryreservation
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -200,6 +202,14 @@ def GetLanguagecount_all():
 @app.route('/GetRoomOccupancyall',methods=['POST'])
 def GetRoomOccupancy_all():
    return GetRoomOccupancy(request)
+
+@app.route('/GetYearbyyeareservationcount',methods=['POST'])
+def GetYearbyyeareservationcount_all():
+   return GetYearbyyeareservationcount(request)
+
+@app.route('/GetCountryreservation',methods=['POST'])
+def GetCountryreservation_all():
+   return GetCountryreservation(request)
 
 # add changes
 
