@@ -57,3 +57,7 @@ def DeleteRoomamenitieConfiguration(request):
     sql = dbput("DELETE FROM public.room_amenitie WHERE  amenitie_id = '"+amenitie_id+"'")
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','Return': 'Record Deleted Successfully','ReturnCode':'RDS'}, sort_keys=True, indent=4))
    
+def RoomnameConfiguration(request):
+    d = json.loads(dbget("select room_name from configration"))
+    return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RRS','Result':d}, sort_keys=True, indent=4))
+ 
