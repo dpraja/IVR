@@ -63,6 +63,18 @@ from configuration import update_config
 from Insert_Ivr_Reservation import Query_Reservation
 
 
+#configuration
+from ExtranetConfiguration import RoomsizeConfiguration
+from ExtranetConfiguration import BeddingoptionsConfiguration
+from ExtranetConfiguration import BedsizeConfiguration
+from ExtranetConfiguration import RoomamenitieConfiguration
+from ExtranetConfiguration import InclusionsConfiguration
+from ExtranetConfiguration import DeleteRoomsizeConfiguration
+from ExtranetConfiguration import DeleteBeddingoptionsConfiguration
+from ExtranetConfiguration import DeleteBedSizeConfiguration
+from ExtranetConfiguration import DeleteInclusionsConfiguration
+from ExtranetConfiguration import DeleteRoomamenitieConfiguration
+
 app = Flask(__name__)
 CORS(app)
 
@@ -243,7 +255,37 @@ def Query_Reservation_Data():
    return Query_Reservation(request)
 
 
-
+#configuration
+@app.route('/RoomsizeConfiguration',methods=['POST'])
+def RoomsizeConfiguration_all():
+   return RoomsizeConfiguration(request)
+@app.route('/BeddingoptionsConfiguration',methods=['POST'])
+def BeddingoptionsConfiguration_all():
+   return BeddingoptionsConfiguration(request)
+@app.route('/BedsizeConfiguration',methods=['POST'])
+def BedsizeConfiguration_all():
+   return BedsizeConfiguration(request)
+@app.route('/RoomamenitieConfiguration',methods=['POST'])
+def RoomamenitieConfiguration_all():
+   return RoomamenitieConfiguration(request)
+@app.route('/InclusionsConfiguration',methods=['POST'])
+def InclusionsConfiguration_all():
+   return InclusionsConfiguration(request)
+@app.route('/DeleteRoomsizeConfiguration',methods=['POST'])
+def DeleteRoomsizeConfiguration_all():
+   return DeleteRoomsizeConfiguration(request)
+@app.route('/DeleteBeddingoptionsConfiguration',methods=['POST'])
+def DeleteBeddingoptionsConfiguration_all():
+   return DeleteBeddingoptionsConfiguration(request)
+@app.route('/DeleteBedSizeConfiguration',methods=['POST'])
+def DeleteBedSizeConfiguration_all():
+   return DeleteBedSizeConfiguration(request)
+@app.route('/DeleteInclusionsConfiguration',methods=['POST'])
+def DeleteInclusionsConfiguration_all():
+   return DeleteInclusionsConfiguration(request)
+@app.route('/DeleteRoomamenitieConfiguration',methods=['POST'])
+def DeleteRoomamenitieConfiguration_all():
+   return DeleteRoomamenitieConfiguration(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
