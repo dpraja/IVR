@@ -74,6 +74,7 @@ from ExtranetConfiguration import DeleteBeddingoptionsConfiguration
 from ExtranetConfiguration import DeleteBedSizeConfiguration
 from ExtranetConfiguration import DeleteInclusionsConfiguration
 from ExtranetConfiguration import DeleteRoomamenitieConfiguration
+from ExtranetConfiguration import RoomnameConfiguration
 
 app = Flask(__name__)
 CORS(app)
@@ -286,6 +287,9 @@ def DeleteInclusionsConfiguration_all():
 @app.route('/DeleteRoomamenitieConfiguration',methods=['POST'])
 def DeleteRoomamenitieConfiguration_all():
    return DeleteRoomamenitieConfiguration(request)
+@app.route('/RoomnameConfiguration',methods=['POST'])
+def Roomname():
+   return RoomnameConfiguration(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
