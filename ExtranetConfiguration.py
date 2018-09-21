@@ -61,3 +61,4 @@ def RoomnameConfiguration(request):
     d = json.loads(dbget("select room_name from configration"))
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RRS','Result':d}, sort_keys=True, indent=4))
  
+ 
