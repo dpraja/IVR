@@ -250,7 +250,7 @@ def select_configuration():
 def update_configuration():
    return update_config(request)
 
-@app.route('/Query_Reservation',methods=['POST'])
+@app.route('/Query_Reservation',methods=['POST','GET'])
 def Query_Reservation_Data():
    return Query_Reservation(request)
 
