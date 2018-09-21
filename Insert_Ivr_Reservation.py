@@ -17,6 +17,6 @@ def Query_Reservation(request):
                           customer_pickup_drop,customer_booked_date,customer_cc,customer_expirydate,\
                           customer_amount,customer_booked_status,\
                           customer_booked_status,customer_adult,customer_child,customer_no_of_rooms,\
-                          channel from ivr_room_customer_booked"))
+                          channel,customer_confirmation_number from ivr_room_customer_booked"))
     print(d)
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","result":d},indent=2))
