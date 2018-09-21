@@ -57,6 +57,11 @@ from Getreservationcancelmodification import GetCountryreservation
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
+from configuration import config
+from configuration import select_config
+from configuration import update_config
+from Insert_Ivr_Reservation import Query_Reservation
+
 
 app = Flask(__name__)
 CORS(app)
@@ -220,6 +225,24 @@ def daterangeforrates():
 @app.route('/restriction',methods=['POST'])
 def restriction_rates():
    return restriction(request)
+
+@app.route('/insert_configuration',methods=['POST'])
+def insert_configuration():
+   return config(request)
+
+@app.route('/select_configuration',methods=['POST'])
+def select_configuration():
+   return select_config(request)
+
+@app.route('/update_configuration',methods=['POST'])
+def update_configuration():
+   return update_config(request)
+
+@app.route('/Query_Reservation',methods=['POST'])
+def Query_Reservation_Data():
+   return Query_Reservation(request)
+
+
 
 if __name__ == "__main__":
   app.run(debug=True)
