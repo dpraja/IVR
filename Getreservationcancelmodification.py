@@ -27,13 +27,17 @@ def Getreservationcancelmodification(request):
     totalivrcount = json.loads(dbget("select count (*) from public.ivr_room_customer_booked"))
     print(totalivrcount)
 
+    totalvalue = reservationcount[0]['count']+ivreservationcount[0]['count']+cancelcount[0]['count']+Modificationcount[0]['count']
+    res_percentage = (reservationcount[0]['count']+ivreservationcount[0]['count']) * 100/totalvalue
+    print("respercentag",res_percentage)
+    mod_percentage = Modificationcount[0]['count'] * 100/totalvalue
+    can_percentage = cancelcount[0]['count']* 100/totalvalue
     json_input = [
-                   {"title":"reservationcount","value":reservationcount[0]['count'] + ivreservationcount[0]['count']},
-                   {"title":"cancelcount","value":cancelcount[0]['count']},
+                   {"title":"reservationcount","value":reservationcount[0]['count'] + ivreservationcount[0]['count'],"percentage":res_percentage},
+                   {"title":"cancelcount","value":cancelcount[0]['count'],"percentage":can_percentage},
                    #{"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']},
-                   {"title":"Modificationcount","value":Modificationcount[0]['count']}
+                   {"title":"Modificationcount","value":Modificationcount[0]['count'],"percentage":mod_percentage}
                    ]
-  
    # json_input = {
       #          "title":["reservationcount","cancelcount","Totalbookingcount"],
        #         "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
