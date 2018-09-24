@@ -26,18 +26,18 @@ def Getreservationcancelmodification(request):
 
     totalivrcount = json.loads(dbget("select count (*) from public.ivr_room_customer_booked"))
     print(totalivrcount)
-
     totalvalue = reservationcount[0]['count']+ivreservationcount[0]['count']+cancelcount[0]['count']+Modificationcount[0]['count']
     res_percentage = (reservationcount[0]['count']+ivreservationcount[0]['count']) * 100/totalvalue
     print("respercentag",res_percentage)
     mod_percentage = Modificationcount[0]['count'] * 100/totalvalue
     can_percentage = cancelcount[0]['count']* 100/totalvalue
     json_input = [
-                   {"title":"reservationcount","value":reservationcount[0]['count'] + ivreservationcount[0]['count'],"percentage":res_percentage},
-                   {"title":"cancelcount","value":cancelcount[0]['count'],"percentage":can_percentage},
+                   {"title":"Reservation","value":reservationcount[0]['count'] + ivreservationcount[0]['count'],"percentage":res_percentage},
+                   {"title":"Cancel","value":cancelcount[0]['count'],"percentage":can_percentage},
                    #{"title":"Totalbookingcount","value":Totalreservationcount[0]['count'] + totalivrcount[0]['count']},
-                   {"title":"Modificationcount","value":Modificationcount[0]['count'],"percentage":mod_percentage}
+                   {"title":"Modification","value":Modificationcount[0]['count'],"percentage":mod_percentage}
                    ]
+  
    # json_input = {
       #          "title":["reservationcount","cancelcount","Totalbookingcount"],
        #         "value":[reservationcount[0]['count'] + ivreservationcount[0]['count'],cancelcount[0]['count'],Totalreservationcount[0]['count'] + totalivrcount[0]['count']]
@@ -89,9 +89,9 @@ def Getsmscount(request):
     print(ivrsmscount)
     channelsmscount = json.loads(dbget("select count(*) from ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and sms in ('success')"))
     json_input = [
-                   {"title":"Bookingcount","value":ivreservationcount[0]['count'] + channel_count[0]['count'] },
+                   {"title":"Booked","value":ivreservationcount[0]['count'] + channel_count[0]['count'] },
                    
-                   {"title":"smscount","value":ivrsmscount[0]['count'] + channelsmscount[0]['count']}
+                   {"title":"Delievered","value":ivrsmscount[0]['count'] + channelsmscount[0]['count']}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
 
@@ -136,9 +136,9 @@ def GetRoomOccupancy(request):
     channel_deluxe= json.loads(dbget("select count(*) from public.ivr_resevation where arrival_date between  '"+date_from+"' and  '"+date_to+"' and roomtype in ('Deluxe')"))
     print(channel_deluxe)
     json_input = [
-                   {"title":"StandardRoom","value":IVR_Standard_room[0]['count'] +channel_standard[0]['count'] },
-                   {"title":"DeluxRoom","value":IVR_deluxroom[0]['count'] + channel_delux[0]['count'] },
-                   {"title":"SuperiorRoom","value":IVR_superiorroom[0]['count'] + channel_superior[0]['count'] },
+                   {"title":"Standard","value":IVR_Standard_room[0]['count'] +channel_standard[0]['count'] },
+                   {"title":"Delux","value":IVR_deluxroom[0]['count'] + channel_delux[0]['count'] },
+                   {"title":"Superior","value":IVR_superiorroom[0]['count'] + channel_superior[0]['count'] },
                    {"title":"DeluxSuite","value":IVR_deluxesuite[0]['count'] + channel_deluxe[0]['count']}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":json_input},indent=2))
@@ -151,7 +151,6 @@ def GetYearbyyeareservationcount(request):
     Year1 = Year1 + Year2
     for dividend_dict in Year1:
      for key, value in dividend_dict.items():
-        #yearlist.append(key)
         dividendlist.append(value)
     
     year_count = 0
@@ -220,3 +219,39 @@ def GetCountryreservation(request):
     
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":fin_list},indent=2))
 
+def monthreservation(request):
+    year = request.json['year']
+    dividendlist, dividendlist_add, count_of_year,fin_list = [],[],{},[]
+    add_year = int(year)
+    print(year,add_year)
+    Year1 = json.loads(dbget("select customer_arrival_date from public.ivr_room_customer_booked  where  customer_arrival_date>='"+year+"-01-01' and customer_arrival_date<'"+str(add_year+1)+"-01-01' and customer_booked_status='booked' order by customer_arrival_date"))
+    
+    Year2 = json.loads(dbget("select arrival_date  from public.ivr_resevation  where arrival_date>='"+year+"-01-01' and arrival_date<'"+str(add_year+1)+"-01-01' order by arrival_date "))
+    
+    Year1 = Year1 + Year2
+    
+    for dividend_dict in Year1:
+     for key, value in dividend_dict.items():
+        dividendlist.append(value)
+        
+    year_count = 0
+    for i in dividendlist:
+        year_count = year_count+1
+        j = datetime.datetime.strptime(i,'%Y-%m-%d').date()
+        month_j = j.strftime("%b")
+        sample = "'{}'".format(month_j)
+        if sample in dividendlist_add:
+            pass
+        else: 
+           dividendlist_add.append(sample)
+           year_count = 1
+        count_of_year[""+str(month_j)+""] = year_count
+
+        
+    print(count_of_year)
+    for k,v in count_of_year.items():
+        fin_list.append({'title':k,'value':v})
+        #fin_list.append(fin_res['value'] = v)
+    print(fin_list)
+        
+    return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":fin_list},indent=2))
