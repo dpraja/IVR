@@ -54,6 +54,7 @@ from Getreservationcancelmodification import GetLanguagecount
 from Getreservationcancelmodification import GetRoomOccupancy
 from Getreservationcancelmodification import GetYearbyyeareservationcount
 from Getreservationcancelmodification import GetCountryreservation
+from Getreservationcancelmodification import monthreservation
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -255,7 +256,9 @@ def update_configuration():
 def Query_Reservation_Data():
    return Query_Reservation(request)
 
-
+@app.route('/monthreservation',methods=['POST'])
+def monthreservation_all():
+   return monthreservation(request)
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
 def RoomsizeConfiguration_all():
