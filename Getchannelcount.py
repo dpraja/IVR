@@ -19,11 +19,14 @@ def Getchannelcounts(request):
     ivrcount = json.loads(dbget("select count (*) from ivr_room_customer_booked where customer_arrival_date between  '"+date_from+"' and  '"+date_to+"' and channel in ('IVR')"))
     print(ivrcount)
 
-    json_input = [{"title":"chatbot","value":channelchatbot[0]['count']},
-                  {"title":"ivr","value":ivrcount[0]['count']}
+    
+    json_input = [{"title":"Chatbot","value":channelchatbot[0]['count']},
+                  {"title":"Ivr","value":ivrcount[0]['count']}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success",
                       "Status_Code": "200","Returnvalue":json_input },indent=2))
     
     
+    
+
     
