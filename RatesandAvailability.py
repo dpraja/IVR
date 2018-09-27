@@ -29,8 +29,8 @@ def ratesandavailability(request):
         from_date += datetime.timedelta(days=1)
     print(str_date)    
     day,days,a = [],{},{"business_id":business_id}
-    res = json.loads(dbget("select room_date,available_count,room_rate from extranet_availableroom where room_date in ("+str_date+") and id in (select id from extranet_room_list where business_id='"+business_id+"' and room_type='"+room_type+"')"))
-    #print(res,type(res),len(res))
+    res = json.loads(dbget("select room_date,available_count,room_rate,room_open from extranet_availableroom where room_date in ("+str_date+") and id in (select id from extranet_room_list where business_id='"+business_id+"' and room_type='"+room_type+"')"))
+    print(res,type(res),len(res))
     length = len(res)
     date = []
     for data in res:
@@ -45,13 +45,13 @@ def ratesandavailability(request):
               d = {"Month": i.strftime('%B'),"Date":i.strftime('%d'),"Day":i.strftime("%A")[0:3],
                 "Price":res[n]["room_rate"],
                 "Available_Room_Count":res[n]["available_count"],
-                "Room_Status":"Declared","date":str(i)}
+                "Room_Status":"Declared","date":str(i),"room_open":res[n]['room_open']}
               #print(d)
         else:
              d = {"Month": i.strftime('%B'),"Date":i.strftime('%d'),"Day":i.strftime("%A")[0:3],
                 "Price":"",
                 "Available_Room_Count":"",
-                "Room_Status":"NotDeclared","date":str(i)}
+                "Room_Status":"NotDeclared","date":str(i),"room_open":res[n]['room_open']}
              #print(d) 
         day.append(d)
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":day},indent=2))
