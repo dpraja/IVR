@@ -20,8 +20,12 @@ def Getchannelcounts(request):
     print(ivrcount)
 
     
-    json_input = [{"title":"Chatbot","value":channelchatbot[0]['count']},
-                  {"title":"Ivr","value":ivrcount[0]['count']}
+    totalvalue = channelchatbot[0]['count'] + ivrcount[0]['count']
+    chatperc = channelchatbot[0]['count'] * 100/totalvalue
+    ivrperc = ivrcount[0]['count'] * 100/ totalvalue
+    
+    json_input = [{"title":"Chatbot","value":channelchatbot[0]['count'],"percentage":chatperc},
+                  {"title":"Ivr","value":ivrcount[0]['count'],"percentage":ivrperc}
                    ]
     return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success",
                       "Status_Code": "200","Returnvalue":json_input },indent=2))
