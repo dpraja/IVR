@@ -62,6 +62,7 @@ from configuration import config
 from configuration import select_config
 from configuration import update_config
 from Insert_Ivr_Reservation import Query_Reservation
+from RoomList import select_restriction
 
 
 #configuration
@@ -259,6 +260,11 @@ def Query_Reservation_Data():
 @app.route('/monthreservation',methods=['POST'])
 def monthreservation_all():
    return monthreservation(request)
+
+@app.route('/select_restriction',methods=['POST'])
+def select_data_restriction():
+   return select_restriction(request)
+
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
 def RoomsizeConfiguration_all():
