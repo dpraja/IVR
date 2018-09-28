@@ -36,5 +36,6 @@ def restriction(request):
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
 
 def select_restriction(request):
-    res = json.loads(dbget("select * from restriction"))
+    business_id = request.json['business_id']
+    res = json.loads(dbget("select * from restriction where business_id= '"+business_id+"' "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
