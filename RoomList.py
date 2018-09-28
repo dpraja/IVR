@@ -23,7 +23,18 @@ def insertroomlist(request):
 
 def restriction(request):
     res = request.json
-    a = { k : v for k,v in res.items() if v != '' if k  not in ('business_id','room_type')}
-    e = { k : v for k,v in res.items() if v != '' if k   in ('business_id','room_type')}
-    gensql('update','extranet_room_list',a,e)
+    print(res)
+    restric_count = json.loads(dbget("select count(*) as c from restriction where business_id='"+res['business_id']+"' "))
+    print(restric_count)
+    if restric_count[0]['c'] == 0:
+        gensql('insert','restriction',res)
+    else:    
+       a = { k : v for k,v in res.items() if v != '' if k  not in ('business_id')}
+       e = { k : v for k,v in res.items() if v != '' if k   in ('business_id')}
+       gensql('update','restriction',a,e)
+    
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
+
+def select_restriction(request):
+    res = json.loads(dbget("select * from restriction"))
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
