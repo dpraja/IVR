@@ -77,7 +77,12 @@ from ExtranetConfiguration import DeleteBedSizeConfiguration
 from ExtranetConfiguration import DeleteInclusionsConfiguration
 from ExtranetConfiguration import DeleteRoomamenitieConfiguration
 from ExtranetConfiguration import RoomnameConfiguration
-
+from ExtranetConfiguration import SelectRoomsizeConfiguration
+from ExtranetConfiguration import SelectBeddingoptionsConfiguration
+from ExtranetConfiguration import SelectBedsizeConfiguration
+from ExtranetConfiguration import SelectRoomamenitieConfiguration
+from ExtranetConfiguration import SelectInclusionsConfiguration
+from ExtranetConfiguration import SelectExtrabed
 app = Flask(__name__)
 CORS(app)
 
@@ -299,6 +304,24 @@ def DeleteRoomamenitieConfiguration_all():
 @app.route('/RoomnameConfiguration',methods=['POST'])
 def Roomname():
    return RoomnameConfiguration(request)
+@app.route('/SelectRoomsizeConfiguration',methods=['GET'])
+def SelectRoomsizeConfiguration_all():
+   return SelectRoomsizeConfiguration()
+@app.route('/SelectBeddingoptionsConfiguration',methods=['GET'])
+def SelectBeddingoptionsConfiguration_all():
+   return SelectBeddingoptionsConfiguration()
+@app.route('/SelectBedsizeConfiguration',methods=['GET'])
+def SelectBedsizeConfiguration_all():
+   return SelectBedsizeConfiguration()
+@app.route('/SelectRoomamenitieConfiguration',methods=['GET'])
+def SelectRoomamenitieConfiguration_all():
+   return SelectRoomamenitieConfiguration()
+@app.route('/SelectInclusionsConfiguration',methods=['GET'])
+def SelectInclusionsConfiguration_all():
+   return SelectInclusionsConfiguration()
+@app.route('/SelectExtrabed',methods=['GET'])
+def SelectExtrabed_all():
+   return SelectExtrabed()
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
