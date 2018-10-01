@@ -3,7 +3,7 @@ import json
 import random
 import datetime
 def insertcustomerroombooking(request):
-     try: 
+     #try: 
         d = request.json
         print(d)
         e = { k : v for k,v in d.items() if k not in ('customer_room_type','customer_name','TFN','customer_arrival_date','customer_depature_date','customer_expirydate')}
@@ -70,5 +70,5 @@ def insertcustomerroombooking(request):
                        id= "+str(id_bus[0]['id'])+" and room_date in ("+str_date+")"))
         
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","conf_no":conf_no}))
-     except:
-        return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+     #except:
+        #return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
