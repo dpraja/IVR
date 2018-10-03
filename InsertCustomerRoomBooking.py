@@ -69,6 +69,5 @@ def insertcustomerroombooking(request):
         print(dbput("update extranet_availableroom set available_count = available_count-1 where \
                        id= "+str(id_bus[0]['id'])+" and room_date in ("+str_date+")"))
         
-        return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","conf_no":conf_no}))
-     #except:
+        return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","conf_no":conf_no},indent=2))     #except:
         #return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
