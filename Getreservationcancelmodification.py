@@ -64,9 +64,9 @@ def GetBookingConfirmation(request):
     print(channel_bookingcount)
     
     json_input = [
-                   {"title":"Bookingcount","value":ivreservationcount[0]['count'] + channel_count[0]['count'] },
+                   {"title":"Booking","value":ivreservationcount[0]['count'] + channel_count[0]['count'] },
                    
-                   {"title":"Confirmationcount","value":sql_value[0]['count'] + channel_bookingcount[0]['count']}
+                   {"title":"Confirmation","value":sql_value[0]['count'] + channel_bookingcount[0]['count']}
                    ]
   
    # json_input = {
