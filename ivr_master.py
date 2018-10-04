@@ -56,6 +56,7 @@ from Getreservationcancelmodification import GetYearbyyeareservationcount
 from Getreservationcancelmodification import GetCountryreservation
 from Getreservationcancelmodification import monthreservation
 from Getreservationcancelmodification import futurebooking
+from Getreservationcancelmodification import HistoryBooking
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -273,6 +274,9 @@ def select_data_restriction():
 @app.route('/futurebooking',methods=['GET'])
 def future_reservation():
    return futurebooking()
+@app.route('/HistoryBooking',methods=['GET'])
+def HistoryBooking_reservation():
+   return HistoryBooking()
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
 def RoomsizeConfiguration_all():
