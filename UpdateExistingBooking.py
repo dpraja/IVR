@@ -2,11 +2,12 @@ from sqlwrapper import dbget,gensql
 import json
 import datetime
 def updateexistingbooking(request):
-    try:
+     try:
         
         d = request.json
-        e = { k : v for k,v in d.items() if k in ('customer_confirmation_number') }
-        f = { k : v for k,v in d.items() if v != '' if k not in ('customer_expirydate','customer_confirmation_number','customer_arrival_date','customer_depature_date')}
+        a = {}
+        e = { k : v for k,v in d.items() if k in ('confirmation_number') }
+        f = { k : v for k,v in d.items() if v != '' if k not in ('customer_expirydate','confirmation_number','customer_arrival_date','customer_depature_date')}
         print(e,f)
         today_date = datetime.datetime.utcnow().date()
         year = str(today_date.year)
@@ -31,8 +32,10 @@ def updateexistingbooking(request):
         customer_expirydate = request.json["customer_expirydate"]
         customer_expirydate = customer_expirydate[0:2]+'/'+customer_expirydate[2:]
         f['customer_expirydate'] = customer_expirydate
-        print(gensql('update','ivr_room_customer_booked',f,e))
+        a['customer_confirmation_number'] = request.json["confirmation_number"]
+        print(gensql('update','ivr_room_customer_booked',f,a))
         
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"}))
     except:
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+
