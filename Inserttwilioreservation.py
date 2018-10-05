@@ -136,7 +136,7 @@ def Smstwilioservice(request):
          the_page = the_page[1:]
          print(the_page)
          the_page = str(the_page)
-     sql = dbput("update reservation set sms = 'success' where confirmation_number = '"+conf_no+"'")
+     sql = dbput("update ivr_room_customer_booked set send_sms = 'success' where customer_confirmation_number = '"+conf_no+"'")
      print(sql)
      return(json.dumps([{"Return":"SMS Sent Successfully","Return_Code":"SSS","Status": "Success","Status_Code": "200","Key":the_page}],indent =2))
 
