@@ -95,8 +95,8 @@ def Modifytwilioreservation(request):
     date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
     arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
     dep_date = datetime.datetime.strptime(date2, '%d-%m-%Y').date()
-    a['arrival'] = arr_date.strftime("%Y-%m-%d")                             #formatted string datetime
-    a['departure'] = dep_date.strftime("%Y-%m-%d")
+    a['customer_arrival_date'] = arr_date.strftime("%Y-%m-%d")                             #formatted string datetime
+    a['customer_depature_date'] = dep_date.strftime("%Y-%m-%d")
     #a['arrival'] = parser.parse(d['arrival']).date().strftime('%d-%m-%Y')
     #a['departure'] = parser.parse(d['departure']).date().strftime('%d-%m-%Y')
 
