@@ -26,6 +26,7 @@ from InsertRatesandAvailability import insertratesandavailability
 from UpdateRatesandAvailability import updateratesandavailability
 from AddDiscount import adddiscount
 from QueryDiscount import querydiscount
+
 #add
 from CheckDate import validationivr
 from SendEmail import sendemail
