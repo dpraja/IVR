@@ -104,7 +104,7 @@ def Modifytwilioreservation(request):
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
     print(sql_value)
     conf = e.get('confirmation_number')
-    sql = dbput("update reservation set modification = 'yes' where confirmation_number = '"+conf+"'")
+    sql = dbput("update reservation set modification = 'yes' where confirmation_number = '"+str(conf)+"'")
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully','ReturnCode':'RUS'}], sort_keys=True, indent=4))
 
 def Canceltwilioreservation(request):
