@@ -36,6 +36,6 @@ def updateexistingbooking(request):
         print(gensql('update','ivr_room_customer_booked',f,a))
         
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"}))
-    except:
+     except:
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
 
