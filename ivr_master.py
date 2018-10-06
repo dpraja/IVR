@@ -74,6 +74,15 @@ from configuration import update_config
 from Insert_Ivr_Reservation import Query_Reservation
 from RoomList import select_restriction
 
+#Rate_plan
+from create_rate_plan import select_room_types
+from create_rate_plan import select_cancellation_policy
+from create_rate_plan import select_packages
+from create_rate_plan import create_rate_plan
+from create_rate_plan import update_rate_plan
+from create_rate_plan import delete_rate_plan
+from create_rate_plan import select_rate_plan
+
 
 #configuration
 from ExtranetConfiguration import RoomsizeConfiguration
