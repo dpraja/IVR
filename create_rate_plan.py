@@ -41,3 +41,7 @@ def select_packages(request):
     res = json.loads(dbget("select * from packages"))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
  
+def select_roomtypeid(request):
+    res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan"))
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
+    
