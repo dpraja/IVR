@@ -59,49 +59,46 @@ def ratesandavailability(request):
 def daterange(request):
     res = request.json
     print(res,type(res))
+    a = { k : v for k,v in res.items() if k not in ('st_date','ed_date','days') }
+    print("a",a)
+    x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id') }
+    y = { k : v for k,v in a.items() if k  in ('business_id','room_id','rate_plan_id') }
+    print("x",x)
+    print("y",y)
+    days = res['days']
+    #day0 = [ k  for k,v in res.items() if v == 0 ]
+    day1 = [ k  for k,v in days.items() if v != 0 ]
+    print(a,days,day1)
     from_date = request.json['st_date']
     to_date = request.json['ed_date']
     from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
     to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
-    #print(from_date,type(from_date))
-    id_room = json.loads(dbget("select id from extranet_room_list where business_id='"+request.json['business_id']+"' and room_type='"+request.json['room_type']+"' "))
-    #print(id_room)
-    days = request.json['days']
-    
-    im_day = { k : v for k,v in days.items() if v != 0 }
-    print(im_day,type(im_day))
-    
     
     while from_date <= to_date:
-      #print(from_date)
-      avail_day = from_date.strftime("%A")[0:3].lower()
-      if avail_day in im_day:
-        #print(avail_day)
-        
-        id1 = json.loads(dbget("select count(*) from extranet_availableroom where id="+str(id_room[0]['id'])+" and room_date='"+str(from_date)+"'"))
-        if id1[0]['count'] == 0:
-               e={}
-               e['id'] = id_room[0]['id']
-               e['available_count'] = request.json['room_to_sell']
-               e['room_rate'] = request.json['price']
-               e['room_date'] = from_date
-               print(True)
-               gensql('insert','extranet_availableroom',e)
-        else:
-               e,a={},{}
-               e['id'] = id_room[0]['id']
-               a['available_count'] = request.json['room_to_sell']
-               a['room_rate'] = request.json['price']
-               e['room_date'] = from_date 
-               print(False)
-               gensql('update','extranet_availableroom',a,e)
-      else:
-          pass
-          #print("no need",avail_day)
-      #print(im_day)    
-      from_date+=datetime.timedelta(days=1)
-        
+          print(from_date,from_date.strftime("%A")[0:3].lower())
+          if from_date.strftime("%A")[0:3].lower() in day1:
+             y1={} 
+             y1 = y
+             y1['room_date'] = from_date
+             count = json.loads(gensql('select','extranet_availableroom','count(*)',y1) )
+             print(count,type(count),count[0]['count'])
+             if count[0]['count'] == 0:
+               print("insert",from_date)  
+               a['booked_count'] = 0
+               a['room_date'] = from_date
+               a['room_open'] = 1
+               print("insert a",a)
+               gensql('insert','extranet_availableroom',a)
+             else:
+               print("update",from_date)  
+               gensql('update','extranet_availableroom',x,y)
+          else:
+              pass
+          from_date+=datetime.timedelta(days=1)
+          
+          
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":""},indent=2))
+    
     
 
 
