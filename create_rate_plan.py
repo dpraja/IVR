@@ -26,7 +26,7 @@ def select_rate_plan(request):
                             from rate_plan join cancellation_policy on rate_plan.cancellation_policy_id = cancellation_policy.policy_id \
                             join configration on rate_plan.room_types_id = configration.room_id \
                             join packages on rate_plan.packages_id = packages.packages_id \
-                            where rate_plan.business_id='8991897773'"))
+                            where rate_plan.business_id="+business_id+" "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
 def select_room_types(request):
@@ -42,6 +42,7 @@ def select_packages(request):
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
  
 def select_roomtypeid(request):
-    res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan"))
+    business_id = request.json['business_id']
+    res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan where business_id="+business_id+" "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
