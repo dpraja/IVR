@@ -73,6 +73,7 @@ from configuration import select_config
 from configuration import update_config
 from Insert_Ivr_Reservation import Query_Reservation
 from RoomList import select_restriction
+from create_rate_plan import select_roomtypeid
 
 #Rate_plan
 from create_rate_plan import select_room_types
@@ -322,6 +323,10 @@ def delete_rateplan():
 @app.route('/select_rate_plan',methods=['POST'])
 def select_rateplan():
    return select_rate_plan(request)
+
+@app.route('/select_roomtypeid',methods=['POST'])
+def selectroomtypeid():
+   return select_roomtypeid(request)
 
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
