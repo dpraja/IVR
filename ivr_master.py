@@ -294,6 +294,35 @@ def future_reservation():
 @app.route('/HistoryBooking',methods=['GET'])
 def HistoryBooking_reservation():
    return HistoryBooking()
+
+@app.route('/select_room_types',methods=['POST'])
+def select_roomtypes():
+   return select_room_types(request)
+
+@app.route('/select_cancellation_policy',methods=['POST'])
+def select_cancelpolicy():
+   return select_cancellation_policy(request)
+
+@app.route('/select_packages',methods=['POST'])
+def select_package():
+   return select_packages(request)
+
+@app.route('/create_rate_plan',methods=['POST'])
+def create_rateplan():
+   return create_rate_plan(request)
+
+@app.route('/update_rate_plan',methods=['POST'])
+def update_rateplan():
+   return update_rate_plan(request)
+
+@app.route('/delete_rate_plan',methods=['POST'])
+def delete_rateplan():
+   return delete_rate_plan(request)
+
+@app.route('/select_rate_plan',methods=['POST'])
+def select_rateplan():
+   return select_rate_plan(request)
+
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
 def RoomsizeConfiguration_all():
