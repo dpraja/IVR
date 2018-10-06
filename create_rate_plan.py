@@ -43,6 +43,6 @@ def select_packages(request):
  
 def select_rateplanid(request):
     business_id = request.json['business_id']
-    res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan where business_id="+business_id+" "))
+    res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan where business_id="+str(business_id)+" "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
