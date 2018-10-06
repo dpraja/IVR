@@ -324,9 +324,9 @@ def delete_rateplan():
 def select_rateplan():
    return select_rate_plan(request)
 
-@app.route('/select_roomplanid',methods=['POST'])
-def selectroomplanid():
-   return select_roomplanid(request)
+@app.route('/select_rateplanid',methods=['POST'])
+def selectrateplanid():
+   return select_rateplanid(request)
 
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
