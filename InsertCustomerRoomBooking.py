@@ -63,11 +63,11 @@ def insertcustomerroombooking(request):
         print(gensql('insert','ivr_room_customer_booked',e))
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
-        id_bus = json.loads(dbget("select id from extranet_room_list where business_id ='"+bi_id[0]['business_id']+"' \
-                                   and room_type= '"+customer_room_type+"' "))
+        id_bus = json.loads(dbget("select room_id from configration where business_id ='"+bi_id[0]['business_id']+"' \
+                                   and room_name= '"+customer_room_type+"' "))
         #print(id_bus[0]['id'])
         print(dbput("update extranet_availableroom set available_count = available_count-1 where \
-                       room_id= "+str(id_bus[0]['id'])+" and room_date in ("+str_date+")"))
+                       room_id= "+str(id_bus[0]['room_id'])+" and room_date in ("+str_date+")"))
         
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","conf_no":conf_no},indent=2))     #except:
         #return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
