@@ -19,7 +19,7 @@ def select_config(request):
                             join bedding_options on configration.bedding_options_id = bedding_options.bedding_option_id\
                             join max_extra_bed on configration.maximum_extrabed_id = max_extra_bed.extrabed_id\
                             join bed_size on configration.bed_size_id = bed_size.bed_size_id\
-                            join inclusions on configration.inculsions_id = inclusions.inclusion_id\
+                            left join inclusions on configration.inculsions_id = inclusions.inclusion_id\
                             join room_amenitie on configration.room_amenities_id = room_amenitie.amenitie_id"))
     return(json.dumps({"Result":res,"ReturnCode":"RRS","ReturnMessage":"Success"},indent=2))
 
