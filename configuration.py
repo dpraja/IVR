@@ -21,6 +21,11 @@ def select_config(request):
                             join bed_size on configration.bed_size_id = bed_size.bed_size_id\
                             left join inclusions on configration.inculsions_id = inclusions.inclusion_id\
                             join room_amenitie on configration.room_amenities_id = room_amenitie.amenitie_id"))
+    for i in res:
+        a = i['amenitie'].split('|')
+        del i['amenitie']
+        i['amenitie'] = a
+    print("res",res)  
     return(json.dumps({"Result":res,"ReturnCode":"RRS","ReturnMessage":"Success"},indent=2))
 
 def update_config(request):
