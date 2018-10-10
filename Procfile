@@ -38,3 +38,4 @@ worker: gunicorn Getreservationcancelmodification.py
 worker: gunicorn ExtranetConfiguration.py
 worker: gunicorn Inserttwilioreservation.py
 worker: gunicorn create_rate_plan.py
+worker: gunicorn User_signup.py
