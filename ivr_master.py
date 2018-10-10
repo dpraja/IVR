@@ -84,6 +84,11 @@ from create_rate_plan import update_rate_plan
 from create_rate_plan import delete_rate_plan
 from create_rate_plan import select_rate_plan
 
+#SignUp
+
+from User_signup import User_signup
+from User_signup import User_login
+from User_signup import Business_signup
 
 #configuration
 from ExtranetConfiguration import RoomsizeConfiguration
@@ -103,6 +108,8 @@ from ExtranetConfiguration import SelectBedsizeConfiguration
 from ExtranetConfiguration import SelectRoomamenitieConfiguration
 from ExtranetConfiguration import SelectInclusionsConfiguration
 from ExtranetConfiguration import SelectExtrabed
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -399,6 +406,21 @@ def Smstwilioservice_all():
 @app.route('/CheckConfirmation',methods=['POST'])
 def CheckConfirmation_all():
    return CheckConfirmation(request)
+
+#User_Signup
+
+@app.route('/user_signup',methods=['POST'])
+def user_signup():
+   return User_signup(request)
+
+@app.route('/User_login',methods=['POST'])
+def Userlogin():
+   return User_login(request)
+
+@app.route('/Business_signup',methods=['POST'])
+def business_signup():
+   return Business_signup(request)
+
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
