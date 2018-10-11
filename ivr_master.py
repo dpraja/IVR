@@ -65,6 +65,7 @@ from Inserttwilioreservation import Modifytwilioreservation
 from Inserttwilioreservation import Canceltwilioreservation
 from Inserttwilioreservation import Smstwilioservice
 from Inserttwilioreservation import CheckConfirmation
+from InsertCustomerRoomBooking import checkinguest
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -302,7 +303,9 @@ def future_reservation():
 @app.route('/HistoryBooking',methods=['GET'])
 def HistoryBooking_reservation():
    return HistoryBooking()
-
+@app.route('/Checkinguest',methods=['POST'])
+def Checkinguest_all():
+   return checkinguest(request)
 @app.route('/select_room_types',methods=['POST'])
 def select_roomtypes():
    return select_room_types(request)
