@@ -71,3 +71,19 @@ def insertcustomerroombooking(request):
         
         return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","conf_no":conf_no},indent=2))     #except:
         #return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+def checkinguest(request):
+        confir = request.json['confirmation_number']
+        #phone = request.json['mobile']
+        RES_Log_Date = datetime.datetime.utcnow().date()
+        print(RES_Log_Date)
+        RES_Log_Date = str(RES_Log_Date)
+        psql = json.loads(dbget("select customer_arrival_date from ivr_room_customer_booked where customer_confirmation_number = '"+confir+"'"))
+        print(psql)
+        today_arrival = psql[0]['customer_arrival_date']
+        if RES_Log_Date == today_arrival:
+            sql = dbput("update ivr_room_customer_booked set customer_booked_status = 'checkin' where customer_confirmation_number = '"+confir+"'")
+            return(json.dumps({'Status': 'Success', 'StatusCode': '200','Return': 'checkin success','ReturnCode':'Valid'}, sort_keys=True, indent=4))
+   
+        else:
+              return(json.dumps({'Status': 'Success', 'StatusCode': '200','Return': 'Checkin a Today Guest arrivals only','ReturnCode':'Invalid'}, sort_keys=True, indent=4))
+
