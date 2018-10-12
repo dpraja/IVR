@@ -84,6 +84,7 @@ from create_rate_plan import create_rate_plan
 from create_rate_plan import update_rate_plan
 from create_rate_plan import delete_rate_plan
 from create_rate_plan import select_rate_plan
+from create_rate_plan import select_plan
 
 #SignUp
 
@@ -337,6 +338,11 @@ def select_rateplan():
 @app.route('/select_rateplanid',methods=['POST'])
 def selectrateplanid():
    return select_rateplanid(request)
+
+@app.route('/select_plan',methods=['POST'])
+def selectplan():
+   return select_plan(request)
+
 
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
