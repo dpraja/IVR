@@ -3,66 +3,120 @@ import datetime
 from sqlwrapper import gensql,dbfetch,dbget
 
 def ratesandavailability(request):
+    
     req = request.json
-    for k,v in req.items():
-        if k == 'date_range':
-           from_date = datetime.datetime.now().date()
-           to_date = from_date +datetime.timedelta(days=v)
-           
-        if k == 'from_date':
-           from_date = request.json['from_date']
-           to_date = request.json['to_date']
-           from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
-           to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
-               
-    business_id = request.json['business_id']
-    room_type = request.json['room_type']
-    #room_name = request.json['room_name']
-    date_list = []
-    str_date = ''
-    while from_date <= to_date:
-        if len(str_date) != 0:
-           str_date += ','+"'"+str(from_date)+"'"
-        else:   
-           str_date += "'"+str(from_date)+"'"   
-        date_list.append(from_date)
-        from_date += datetime.timedelta(days=1)
-    print(str_date)    
-    day,days,a = [],{},{"business_id":business_id}
-    res = json.loads(dbget("select room_date,available_count,room_rate,room_open from extranet_availableroom where room_date in ("+str_date+") and id in (select id from extranet_room_list where business_id='"+business_id+"' and room_type='"+room_type+"')"))
-    print(res,type(res),len(res))
-    length = len(res)
-    date = []
-    for data in res:
-        print(data['room_date'],type(data['room_date']))
-        date.append(datetime.datetime.strptime(data['room_date'],'%Y-%m-%d').date())
-    #print(date,type(list))    
-    for i in date_list:
-        #print(i,type(i))
-        if i in date:
-              n = date.index(i)
-              #print(n)
-              d = {"Month": i.strftime('%B'),"Date":i.strftime('%d'),"Day":i.strftime("%A")[0:3],
-                "Price":res[n]["room_rate"],
-                "Available_Room_Count":res[n]["available_count"],
-                "Room_Status":"Declared","date":str(i),"room_open":res[n]['room_open']}
-              #print(d)
+    #print(req)
+    a = {k:v for k,v in req.items() if v == '' }
+    #print(len(a))
+    if len(a) != 0:
+       from_date = datetime.datetime.now().date()
+       to_date = from_date +datetime.timedelta(days=15)
+    else:
+       from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
+       to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
+       
+    res = json.loads(dbget("SELECT configration.room_id, configration.room_name ,room_date, available_count,\
+                            room_rate, room_open, s_no, extra_adult_rate, booked_count, rate_plan.rate_plan_id,rate_plan.rate_plan, \
+                            min_stay, max_stay, close_arrival, close_departure, house_close \
+	                    FROM public.extranet_availableroom join configration on extranet_availableroom.room_id = configration.room_id\
+	                    join rate_plan on extranet_availableroom.rate_plan_id = rate_plan.rate_plan_id \
+                            where configration.business_id='"+req['business_id']+"' and room_date \
+	                    between '"+str(from_date)+"' and '"+str(to_date)+"'"))
+    
+    #print(res,type(res))
+    
+    room_name,colle_rooms,rate_plan = [],[],[]
+    count_type, count_plan = 0,0
+    
+    for i in res:
+      #print(type(i))  
+      l={k:v for k,v in i.items() if k in('room_id','room_name','room_date','rate_plan','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
+                                          'close_arrival','close_departure','house_close') }
+      #print('lll',l)
+      if i['room_name'] in  room_name :
+          pass
+      else:
+          rate_plan = []
+          count_plan = 0
+          count_type = count_type+1
+          room_name.append(i['room_name'])
+      #print("room_name",room_name)    
+      if i['rate_plan'] in rate_plan:
+         pass
+      else:
+          count_plan = count_plan+1
+          rate_plan.append(i['rate_plan'])
+          
+      k={}
+      k['room_plan'+str(count_plan)] = l
+      
+      j={}
+      j['room_type'+str(count_type)] = k
+      colle_rooms.append(j)         
+      
+      #print(i)
+    #print(room_name)
+    #print(colle_rooms)
+
+    sell = json.loads(dbget("select room_to_sell.*, configration.room_name as con_room_name from room_to_sell \
+                             join configration on room_to_sell.room_id = configration.room_id where room_date between  \
+                             '"+str(from_date)+"' and '"+str(to_date)+"' and  room_to_sell.business_id='"+req['business_id']+"' "))
+    #print("sell",sell)
+        
+    r_key,p_key = [],[]
+    total,room_total,plan_total,plan_total01 = [],[],[],[]
+    room_to_sell = []
+    for i in colle_rooms:
+        #print(i)
+        room_k = [k for k,v in i.items()]
+        rooms = i[""+room_k[0]+""]
+        #print("rooms  ",rooms)
+        
+        plan_k = [k for k,v in rooms.items()]
+        plans = rooms[""+plan_k[0]+""]
+        #print("plans  ",plans)
+        
+        if room_k[0] not in r_key:           
+           r_key.append(room_k[0])
+           plan_total = []
+           #plan_total[]
+           '''
+           plan_k = [k for k,v in rooms.items()]
+           plans = rooms[""+plan_k[0]+""]
+           print("plans  ",plans)
+           '''
+           total.append({""+room_k[0]+"":{'room_name': plans['room_name'],'room_to_sell':room_to_sell,'plans':plan_total}})
         else:
-             d = {"Month": i.strftime('%B'),"Date":i.strftime('%d'),"Day":i.strftime("%A")[0:3],
-                "Price":"",
-                "Available_Room_Count":"",
-                "Room_Status":"NotDeclared","date":str(i),"room_open":res[n]['room_open']}
-             #print(d) 
-        day.append(d)
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":day},indent=2))
+           pass
+        for j in sell:
+            if plans['room_name'] == j['con_room_name']  and plans['room_date'] == j['room_date']:
+               j1 ={k:v for k,v in j.items() if k in ('room_id','room_date','available_count','booked_count') }
+               room_to_sell.append(j1)
+        plan_total.append(rooms)
+        
+        '''
+        plan_k = [k for k,v in rooms.items()]
+        plans = rooms[""+plan_k[0]+""]
+        print("plans  ",plans)        
+    
+        if plan_k[0] not in p_key:
+             p_key.append(plan_k[0])
+        else:
+            pass
+        '''
+    #print(r_key,p_key)
+    print(total)
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))   
+   
 
 def daterange(request):
     res = request.json
     print(res,type(res))
     a = { k : v for k,v in res.items() if k not in ('st_date','ed_date','days') }
     print("a",a)
-    x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id') }
+    x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id','available_count') }
     y = { k : v for k,v in a.items() if k  in ('business_id','room_id','rate_plan_id') }
+    z = { k : v for k,v in a.items() if k  in ('business_id','room_id') }
     print("x",x)
     print("y",y)
     days = res['days']
@@ -84,7 +138,7 @@ def daterange(request):
              print(count,type(count),count[0]['count'])
              if count[0]['count'] == 0:
                print("insert",from_date)  
-               a['booked_count'] = 0
+               #a['booked_count'] = 0
                a['room_date'] = from_date
                a['room_open'] = 1
                print("insert a",a)
@@ -96,9 +150,26 @@ def daterange(request):
               pass
           from_date+=datetime.timedelta(days=1)
           
-          
+    sell_detail = z
+    sell_detail['available_count'] = res['available_count']
+    sell_detail['booked_count'] = 0
+    u_x = {'available_count':res['available_count']}
+    while from_date <= to_date:
+            z['room_date'] = from_date
+            count = json.loads(gensql('select','room_to_sell','count(*)',z) )
+            if count[0]['count'] == 0:
+                print("insert a",a)
+                sell_detail['room_date'] = from_date
+                gensql('insert','room_to_sell',sell_detail)
+            else:
+               print("update",from_date)
+               z['room_date'] = from_date
+               gensql('update','room_to_sell',u_x,z)
+            from_date+=datetime.timedelta(days=1)   
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":""},indent=2))
     
     
 
 
+#RatesandAvailability.py
+#Displaying RatesandAvailability.py.
