@@ -119,4 +119,12 @@ def select_rateplanid(request):
     business_id = request.json['business_id']
     res = json.loads(dbget("select rate_plan_id, rate_plan from public.rate_plan where business_id='"+business_id+"' "))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
+
+def select_plan(request):
+    business_id = request.json['business_id']
+    rm_id = request.json['room_id']
+    res = json.loads(dbget("select rate_plan.rate_plan_id, rate_plan.rate_plan from rate_plan join room_type_select \
+                            on rate_plan.rate_plan_id  = room_type_select.rate_plan_id \
+                            where room_type_select.room_id='"+str(rm_id)+"' and rate_plan.business_id='"+business_id+"' "))
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
