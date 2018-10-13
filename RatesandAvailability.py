@@ -149,7 +149,10 @@ def daterange(request):
           else:
               pass
           from_date+=datetime.timedelta(days=1)
-          
+     
+    from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
+    to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
+ 
     sell_detail = z
     sell_detail['available_count'] = res['available_count']
     sell_detail['booked_count'] = 0
