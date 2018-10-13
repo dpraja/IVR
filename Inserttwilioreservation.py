@@ -6,7 +6,9 @@ import urllib
 from dateutil import parser
 def Inserttwilioreservation(request):
     d = request.json
-    
+    RES_Log_Time = datetime.datetime.utcnow()+datetime.timedelta(hours=5, minutes=30)
+    RES_Log_Time = RES_Log_Time.strftime('%Y-%m-%d %H:%M:%S')
+    print(RES_Log_Time)
     roomtype = request.json['customer_room_type']
     arr = request.json['customer_arrival_date']
     name = request.json['customer_name']
@@ -28,6 +30,7 @@ def Inserttwilioreservation(request):
     d['customer_room_type'] = roomtype.title()
     d['customer_name'] = name
     d['customer_email'] = email
+    d['booked_date'] = RES_Log_Time
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
     confirmation= d.get("customer_confirmation_number")
