@@ -53,6 +53,9 @@ def insertcustomerroombooking(request):
               str_date += ","+"'"+str(arrival_date)+"'"
         #print(str_date)
         conf_no = (random.randint(1000000000,9999999999))
+        RES_Log_Time = datetime.datetime.utcnow()+datetime.timedelta(hours=5, minutes=30)
+        RES_Log_Time = RES_Log_Time.strftime('%Y-%m-%d %H:%M:%S')
+        print(RES_Log_Time)
         e['customer_confirmation_number'] = conf_no
         e['customer_booked_status'] = 'booked'
         e['customer_booked_date'] = today_date
@@ -60,6 +63,7 @@ def insertcustomerroombooking(request):
         e['customer_room_type'] = customer_room_type
         e['ivr_language'] = language
         e['cntry_code'] = cntry
+        e['booked_date'] = RES_Log_Time
         print(gensql('insert','ivr_room_customer_booked',e))
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
