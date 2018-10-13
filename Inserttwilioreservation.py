@@ -9,6 +9,8 @@ def Inserttwilioreservation(request):
     
     roomtype = request.json['customer_room_type']
     arr = request.json['customer_arrival_date']
+    name = request.json['customer_name']
+    email = request.json['customer_email']
     dep = request.json['customer_depature_date']
     arr = parser.parse(arr).date().strftime('%d-%m-%Y')
     dep = parser.parse(dep).date().strftime('%d-%m-%Y')
@@ -24,6 +26,8 @@ def Inserttwilioreservation(request):
     d['modification'] = "No"
     d['customer_booked_status'] = "booked"
     d['customer_room_type'] = roomtype.title()
+    d['customer_name'] = name
+    d['customer_email'] = email
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
     confirmation= d.get("customer_confirmation_number")
