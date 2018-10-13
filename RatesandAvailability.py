@@ -150,6 +150,8 @@ def daterange(request):
               pass
           from_date+=datetime.timedelta(days=1)
      
+    from_date = request.json['st_date']
+    to_date = request.json['ed_date']
     from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
     to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
  
