@@ -30,7 +30,7 @@ def ratesandavailability(request):
     
     for i in res:
       #print(type(i))  
-      l={k:v for k,v in i.items() if k in('room_id','room_name','room_date','rate_plan','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
+      l={k:v for k,v in i.items() if k in('room_id','room_name','room_date','rate_plan','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
                                           'close_arrival','close_departure','house_close') }
       #print('lll',l)
       if i['room_name'] in  room_name :
