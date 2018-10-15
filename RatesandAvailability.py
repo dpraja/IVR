@@ -114,7 +114,7 @@ def daterange(request):
     print(res,type(res))
     a = { k : v for k,v in res.items() if k not in ('st_date','ed_date','days') }
     print("a",a)
-    x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id','available_count') }
+    x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id') }
     y = { k : v for k,v in a.items() if k  in ('business_id','room_id','rate_plan_id') }
     z = { k : v for k,v in a.items() if k  in ('business_id','room_id') }
     print("x",x)
