@@ -15,17 +15,20 @@ def Lastreportrecord():
 def lastreservationcount():
    RES_Log_Date = datetime.datetime.utcnow().date()
    print(RES_Log_Date)
-   psql = json.loads(dbget("select count(send_sms) from ivr_room_customer_booked \
-                            where send_sms in ('success') and customer_booked_status in('booked')  and DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 4"))
+   psql = json.loads(dbget("select count(*) from ivr_room_customer_booked \
+                            where send_sms in ('success') and customer_booked_status in('booked')  and DATE(booked_date) = '"+str(RES_Log_Date)+"' "))
    print(psql)
    psql1 = json.loads(dbget("select count(*) from ivr_room_customer_booked \
-                            where customer_booked_status in('booked')  and DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 4"))
+                            where customer_booked_status in('booked')  and DATE(booked_date) = '"+str(RES_Log_Date)+"'"))
    print(psql1)
+   psql = psql + psql1
+   
    car1 = {
        "Sms_count":psql[0]['count'],
        "reservation":psql1[0]['count']
        }
    print(car1)
+   
    return(json.dumps({"Return_value":car1,"Return_code":"Success"},indent=2))
 #lastreservationcount()
 
