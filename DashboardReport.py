@@ -34,10 +34,10 @@ def lastchannelrecord():
    RES_Log_Date = datetime.datetime.utcnow().date()
    print(RES_Log_Date)
    sql = json.loads(dbget("select customer_mobile,channel,booked_date from ivr_room_customer_booked \
-                     where customer_booked_status in('booked') and channel in ('whatsapp') and  DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 4 "))
+                     where customer_booked_status in('booked') and channel in ('whatsapp') and  DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 2 "))
   
    psql = json.loads(dbget("select customer_mobile,channel,booked_date from ivr_room_customer_booked \
-                     where customer_booked_status in('booked') and channel in ('IVR') and  DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 4 "))
+                     where customer_booked_status in('booked') and channel in ('IVR') and  DATE(booked_date) = '"+str(RES_Log_Date)+"' order by booked_date  limit 2 "))
    print(psql)
    sql = sql + psql
    print(sql)
