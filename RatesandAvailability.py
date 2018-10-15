@@ -112,7 +112,7 @@ def ratesandavailability(request):
 def daterange(request):
     res = request.json
     print(res,type(res))
-    a = { k : v for k,v in res.items() if k not in ('st_date','ed_date','days') }
+    a = { k : v for k,v in res.items() if k not in ('st_date','ed_date','days','available_count') }
     print("a",a)
     x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id') }
     y = { k : v for k,v in a.items() if k  in ('business_id','room_id','rate_plan_id') }
