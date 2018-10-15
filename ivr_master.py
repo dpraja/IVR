@@ -111,7 +111,10 @@ from ExtranetConfiguration import SelectRoomamenitieConfiguration
 from ExtranetConfiguration import SelectInclusionsConfiguration
 from ExtranetConfiguration import SelectExtrabed
 
-
+#Dashobos
+from DashboardReport import Lastreportrecord
+from DashboardReport import lastreservationcount
+from DashboardReport import lastchannelrecord
 app = Flask(__name__)
 CORS(app)
 
@@ -429,6 +432,17 @@ def Userlogin():
 @app.route('/Business_signup',methods=['POST'])
 def business_signup():
    return Business_signup(request)
+
+@app.route('/Dashboard_report',methods=['GET'])
+def Lastreportrecord_all():
+   return Lastreportrecord()
+
+@app.route('/lastreservationcount',methods=['GET'])
+def lastreservationcount_all():
+   return lastreservationcount()
+@app.route('/lastchannelrecord',methods=['GET'])
+def lastchannelrecord_all():
+   return lastchannelrecord()
 
 if __name__ == "__main__":
   app.run(debug=True)
