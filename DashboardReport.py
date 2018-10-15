@@ -21,11 +21,16 @@ def lastreservationcount():
    psql1 = json.loads(dbget("select count(*) from ivr_room_customer_booked \
                             where customer_booked_status in('booked')  and DATE(booked_date) = '"+str(RES_Log_Date)+"'"))
    print(psql1)
-   psql = psql + psql1
+   cancel = json.loads(dbget("select count(*) from ivr_room_customer_booked \
+                            where customer_booked_status in('canceled')  and DATE(booked_date) = '"+str(RES_Log_Date)+"'"))
+   modify = json.loads(dbget("select count(*) from ivr_room_customer_booked \
+                            where modification in ('yes')  and DATE(booked_date) = '"+str(RES_Log_Date)+"'"))
    
    car1 = {
        "Sms_count":psql[0]['count'],
-       "reservation":psql1[0]['count']
+       "reservation":psql1[0]['count'],
+       "cancel":cancel[0]['count'],
+       "modify":modify[0]['count']
        }
    print(car1)
    
