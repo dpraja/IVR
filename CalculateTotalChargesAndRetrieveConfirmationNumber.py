@@ -84,6 +84,7 @@ def calculatetotalcharges(request):
                    #print(arrival_date + datetime.timedelta(i))
                    datebetween = arrival_date + datetime.timedelta(x)
                    if datebetween == conf_date and plan_rate == int(i['rate_plan_id']) :
+                      
                       print(i["extra_adult_rate"],i['room_rate'],i['room_rate'])
                       r1 = max_adult * total_rooms_count
                       extra_price = (int(customer_adult) - r1) * int(i["extra_adult_rate"])
@@ -92,48 +93,24 @@ def calculatetotalcharges(request):
                       sumva += total
                       ##price1 = result1 * int(i['room_rate'])
                       
-                      #price2 = (total_adult - result1) * (int(i["extra_adult_rate"])+int(i['room_rate']))   
-                      datelist_rate.append({"date":datebetween,"day":datebetween.strftime('%d %B'),"total":total})
+
+                      
+                      #price2 = (total_adult - result1) * (int(i["extra_adult_rate"])+int(i['room_rate']))
+                       #datebetween.strftime('%d %B')
+                      datelist_rate.append({"day":datebetween,"total":total,"date":datebetween.strftime('%d %B')})
                       #print(datelist_rate)
                    
               
         print(datelist_rate)
         print("sumva",sumva)
        
-        '''
-       
-        price1 = result1 * rooms_rate
-        price2 = (total_adult - result1) * (extra_adult_rate+rooms_rate)
-        print(price2,price1)
-        total_amout = price1 + price2
-        arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d')
-        depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d')
-        deltadates = depature_date - arrival_date
-        for i in range(deltadates.days + 1):
-                 #print(arrival_date + datetime.timedelta(i))
-                 datebetween = arrival_date + datetime.timedelta(i)
-                 datebetween = datebetween.strftime('%d %B')
-                 dividen_list.append(datebetween)
-                 datelist_amount[""+str(datebetween)+""] = total_amout
-                 
-                 
-             #print(datelist_amount)
-        #s = 0
-        for k,v in datelist_amount.items():
-                     #name = "day"+""+str(s)+""
-                     #amounts = "amount"+""+str(s)+""
-                     #print(name)
-                     last_list.append({"day":k,"amount":v})
-                    # s += 1
-        #print(sumval)
-        print(last_list)
-            #print(dividen_list)
-            
-        #print(x)
-        #price2 = 
-        #price2 = total_rooms_count *
-        '''
-        return(json.dumps({"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate},indent=2))
+        
+        
+        def myconverter(o):
+                    if isinstance(o, datetime.datetime):
+                         return o.__str__()  
+ 
+        return(json.dumps({"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate},indent=2,default=myconverter))
         
         #return(json.dumps({"ServiceMessage":"Success","Total_Amount":total_amout,"date_month_amount":last_list},indent=2))
         
