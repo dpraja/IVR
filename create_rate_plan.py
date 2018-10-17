@@ -123,8 +123,23 @@ def select_rateplanid(request):
 def select_plan(request):
     business_id = request.json['business_id']
     rm_id = request.json['room_id']
+    st_date =request.json['start_date']
+    en_date = request.json['end_date']
+    print(business_id,rm_id,st_date,en_date,type(business_id))
+    '''
     res = json.loads(dbget("select rate_plan.rate_plan_id, rate_plan.rate_plan from rate_plan join room_type_select \
                             on rate_plan.rate_plan_id  = room_type_select.rate_plan_id \
-                            where room_type_select.room_id='"+str(rm_id)+"' and rate_plan.business_id='"+business_id+"' "))
+                            where room_type_select.room_id='5' and rate_plan.business_id='8991897773' \
+			    and rate_plan.start_date<= '2018-10-13' and rate_plan.end_date >= '2018-10-22'"))
+    '''
+    res = json.loads(dbget("select rate_plan.rate_plan_id, rate_plan.rate_plan from rate_plan join room_type_select \
+                            on rate_plan.rate_plan_id  = room_type_select.rate_plan_id \
+                            where room_type_select.room_id='"+str(rm_id)+"' and rate_plan.business_id='"+str(business_id)+"' \
+			    and rate_plan.start_date<= '"+str(st_date)+"' and rate_plan.end_date >= '"+str(en_date)+"'"))
+    
+    print(res)
+    
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
+    
+
     
