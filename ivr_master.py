@@ -66,6 +66,8 @@ from Inserttwilioreservation import Canceltwilioreservation
 from Inserttwilioreservation import Smstwilioservice
 from Inserttwilioreservation import CheckConfirmation
 from InsertCustomerRoomBooking import checkinguest
+
+from Inserttwilioreservation import twiliofetchroomsavailabilityandprice
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -406,6 +408,7 @@ def reservation():
 def InsertArrivalDeparture_all():
    return InsertArrivalDeparture(request)
 
+
 @app.route('/Modifytwilioreservation',methods=['POST'])
 def Modifytwilioreservation_all():
    return Modifytwilioreservation(request)
@@ -418,7 +421,9 @@ def Smstwilioservice_all():
 @app.route('/CheckConfirmation',methods=['POST'])
 def CheckConfirmation_all():
    return CheckConfirmation(request)
-
+@app.route('/twiliofetchroomsavailabilityandprice',methods=['POST'])
+def twilio_fetchdetails():
+   return twiliofetchroomsavailabilityandprice(request)
 #User_Signup
 
 @app.route('/user_signup',methods=['POST'])
