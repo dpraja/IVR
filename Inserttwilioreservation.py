@@ -418,12 +418,9 @@ def twiliocalculatetotalcharges(request):
                     if isinstance(o, datetime.datetime):
                          return o.__str__()  
  
-        return(json.dumps({"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate},indent=2,default=myconverter))
+        return(json.dumps([{"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate}],indent=2,default=myconverter))
         
         #return(json.dumps({"ServiceMessage":"Success","Total_Amount":total_amout,"date_month_amount":last_list},indent=2))
         
     #except:
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
-    
-  
-
