@@ -368,7 +368,7 @@ def twiliofetchroomsavailabilityandprice(request):
         return(json.dumps([{"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
                               "Status_Code": "200","total":amount}],indent=2))   
 def twiliocalculatetotalcharges(request):
-    #try:
+   #try:
         tfn = request.json['tfn_num']
         dividen_list = []
         last_list = []
@@ -383,7 +383,10 @@ def twiliocalculatetotalcharges(request):
         customer_arrival_date = request.json["arrival_date"]
         customer_depature_date = request.json["depature_date"]
         customer_room_type = request.json["room_type"] # ROOM_ID
+        
         print(customer_room_type,type(customer_room_type))
+
+        roos_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
        # customer_room_type = customer_room_type.title()
        # print("roomtype",customer_room_type)
         customer_adult = request.json["adult"]
@@ -410,12 +413,12 @@ def twiliocalculatetotalcharges(request):
 
         customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
         
-        print("arrival",customer_arrival_date,"depature",customer_depature_date,"roomid",customer_room_type,"businessid",bi_id[0]['business_id'])    # CONFIGRATION
+        #print("arrival",customer_arrival_date,"depature",customer_depature_date,"roomid",customer_room_type,"businessid",bi_id[0]['business_id'])    # CONFIGRATION
         sql = json.loads(dbget("select max_extra_bed.extrabed,extranet_availableroom.extra_adult_rate,extranet_availableroom.rate_plan_id,extranet_availableroom.room_date,extranet_availableroom.room_rate,configration.max_adults \
                                     from configration \
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
-                                   where configration.room_id  = '"+str(customer_room_type)+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
+                                   where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
         #print("res",result)
      
         #available_rate = json.loads(dbget("select room_id,room_rate,room_date,rate_plan_id from extranet_availableroom where room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"' and room_id='"+str(customer_room_type)+"'"))
