@@ -5,6 +5,8 @@ import json
 def config(request):
     
     res = request.json
+    roomtype = request.json['room_name']
+    res['room_name'] = roomtype.title()
     print(res)
     gensql('insert','configration',res)
     return(json.dumps({"Return":"Record Inserted Successfully","ReturnCode":"RIS","ReturnMessage":"Success"},indent=2))
