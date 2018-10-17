@@ -228,6 +228,7 @@ def twiliofetchroomsavailabilityandprice(request):
         #d['customer_depature_date'] = datetime.date(2019, 1, 3)
         customer_arrival_date = d['arrival_date']
         customer_depature_date = d['depature_date']
+        '''
         #print(customer_arrival_date,customer_depature_date)
         today_date = datetime.datetime.utcnow().date()
         year = str(today_date.year)
@@ -250,19 +251,25 @@ def twiliofetchroomsavailabilityandprice(request):
         print(customer_arrival_date,customer_depature_date)
         #print(d)  ,room_rate        
         print("date",d['customer_arrival_date'],d['customer_depature_date'])
-        nights = datetime.datetime.strptime(customer_arrival_date, "%Y-%m-%d").date() - datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()
+        '''
+        customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
+        customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
+        customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
+        customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
+            
+        nights = customer_depature_date - customer_arrival_date
         
         print("nights",customer_arrival_date,type(customer_arrival_date))
 
-        d['customer_depature_date'] = datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()-datetime.timedelta(days=1)
+        depature_date1 = customer_depature_date-datetime.timedelta(days=1)
 
-        print("d['customer_depature_date']",d['customer_depature_date'])
+        print("depature_date1",depature_date1)
 
         
-        room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(d['customer_arrival_date'])+"'\
-                                         and '"+str(d['customer_depature_date'])+"' and business_id='"+bi_id[0]['business_id']+"' "))
+        room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(customer_arrival_date)+"'\
+                                         and '"+str(customer_depature_date)+"' and business_id='"+bi_id[0]['business_id']+"' "))
         
-        #print(room_to_sell,type(room_to_sell))
+        print(room_to_sell,type(room_to_sell))
         
         count_o, count_l = [],[]
         
@@ -285,10 +292,10 @@ def twiliofetchroomsavailabilityandprice(request):
                                   room_open, extranet_availableroom.rate_plan_id from extranet_availableroom \
                                   join configration on extranet_availableroom.room_id = configration.room_id where\
                                   room_date between \
-                                  '"+str(d['customer_arrival_date'])+"' and '"+str(d['customer_depature_date'])+"' and \
+                                  '"+str(customer_arrival_date)+"' and '"+str(depature_date1)+"' and \
                                   extranet_availableroom.business_id = '"+bi_id[0]['business_id']+"' and \
                                   extranet_availableroom.room_id in (%s) order by room_id asc, room_date asc" % ",".join(map(str,count_ll))))
-        #print(rates)
+        print(rates)
 
         beds = json.loads(dbget("select configration.room_id,configration.room_name, bedding_options.total_bed , max_extra_bed.extrabed from configration join \
                                  bedding_options on configration.bedding_options_id = bedding_options.bedding_option_id\
@@ -366,7 +373,7 @@ def twiliofetchroomsavailabilityandprice(request):
         amount['count'] = count
         #print("final",final,amount)
         return(json.dumps([{"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
-                              "Status_Code": "200","total":amount}],indent=2))   
+                              "Status_Code": "200","total":amount}],indent=2))  
 def twiliocalculatetotalcharges(request):
    #try:
         tfn = request.json['tfn_num']
