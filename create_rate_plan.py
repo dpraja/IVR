@@ -138,8 +138,14 @@ def select_plan(request):
 			    and rate_plan.start_date<= '"+str(st_date)+"' and rate_plan.end_date >= '"+str(en_date)+"'"))
     
     print(res)
+    sql = json.loads(dbget("select min_price from configration where room_id='"+str(rm_id)+"'"))
     
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
+    print(res)
+    
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res,"minimumprice":sql},indent=2))
+    
+    
+    
     
 
     
