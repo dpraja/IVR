@@ -489,3 +489,10 @@ def twiliocalculatetotalcharges(request):
         
     #except:
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+def CheckRoomtype(request):
+    room_name = request.json['room_name']
+    sql = json.loads(dbget("select count(*) from configration where room_name = '"+str(room_name)+"'"))
+    print(sql)
+    if sql[0]['count'] > 0:
+        return(json.dumps([{'Retuen':'Success','Returncode':'Valid'}]))
+    return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
