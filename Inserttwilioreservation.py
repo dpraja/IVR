@@ -4,6 +4,8 @@ import datetime
 import random
 import urllib
 from dateutil import parser
+from decimal import Decimal
+import math
 def Inserttwilioreservation(request):
     d = request.json
     RES_Log_Time = datetime.datetime.utcnow()+datetime.timedelta(hours=5, minutes=30)
