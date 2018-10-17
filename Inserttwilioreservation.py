@@ -157,3 +157,161 @@ def CheckConfirmation(request):
          return(json.dumps([{"Return":"Confirmation number already exist","Return_Code":"Valid","Status": "Success","Status_Code": "200"}],indent =2))
      else:
          return(json.dumps([{"Return":"Confirmation number does not exist","Return_Code":"Invalid","Status": "Success","Status_Code": "200"}],indent =2))
+def twiliofetchroomsavailabilityandprice(request):
+    #try:
+        d = request.json
+        print(d)
+        tfn = request.json['TFN']
+        adult = d['adult']
+        child = d['child']
+        b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
+        print(b_id)#,b_id[0]['id'])
+        bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
+        print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
+
+        #d['customer_arrival_date'] = datetime.date(2019, 1, 1)
+        #d['customer_depature_date'] = datetime.date(2019, 1, 3)
+        customer_arrival_date = d['arrival_date']
+        customer_depature_date = d['depature_date']
+        #print(customer_arrival_date,customer_depature_date)
+        today_date = datetime.datetime.utcnow().date()
+        year = str(today_date.year)
+        if int(customer_arrival_date[0:2]) == today_date.month :
+            if int(customer_arrival_date[2:]) < today_date.day :
+               year = str(today_date.year+1)
+               print("year",year,type(year))
+        elif int(customer_arrival_date[0:2]) < today_date.month :
+            year = str(today_date.year+1)
+        customer_arrival_date = year+'-'+customer_arrival_date[0:2]+'-'+customer_arrival_date[2:]
+        d['customer_arrival_date'] = customer_arrival_date
+        if int(customer_depature_date[0:2]) == today_date.month :
+            if int(customer_depature_date[2:]) < today_date.day :
+               year = str(today_date.year+1)
+               print("year",year,type(year))    
+        elif int(customer_depature_date[0:2]) < today_date.month :
+            year = str(today_date.year+1)
+        customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
+        d['customer_depature_date'] = customer_depature_date
+        print(customer_arrival_date,customer_depature_date)
+        #print(d)  ,room_rate        
+        print("date",d['customer_arrival_date'],d['customer_depature_date'])
+        nights = datetime.datetime.strptime(customer_arrival_date, "%Y-%m-%d").date() - datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()
+        
+        print("nights",customer_arrival_date,type(customer_arrival_date))
+
+        d['customer_depature_date'] = datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()-datetime.timedelta(days=1)
+
+        print("d['customer_depature_date']",d['customer_depature_date'])
+
+        
+        room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(d['customer_arrival_date'])+"'\
+                                         and '"+str(d['customer_depature_date'])+"' and business_id='"+bi_id[0]['business_id']+"' "))
+        
+        #print(room_to_sell,type(room_to_sell))
+        
+        count_o, count_l = [],[]
+        
+        for i in room_to_sell:
+              if i['available_count'] == 0 or i['available_count'] == None:
+                      count_o.append(i['room_id'])           
+              else:
+                 if i['room_id'] not in count_l:
+                    count_l.append(i['room_id'])
+        #print(count_o, count_l)
+
+        for i in  count_o:
+            count_l = [x for x in count_l if x != i]
+
+        count_ll = list(map(str, count_l))        
+        #print("idssss   ",count_l,count_ll)    
+
+        rates = json.loads(dbget("select extranet_availableroom.room_id, configration.room_name, room_date,\
+                                  room_rate,extranet_availableroom.extra_adult_rate,\
+                                  room_open, extranet_availableroom.rate_plan_id from extranet_availableroom \
+                                  join configration on extranet_availableroom.room_id = configration.room_id where\
+                                  room_date between \
+                                  '"+str(d['customer_arrival_date'])+"' and '"+str(d['customer_depature_date'])+"' and \
+                                  extranet_availableroom.business_id = '"+bi_id[0]['business_id']+"' and \
+                                  extranet_availableroom.room_id in (%s) order by room_id asc, room_date asc" % ",".join(map(str,count_ll))))
+        #print(rates)
+
+        beds = json.loads(dbget("select configration.room_id,configration.room_name, bedding_options.total_bed , max_extra_bed.extrabed from configration join \
+                                 bedding_options on configration.bedding_options_id = bedding_options.bedding_option_id\
+                                 join max_extra_bed on configration.maximum_extrabed_id = max_extra_bed.extrabed_id \
+                                 where  business_id='"+bi_id[0]['business_id']+"' and \
+                                 configration.room_id in (%s)" % ",".join(map(str,count_ll))))
+        #print("beds",beds)
+        #print("adult",adult)
+        plans, total =[],[]
+        list1 =[]
+        
+        for room_id in count_l:
+            list1 = []
+            #plan_ids = []
+            plans = []
+            for rate in rates:
+                if rate['room_id'] == room_id:                       
+                       #print(rate,rates.index(rate))
+                       r = {}
+                       r['room_id'] = rate['room_id']
+                       r['roo_name'] = rate['room_name']
+                       r['rate_plan_id'] = rate['rate_plan_id']
+                       r['room_date'] = rate['room_date']
+                       r['room_rate'] = rate['room_rate']
+                       r['extra_adult_rate'] = rate['extra_adult_rate']
+                       plans.append(r)
+            #print("plans",plans)
+            plan_ids = []
+            for plan in plans:
+                
+                if plan['room_date'] in plan_ids:
+                   #print(len(list1),"len list....if")     
+                   list1[len(list1)-1].append(plan)
+                   
+                else:
+                   plan_ids.append(plan['room_date'])
+                   list1.append([])
+                   #print(len(list1),"len list....else")
+                   list1[len(list1)-1].append(plan)
+                
+                
+            #print("plans, list1",plan_ids, list1)
+
+            r1 = {}
+            r1['room_id'] = room_id
+            r1['rate_plans'] = list1
+            total.append(r1)
+        add_amount,final = [], []
+        amount = {}
+        count = 0
+        for bed in beds:    
+            for tol in total:
+                    
+                if tol['room_id'] == bed['room_id']:    
+                   #print(tol,"1111111111111111111111111111111")
+                   total_bed = bed['total_bed']
+                   extrabed = bed['extrabed']
+                   rate_plan = tol['rate_plans']
+                   for plan in rate_plan:
+                        room_rate, extra_adult_rate =[],[] 
+                        for p in plan:
+                            room_rate.append(p['room_rate'])
+                            extra_adult_rate.append(p['extra_adult_rate'])
+                        r1 = min(room_rate)+min(extra_adult_rate)
+                        #print(r1)
+                        add_amount.append(r1)
+                   amount['amount'+""+str(count)+""] = sum(add_amount)     
+                   #amount['room_id'+""+str(count)+""] = bed['room_id']
+                   amount['room_name'+""+str(count)+""] = bed['room_name']
+                   count += 1
+            final.append(amount)
+    
+        #print(total)
+        #print(add_amount)
+        amount['count'] = count
+        #print("final",final,amount)
+        return(json.dumps([{"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
+                              "Status_Code": "200","total":amount}],indent=2))   
+    
+  
+
