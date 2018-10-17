@@ -97,7 +97,7 @@ def calculatetotalcharges(request):
                       
                       #price2 = (total_adult - result1) * (int(i["extra_adult_rate"])+int(i['room_rate']))
                        #datebetween.strftime('%d %B')
-                      datelist_rate.append({"day":datebetween,"total":total,"date":datebetween.strftime('%d %B')})
+                      datelist_rate.append({"day":datebetween.strftime('%Y-%m-%d'),"total":total})
                       #print(datelist_rate)
                    
               
