@@ -8,13 +8,15 @@ from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
     d = request.json
-    RES_Log_Time = datetime.datetime.utcnow()+datetime.timedelta(hours=5, minutes=30)
-    RES_Log_Time = RES_Log_Time.strftime('%Y-%m-%d %H:%M:%S')
-    print(RES_Log_Time)
+    #amount = d['amount']
+    d= {k:v for k,v in d.items() if k not in ('TFN')}
+    tfn = request.json['TFN']
+    b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
+    print(b_id)
+    bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
+    print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
     roomtype = request.json['customer_room_type']
     arr = request.json['customer_arrival_date']
-    name = request.json['customer_name']
-    email = request.json['customer_email']
     dep = request.json['customer_depature_date']
     arr = parser.parse(arr).date().strftime('%d-%m-%Y')
     dep = parser.parse(dep).date().strftime('%d-%m-%Y')
@@ -24,19 +26,28 @@ def Inserttwilioreservation(request):
     print(arr_date,dep_date)
     arr = arr_date.strftime("%Y-%m-%d")
     dep = dep_date.strftime("%Y-%m-%d")
+    
     d['customer_arrival_date'] = arr
     d['customer_depature_date'] = dep
     d['customer_confirmation_number'] = confir
     d['modification'] = "No"
     d['customer_booked_status'] = "booked"
     d['customer_room_type'] = roomtype.title()
-    d['customer_name'] = name
-    d['customer_email'] = email
-    d['booked_date'] = RES_Log_Time
+    d['business_id'] = str(bi_id[0]['business_id'])
+    
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
-    confirmation= d.get("customer_confirmation_number")
-    return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS","Status":"Success","Statuscode":200,"confirmation_number":confirmation}],indent=2))
+    '''
+    res = json.loads(gensql('select','public.ivr_room_customer_booked','cus_id',d))
+    print(res,type(res))
+    e = {}
+    e['cus_id'] = res[0]['cus_id']
+    for i in amount:
+        e['rate_date'] = i['day']
+        e['amount'] = i['total']
+        gensql('insert','customer_rate_detail',e)
+    '''    
+    return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS","Status":"Success","Statuscode":200,"confirmation_number":confir}],indent=2))
 
 def InsertArrivalDeparture(request):
     
