@@ -301,7 +301,7 @@ def twiliofetchroomsavailabilityandprice(request):
                         #print(r1)
                         add_amount.append(r1)
                    amount['amount'+""+str(count)+""] = sum(add_amount)     
-                   #amount['room_id'+""+str(count)+""] = bed['room_id']
+                   amount['room_id'+""+str(count)+""] = bed['room_id']
                    amount['room_name'+""+str(count)+""] = bed['room_name']
                    count += 1
             final.append(amount)
