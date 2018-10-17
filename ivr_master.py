@@ -69,6 +69,7 @@ from InsertCustomerRoomBooking import checkinguest
 
 from Inserttwilioreservation import twiliofetchroomsavailabilityandprice
 from Inserttwilioreservation import twiliocalculatetotalcharges
+from Inserttwilioreservation import CheckRoomtype
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -428,6 +429,10 @@ def twilio_fetchdetails():
 @app.route('/twiliocalculatetotalcharges',methods=['POST'])
 def twiliocalculatetotalcharges_show():
    return twiliocalculatetotalcharges(request)
+
+@app.route('/CheckRoomtype',methods=['POST'])
+def CheckRoomtype_all():
+   return CheckRoomtype(request)
 #User_Signup
 
 @app.route('/user_signup',methods=['POST'])
