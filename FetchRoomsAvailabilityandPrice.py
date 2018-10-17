@@ -13,13 +13,41 @@ def fetchroomsavailabilityandprice(request):
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
 
-        d['customer_arrival_date'] = datetime.date(2019, 1, 1)
-        d['customer_depature_date'] = datetime.date(2019, 1, 3)
+        #d['customer_arrival_date'] = datetime.date(2019, 1, 1)
+        #d['customer_depature_date'] = datetime.date(2019, 1, 3)
+        customer_arrival_date = d['arrival_date']
+        customer_depature_date = d['depature_date']
+        #print(customer_arrival_date,customer_depature_date)
+        today_date = datetime.datetime.utcnow().date()
+        year = str(today_date.year)
+        if int(customer_arrival_date[0:2]) == today_date.month :
+            if int(customer_arrival_date[2:]) < today_date.day :
+               year = str(today_date.year+1)
+               print("year",year,type(year))
+        elif int(customer_arrival_date[0:2]) < today_date.month :
+            year = str(today_date.year+1)
+        customer_arrival_date = year+'-'+customer_arrival_date[0:2]+'-'+customer_arrival_date[2:]
+        d['customer_arrival_date'] = customer_arrival_date
+        if int(customer_depature_date[0:2]) == today_date.month :
+            if int(customer_depature_date[2:]) < today_date.day :
+               year = str(today_date.year+1)
+               print("year",year,type(year))    
+        elif int(customer_depature_date[0:2]) < today_date.month :
+            year = str(today_date.year+1)
+        customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
+        d['customer_depature_date'] = customer_depature_date
+        print(customer_arrival_date,customer_depature_date)
+        #print(d)  ,room_rate        
         print("date",d['customer_arrival_date'],d['customer_depature_date'])
-        nights = d['customer_depature_date']-d['customer_arrival_date']
+        nights = datetime.datetime.strptime(customer_arrival_date, "%Y-%m-%d").date() - datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()
+        
+        print("nights",customer_arrival_date,type(customer_arrival_date))
 
-        print("nights",nights)
+        d['customer_depature_date'] = datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()-datetime.timedelta(days=1)
 
+        print("d['customer_depature_date']",d['customer_depature_date'])
+
+        
         room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(d['customer_arrival_date'])+"'\
                                          and '"+str(d['customer_depature_date'])+"' and business_id='"+bi_id[0]['business_id']+"' "))
         
@@ -117,7 +145,7 @@ def fetchroomsavailabilityandprice(request):
                         #print(r1)
                         add_amount.append(r1)
                    amount['amount'+""+str(count)+""] = sum(add_amount)     
-                   amount['room_id'+""+str(count)+""] = bed['room_id']
+                   #amount['room_id'+""+str(count)+""] = bed['room_id']
                    amount['room_name'+""+str(count)+""] = bed['room_name']
                    count += 1
             final.append(amount)
@@ -127,10 +155,8 @@ def fetchroomsavailabilityandprice(request):
         amount['count'] = count
         #print("final",final,amount)
         return(json.dumps({"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
-                              "Status_Code": "200","total":total},indent=2))
+                              "Status_Code": "200","total":amount},indent=2))   
     
-    #except:
-    #    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure","count":"0"},indent=2))   
     
 def fetchpromotionalmessage(request):
     try: 
