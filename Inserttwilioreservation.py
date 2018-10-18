@@ -490,9 +490,46 @@ def twiliocalculatetotalcharges(request):
     #except:
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
 def CheckRoomtype(request):
-    room_name = request.json['room_name']
-    sql = json.loads(dbget("select count(*) from configration where room_name = '"+str(room_name)+"'"))
-    print(sql)
-    if sql[0]['count'] > 0:
+    d = request.json
+    print(d)
+    tfn = d['TFN']
+
+    customer_arrival_date = d['customer_arrival_date']
+    customer_depature_date = d['customer_depature_date']
+    #d = {k:v for k,v in d.items() if k not in ('TFN')}
+    b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
+    print(b_id)#,b_id[0]['id'])
+    bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
+    print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
+
+    customer_room_type = d['customer_room_type'] 
+    room_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
+
+    print(room_type_id[0]['room_id'],type(room_type_id[0]['room_id']))
+
+    customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
+    customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
+    customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
+    customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
+            
+    nights = customer_depature_date.day - customer_arrival_date.day
+        
+    print("nights",customer_arrival_date,type(customer_arrival_date))
+
+    depature_date1 = customer_depature_date-datetime.timedelta(days=1)
+
+    print("depature_date1",depature_date1)
+
+        
+    count = json.loads(dbget("select count(*) from room_to_sell where room_id='"+str(room_type_id[0]['room_id'])+"' and \
+                              room_date between '"+str(customer_arrival_date)+"' \
+                              and '"+str(depature_date1)+"' and business_id='"+bi_id[0]['business_id']+"' "))
+
+    print(count)
+
+    if int(count[0]['count']) == int(nights):
         return(json.dumps([{'Retuen':'Success','Returncode':'Valid'}]))
-    return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
+    else:
+        return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
+    
+
