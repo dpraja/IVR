@@ -77,6 +77,13 @@ def InsertArrivalDeparture(request):
         arr_date = datetime.datetime.strptime(arr_date, '%Y-%m-%d').date()   #convert string to datetime format
         dep_date = datetime.datetime.strptime(dep_date, '%Y-%m-%d').date()
         print(arr_date,dep_date)
+        
+        today_date = datetime.datetime.utcnow().date()
+        if arr_date < today_date:
+            arr_date = arr_date+datetime.timedelta(days=365)
+        if dep_date < today_date:
+            dep_date = dep_date+datetime.timedelta(days=365)
+            
         restrict_days =  today_date + datetime.timedelta(days=90)
         print(restrict_days)
         #charges_end_date = datetime.datetime.strptime(data2, '%Y-%m-%d').date()
