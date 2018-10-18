@@ -462,7 +462,7 @@ def twiliocalculatetotalcharges(request):
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
                                    where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
-        #print("res",result)
+        print("sql",sql)
      
         #available_rate = json.loads(dbget("select room_id,room_rate,room_date,rate_plan_id from extranet_availableroom where room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"' and room_id='"+str(customer_room_type)+"'"))
         #print(available_rate)
@@ -475,11 +475,11 @@ def twiliocalculatetotalcharges(request):
         
         plan_rate = int(sql[0]['rate_plan_id'])
 
-        print("plan_rate",plan_rate)
+        #print("plan_rate",plan_rate)
         total_beds = max_adult + extra_bed
         total_rooms = total_adult / total_beds
         total_rooms_count = math.ceil(total_rooms)
-        print(total_rooms_count)
+        print("no of rooms",total_rooms_count)
         
     
         sumva = 0
@@ -490,27 +490,19 @@ def twiliocalculatetotalcharges(request):
                 print("conf_date",conf_date)
                 deltadates = depature_date - arrival_date
                 for x in range(deltadates.days + 1):
-                   #print(arrival_date + datetime.timedelta(i))
+                   
                    datebetween = arrival_date + datetime.timedelta(x)
-                   if datebetween == conf_date and plan_rate == int(i['rate_plan_id']) :
+                   if datebetween == conf_date or plan_rate == int(i['rate_plan_id']) :
                       
-                      print(i["extra_adult_rate"],i['room_rate'],i['room_rate'])
+                      print("hiiiiiiiiiiii",i["extra_adult_rate"],i['room_rate'],i['room_rate'])
                       r1 = max_adult * total_rooms_count
                       extra_price = (int(customer_adult) - r1) * int(i["extra_adult_rate"])
                       price = total_rooms_count * int(i['room_rate'])
                       total = price + extra_price                        
                       sumva += total
-                      ##price1 = result1 * int(i['room_rate'])
-                      
-
-                      
-                      #price2 = (total_adult - result1) * (int(i["extra_adult_rate"])+int(i['room_rate']))
-                       #datebetween.strftime('%d %B')
                       datelist_rate.append({"day":datebetween.strftime('%Y-%m-%d'),"total":total})
-                      #print(datelist_rate)
-                   
-              
-        print(datelist_rate)
+                      
+        print("datelist_rate",datelist_rate)
         print("sumva",sumva)
        
         
@@ -519,7 +511,8 @@ def twiliocalculatetotalcharges(request):
                     if isinstance(o, datetime.datetime):
                          return o.__str__()  
  
-        return(json.dumps([{"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate}],indent=2,default=myconverter))
+        return(json.dumps([{"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate,
+                            "no_of_rooms":total_rooms_count}],indent=2,default=myconverter))
         
         #return(json.dumps({"ServiceMessage":"Success","Total_Amount":total_amout,"date_month_amount":last_list},indent=2))
         
