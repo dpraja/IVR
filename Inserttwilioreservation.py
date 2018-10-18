@@ -469,8 +469,8 @@ def twiliocalculatetotalcharges(request):
     
         sumva = 0
         for i in sql:
-                arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d')
-                depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d')
+                arrival_date = customer_arrival_date
+                depature_date = customer_depature_date
                 conf_date = datetime.datetime.strptime(i['room_date'], '%Y-%m-%d')
                 print("conf_date",conf_date)
                 deltadates = depature_date - arrival_date
