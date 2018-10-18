@@ -142,7 +142,9 @@ def select_plan(request):
     
     print(res)
     
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res,"minimumprice":sql},indent=2))
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res,
+                       "minimumprice":sql[0]['min_price']},indent=2))
+ 
     
     
     
