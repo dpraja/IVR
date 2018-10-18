@@ -505,9 +505,10 @@ def CheckRoomtype(request):
     customer_room_type = d['customer_room_type']
     
     sql = json.loads(dbget("select count(*) from configration where room_name = '"+str(customer_room_type)+"'"))
-    print(sql)
+    print(sql,sql[0]['count'],type(sql[0]['count']))
 
     if sql[0]['count'] == 0:
+        
         return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
     
     room_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
@@ -539,6 +540,8 @@ def CheckRoomtype(request):
         return(json.dumps([{'Retuen':'Success','Returncode':'Valid'}]))
     else:
         return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
+    
+
     
 
     
