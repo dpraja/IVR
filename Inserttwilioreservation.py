@@ -502,7 +502,14 @@ def CheckRoomtype(request):
     bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
     print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
 
-    customer_room_type = d['customer_room_type'] 
+    customer_room_type = d['customer_room_type']
+    
+    sql = json.loads(dbget("select count(*) from configration where room_name = '"+str(customer_room_type)+"'"))
+    print(sql)
+
+    if sql[0]['count'] == 0:
+        return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
+    
     room_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
 
     print(room_type_id[0]['room_id'],type(room_type_id[0]['room_id']))
@@ -527,9 +534,12 @@ def CheckRoomtype(request):
 
     print(count)
 
+
     if int(count[0]['count']) == int(nights):
         return(json.dumps([{'Retuen':'Success','Returncode':'Valid'}]))
     else:
         return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
+    
+
     
 
