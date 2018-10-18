@@ -421,6 +421,21 @@ def twiliocalculatetotalcharges(request):
         customer_child = request.json["child"]
         print("adults",customer_adult,type(customer_adult))
         d,e,d1,d2 = {},[],{},{}
+        
+        customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
+        customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
+        customer_arrival_date = datetime.datetime.strptime(customer_arrival_date,'%Y-%m-%d').date()
+        customer_depature_date = datetime.datetime.strptime(customer_depature_date,'%Y-%m-%d').date()
+
+        today_date = datetime.datetime.utcnow().date()
+        if customer_arrival_date < today_date:
+            customer_arrival_date = customer_arrival_date+datetime.timedelta(days=365)
+        if customer_depature_date < today_date:
+            customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
+            
+        print("arr",customer_arrival_date)
+        print("dep",customer_depature_date)
+        '''
         print(customer_arrival_date,customer_depature_date)
         today_date = datetime.datetime.utcnow().date()
         year = str(today_date.year)
@@ -440,7 +455,7 @@ def twiliocalculatetotalcharges(request):
             year = str(today_date.year+1)
 
         customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
-        
+        '''
         #print("arrival",customer_arrival_date,"depature",customer_depature_date,"roomid",customer_room_type,"businessid",bi_id[0]['business_id'])    # CONFIGRATION
         sql = json.loads(dbget("select max_extra_bed.extrabed,extranet_availableroom.extra_adult_rate,extranet_availableroom.rate_plan_id,extranet_availableroom.room_date,extranet_availableroom.room_rate,configration.max_adults \
                                     from configration \
@@ -510,6 +525,7 @@ def twiliocalculatetotalcharges(request):
         
     #except:
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+        
 def CheckRoomtype(request):
     d = request.json
     print(d)
