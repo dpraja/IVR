@@ -212,6 +212,8 @@ def CheckConfirmation(request):
          return(json.dumps([{"Return":"Confirmation number already exist","Return_Code":"Valid","Status": "Success","Status_Code": "200"}],indent =2))
      else:
          return(json.dumps([{"Return":"Confirmation number does not exist","Return_Code":"Invalid","Status": "Success","Status_Code": "200"}],indent =2))
+        
+        
 def twiliofetchroomsavailabilityandprice(request):
     #try:
         d = request.json
@@ -256,8 +258,19 @@ def twiliofetchroomsavailabilityandprice(request):
         customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
         customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
         customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
+
+        today_date = datetime.datetime.utcnow().date()
+        if customer_arrival_date < today_date:
+            #year = customer_arrival_date.year
+            #print("year",year,type(year))
+            customer_arrival_date = customer_arrival_date+datetime.timedelta(days=365)
+        if customer_depature_date < today_date:
+            customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
             
-        nights = customer_depature_date - customer_arrival_date
+        print("arr",customer_arrival_date)
+        print("dep",customer_depature_date)
+        
+        nights = customer_depature_date.day - customer_arrival_date.day
         
         print("nights",customer_arrival_date,type(customer_arrival_date))
 
@@ -267,9 +280,9 @@ def twiliofetchroomsavailabilityandprice(request):
 
         
         room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(customer_arrival_date)+"'\
-                                         and '"+str(customer_depature_date)+"' and business_id='"+bi_id[0]['business_id']+"' "))
+                                         and '"+str(depature_date1)+"' and business_id='"+bi_id[0]['business_id']+"' "))
         
-        print(room_to_sell,type(room_to_sell))
+        print("room_to_sell",room_to_sell,type(room_to_sell))
         
         count_o, count_l = [],[]
         
@@ -374,6 +387,7 @@ def twiliofetchroomsavailabilityandprice(request):
         #print("final",final,amount)
         return(json.dumps([{"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
                               "Status_Code": "200","total":amount}],indent=2))  
+    
 def twiliocalculatetotalcharges(request):
    #try:
         tfn = request.json['tfn_num']
