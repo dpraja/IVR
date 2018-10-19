@@ -15,7 +15,7 @@ def ratesandavailability(request):
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
        
-    res = json.loads(dbget("SELECT configration.room_id, configration.room_name ,room_date, \
+    res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,room_date, \
                             room_rate, room_open, s_no,   rate_plan.rate_plan_id,rate_plan.rate_plan, \
                             min_stay, max_stay, close_arrival, close_departure, house_close \
 	                    FROM public.extranet_availableroom join configration on extranet_availableroom.room_id = configration.room_id\
@@ -30,7 +30,7 @@ def ratesandavailability(request):
     
     for i in res:
       #print(type(i))  
-      l={k:v for k,v in i.items() if k in('room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
+      l={k:v for k,v in i.items() if k in('business_id','room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
                                           'close_arrival','close_departure','house_close') }
       #print('lll',l)
       if i['room_name'] in  room_name :
