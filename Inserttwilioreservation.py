@@ -1,8 +1,6 @@
 from sqlwrapper import gensql,dbget,dbput
 import json
 import datetime
-from datetime import datetime
-from pytz import timezone
 import random
 import urllib
 from dateutil import parser
