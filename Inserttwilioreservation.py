@@ -555,6 +555,8 @@ def CheckRoomtype(request):
 
     customer_room_type = d['customer_room_type']
     
+    customer_room_type = customer_room_type.title()
+    
     sql = json.loads(dbget("select count(*) from configration where room_name = '"+str(customer_room_type)+"'"))
     print(sql,sql[0]['count'],type(sql[0]['count']))
 
