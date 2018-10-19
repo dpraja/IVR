@@ -1,6 +1,8 @@
 from sqlwrapper import gensql,dbget,dbput
 import json
 import datetime
+from datetime import datetime
+from pytz import timezone
 import random
 import urllib
 from dateutil import parser
@@ -18,10 +20,21 @@ def Inserttwilioreservation(request):
     roomtype = request.json['customer_room_type']
     arr = request.json['customer_arrival_date']
     dep = request.json['customer_depature_date']
-    arr = parser.parse(arr).date().strftime('%d-%m-%Y')
-    dep = parser.parse(dep).date().strftime('%d-%m-%Y')
-    arr_date = datetime.datetime.strptime(arr, '%d-%m-%Y').date()
-    dep_date = datetime.datetime.strptime(dep, '%d-%m-%Y').date()
+    
+    customer_arrival_date = parser.parse(arr).date().strftime('%Y-%m-%d')
+    customer_depature_date = parser.parse(dep).date().strftime('%Y-%m-%d')
+    customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
+    customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
+
+    today_date = datetime.datetime.utcnow().date()
+    if customer_arrival_date < today_date:
+            customer_arrival_date = customer_arrival_date+datetime.timedelta(days=365)
+    if customer_depature_date < today_date:
+            customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
+            
+    print("arr",customer_arrival_date)
+    print("dep",customer_depature_date)
+    
     confir = (random.randint(100000,999999))
     print(arr_date,dep_date)
     arr = arr_date.strftime("%Y-%m-%d")
