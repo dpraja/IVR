@@ -122,29 +122,38 @@ def InsertArrivalDeparture(request):
 
 def Modifytwilioreservation(request):
     d = request.json
-           
+    print(d)       
     a = { k : v for k,v in d.items() if v != '' if k not in ('customer_confirmation_number','customer_arrival_date','customer_depature_date')}
     print(a)
-    e = { k : v for k,v in d.items() if k != '' if k in ('customer_confirmation_number')}
+    e = { k : v for k,v in d.items()  if k in ('customer_confirmation_number')}
     print(e)
+    customer_arrival_date = d['customer_arrival_date']
+    customer_depature_date = d['customer_depature_date']
+    
+    customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
+    customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
+    customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
+    customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
 
-    data1 = d.get('customer_arrival_date')
-    data2 = d.get('customer_depature_date')
-    date1 = parser.parse(data1).date().strftime('%d-%m-%Y')
-    date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
-    arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
-    dep_date = datetime.datetime.strptime(date2, '%d-%m-%Y').date()
-    a['customer_arrival_date'] = arr_date.strftime("%Y-%m-%d")                             #formatted string datetime
-    a['customer_depature_date'] = dep_date.strftime("%Y-%m-%d")
-    #a['arrival'] = parser.parse(d['arrival']).date().strftime('%d-%m-%Y')
-    #a['departure'] = parser.parse(d['departure']).date().strftime('%d-%m-%Y')
-
+    today_date = datetime.datetime.utcnow().date()
+    if customer_arrival_date < today_date:
+        customer_arrival_date = customer_arrival_date+datetime.timedelta(days=365)
+    if customer_depature_date < today_date:
+        customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
+            
+    print("arr",customer_arrival_date)
+    print("dep",customer_depature_date)
+    
+    a['customer_arrival_date'] = customer_arrival_date
+    a['customer_depature_date'] = customer_depature_date
+    a['booked_date'] = today_date = datetime.datetime.utcnow()
     
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
     print(sql_value)
-    conf = e.get('confirmation_number')
-    sql = dbput("update ivr_room_customer_booked set modification = 'yes' where customer_confirmation_number = '"+str(conf)+"'")
-    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully','ReturnCode':'RUS'}], sort_keys=True, indent=4))
+    
+    
+    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
+                        'ReturnCode':'RUS'}], sort_keys=True, indent=4))
 
 def Canceltwilioreservation(request):
     d = {}
