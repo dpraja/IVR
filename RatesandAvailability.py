@@ -173,8 +173,19 @@ def daterange(request):
             from_date+=datetime.timedelta(days=1)   
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":""},indent=2))
     
+def room_open_update(request):
+    d = request.json['records']
+    print(d,type(d))
+    
+    for i in d:
+        ids = {k:v for k,v in i.items() if k in ('rate_plan_id','room_id','business_id')}
+        values = {k:v for k,v in i.items() if k not in ('rate_plan_id','room_id','business_id',
+                                                        'rate_plan','room_name')}
+        
+        gensql('update','extranet_availableroom',values,ids)
+
+    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
+                        'ReturnCode':'RUS'}], sort_keys=True, indent=4))    
     
 
 
-#RatesandAvailability.py
-#Displaying RatesandAvailability.py.
