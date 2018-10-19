@@ -34,17 +34,18 @@ def Inserttwilioreservation(request):
     print("dep",customer_depature_date)
     
     confir = (random.randint(100000,999999))
-    print(arr_date,dep_date)
-    arr = arr_date.strftime("%Y-%m-%d")
-    dep = dep_date.strftime("%Y-%m-%d")
+    #print(arr_date,dep_date)
+    #arr = arr_date.strftime("%Y-%m-%d")
+    #dep = dep_date.strftime("%Y-%m-%d")
     
-    d['customer_arrival_date'] = arr
-    d['customer_depature_date'] = dep
+    d['customer_arrival_date'] = customer_arrival_date
+    d['customer_depature_date'] = customer_depature_date
     d['customer_confirmation_number'] = confir
     d['modification'] = "No"
     d['customer_booked_status'] = "booked"
     d['customer_room_type'] = roomtype.title()
     d['business_id'] = str(bi_id[0]['business_id'])
+    d['booked_date'] = today_date = datetime.datetime.utcnow()
     
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
