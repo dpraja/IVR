@@ -79,6 +79,7 @@ from configuration import update_config
 from Insert_Ivr_Reservation import Query_Reservation
 from RoomList import select_restriction
 from create_rate_plan import select_rateplanid
+from RatesandAvailability import room_open_update
 
 #Rate_plan
 from create_rate_plan import select_room_types
@@ -457,6 +458,10 @@ def lastreservationcount_all():
 @app.route('/lastchannelrecord',methods=['GET'])
 def lastchannelrecord_all():
    return lastchannelrecord()
+
+@app.route('/update_room_open',methods=['POST'])
+def update_roomopen():
+   return room_open_update(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
