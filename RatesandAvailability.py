@@ -178,9 +178,10 @@ def room_open_update(request):
     print(d,type(d))
     
     for i in d:
-        ids = {k:v for k,v in i.items() if k in ('rate_plan_id','room_id','business_id')}
+        ids = {k:v for k,v in i.items() if k in ('rate_plan_id','room_id','business_id','room_date')}
+        
         values = {k:v for k,v in i.items() if k not in ('rate_plan_id','room_id','business_id',
-                                                        'rate_plan','room_name')}
+                                                        'rate_plan','room_name','room_date')}
         
         gensql('update','extranet_availableroom',values,ids)
 
