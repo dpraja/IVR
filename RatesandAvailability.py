@@ -15,7 +15,7 @@ def ratesandavailability(request):
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
        
-        res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
+       res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
                             room_date, \
                             room_rate, room_open, s_no,   rate_plan.rate_plan_id,rate_plan.rate_plan, \
                             min_stay, max_stay, close_arrival, close_departure, house_close, extra_adult_rate \
@@ -164,7 +164,7 @@ def room_open_update(request):
         j = {k:v for k,v in i.items() if k not in ('s_no')}
         ids = {k:v for k,v in j.items() if k in ('rate_plan_id','room_id','business_id','room_date')}
         
-        values = {k:v for k,v in j.items()  if k not in ('rate_plan_id','room_id','business_id',
+        values = {k:v for k,v in j.items() if v!=None if k not in ('rate_plan_id','room_id','business_id',
                                                         'rate_plan','room_name','room_date')}
         
         gensql('update','extranet_availableroom',values,ids)
