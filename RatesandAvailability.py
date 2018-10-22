@@ -31,14 +31,16 @@ def ratesandavailability(request):
     count_type, count_plan = 0,0
     
     for i in res:
-      print(i,type(i),res.index(i))  
+      #print(i,type(i),res.index(i))  
       #l={k:v for k,v in i.items() if k in('business_id','room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
       #                                    'close_arrival','close_departure','house_close') }
       #print('lll',i['room_id'],i['rate_plan_id'])
       if i['room_id'] in  room_id :
           pass
       else:
+          
           rate_plan = []
+          rate_plan_id = []
           count_plan = 0
           count_type = count_type+1
           room_id.append(i['room_id'])
@@ -84,19 +86,12 @@ def ratesandavailability(request):
            total.append({""+room_k[0]+"":{'room_name': plans['room_name'],'room_to_sell':room_to_sell,'plans':plan_total}})
         else:
            pass
-        '''
-        for j in sell:
-            if plans['room_id'] == j['room_id']  and plans['room_date'] == j['room_date']:
-               print("j",j,sell.index(j)) 
-               j1 ={k:v for k,v in j.items() if k in ('room_id','room_date','available_count','booked_count') }
-               room_to_sell.append(j1)
-        '''
 
         plan_total.append(rooms)
         
     #print(total)
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))     
-
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))   
+ 
 def daterange(request):
     res = request.json
     print(res,type(res))
