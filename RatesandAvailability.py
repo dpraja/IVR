@@ -15,40 +15,42 @@ def ratesandavailability(request):
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
        
-    res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,room_date, \
+    res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
+                            room_date, \
                             room_rate, room_open, s_no,   rate_plan.rate_plan_id,rate_plan.rate_plan, \
                             min_stay, max_stay, close_arrival, close_departure, house_close \
 	                    FROM public.extranet_availableroom join configration on extranet_availableroom.room_id = configration.room_id\
 	                    join rate_plan on extranet_availableroom.rate_plan_id = rate_plan.rate_plan_id \
                             where configration.business_id='"+req['business_id']+"' and room_date \
-	                    between '"+str(from_date)+"' and '"+str(to_date)+"'"))
+	                    between '"+str(from_date)+"' and '"+str(to_date)+"' \
+                            order by room_id,rate_plan_id,room_date"))
     
-    #print(res,type(res))
+    #print(res,type(res),len(res))
     
-    room_name,colle_rooms,rate_plan = [],[],[]
+    room_id,colle_rooms,rate_plan_id = [],[],[]
     count_type, count_plan = 0,0
     
     for i in res:
-      #print(type(i))  
-      l={k:v for k,v in i.items() if k in('business_id','room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
-                                          'close_arrival','close_departure','house_close') }
-      #print('lll',l)
-      if i['room_name'] in  room_name :
+      print(i,type(i),res.index(i))  
+      #l={k:v for k,v in i.items() if k in('business_id','room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
+      #                                    'close_arrival','close_departure','house_close') }
+      #print('lll',i['room_id'],i['rate_plan_id'])
+      if i['room_id'] in  room_id :
           pass
       else:
           rate_plan = []
           count_plan = 0
           count_type = count_type+1
-          room_name.append(i['room_name'])
-      #print("room_name",room_name)    
-      if i['rate_plan'] in rate_plan:
+          room_id.append(i['room_id'])
+          #print("room_iddddd",room_id)    
+      if i['rate_plan_id'] in rate_plan_id:
          pass
       else:
           count_plan = count_plan+1
-          rate_plan.append(i['rate_plan'])
-          
+          rate_plan_id.append(i['rate_plan_id'])
+          #print("plan_iddddd",rate_plan_id)    
       k={}
-      k['room_plan'+str(count_plan)] = l
+      k['room_plan'+str(count_plan)] = i
       
       j={}
       j['room_type'+str(count_type)] = k
@@ -56,58 +58,44 @@ def ratesandavailability(request):
       
       #print(i)
     #print(room_name)
-    #print(colle_rooms)
-
-    sell = json.loads(dbget("select room_to_sell.*, configration.room_name as con_room_name from room_to_sell \
-                             join configration on room_to_sell.room_id = configration.room_id where room_date between  \
-                             '"+str(from_date)+"' and '"+str(to_date)+"' and  room_to_sell.business_id='"+req['business_id']+"' "))
-    #print("sell",sell)
-        
+    #print("colle_rooms",colle_rooms,len(colle_rooms))
+    
     r_key,p_key = [],[]
     total,room_total,plan_total,plan_total01 = [],[],[],[]
     room_to_sell = []
     for i in colle_rooms:
-        #print(i)
+        #print("i",i,colle_rooms.index(i))
         room_k = [k for k,v in i.items()]
         rooms = i[""+room_k[0]+""]
-        #print("rooms  ",rooms)
+        #print("rrrrrrrrrrrrrrrrrrrrrooms  ",rooms)
         
         plan_k = [k for k,v in rooms.items()]
         plans = rooms[""+plan_k[0]+""]
-        #print("plans  ",plans)
+        #print("ppppppppppppppppppppplans  ",plans)
         
         if room_k[0] not in r_key:           
            r_key.append(room_k[0])
            plan_total = []
-           #plan_total[]
-           '''
-           plan_k = [k for k,v in rooms.items()]
-           plans = rooms[""+plan_k[0]+""]
-           print("plans  ",plans)
-           '''
+           room_to_sell = json.loads(dbget("select room_to_sell.*, configration.room_name as con_room_name from room_to_sell \
+                             join configration on room_to_sell.room_id = configration.room_id where room_date between  \
+                             '"+str(from_date)+"' and '"+str(to_date)+"' and  \
+                             room_to_sell.business_id='"+req['business_id']+"' and \
+                             room_to_sell.room_id='"+str(plans['room_id'])+"'"))           
            total.append({""+room_k[0]+"":{'room_name': plans['room_name'],'room_to_sell':room_to_sell,'plans':plan_total}})
         else:
            pass
+        '''
         for j in sell:
-            if plans['room_name'] == j['con_room_name']  and plans['room_date'] == j['room_date']:
+            if plans['room_id'] == j['room_id']  and plans['room_date'] == j['room_date']:
+               print("j",j,sell.index(j)) 
                j1 ={k:v for k,v in j.items() if k in ('room_id','room_date','available_count','booked_count') }
                room_to_sell.append(j1)
+        '''
+
         plan_total.append(rooms)
         
-        '''
-        plan_k = [k for k,v in rooms.items()]
-        plans = rooms[""+plan_k[0]+""]
-        print("plans  ",plans)        
-    
-        if plan_k[0] not in p_key:
-             p_key.append(plan_k[0])
-        else:
-            pass
-        '''
-    #print(r_key,p_key)
-    print(total)
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))   
-   
+    #print(total)
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))     
 
 def daterange(request):
     res = request.json
