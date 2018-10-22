@@ -15,16 +15,16 @@ def ratesandavailability(request):
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
        
-    res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
+        res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
                             room_date, \
                             room_rate, room_open, s_no,   rate_plan.rate_plan_id,rate_plan.rate_plan, \
-                            min_stay, max_stay, close_arrival, close_departure, house_close \
+                            min_stay, max_stay, close_arrival, close_departure, house_close, extra_adult_rate \
 	                    FROM public.extranet_availableroom join configration on extranet_availableroom.room_id = configration.room_id\
 	                    join rate_plan on extranet_availableroom.rate_plan_id = rate_plan.rate_plan_id \
                             where configration.business_id='"+req['business_id']+"' and room_date \
 	                    between '"+str(from_date)+"' and '"+str(to_date)+"' \
                             order by room_id,rate_plan_id,room_date"))
-    
+ 
     #print(res,type(res),len(res))
     
     room_id,colle_rooms,rate_plan_id = [],[],[]
