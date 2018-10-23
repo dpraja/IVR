@@ -100,34 +100,35 @@ def daterange(request):
     x = { k : v for k,v in a.items() if k not in ('business_id','room_id','rate_plan_id') }
     y = { k : v for k,v in a.items() if k  in ('business_id','room_id','rate_plan_id') }
     z = { k : v for k,v in a.items() if k  in ('business_id','room_id') }
+    print("zzz",z)
     print("x",x)
     print("y",y)
     days = res['days']
     #day0 = [ k  for k,v in res.items() if v == 0 ]
     day1 = [ k  for k,v in days.items() if v != 0 ]
-    print(a,days,day1)
+    #print(a,days,day1)
     from_date = request.json['st_date']
     to_date = request.json['ed_date']
     from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
     to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
     
     while from_date <= to_date:
-          print(from_date,from_date.strftime("%A")[0:3].lower())
+          #print(from_date,from_date.strftime("%A")[0:3].lower())
           if from_date.strftime("%A")[0:3].lower() in day1:
              y1={} 
              y1 = y
              y1['room_date'] = from_date
              count = json.loads(gensql('select','extranet_availableroom','count(*)',y1) )
-             print(count,type(count),count[0]['count'])
+             #print(count,type(count),count[0]['count'])
              if count[0]['count'] == 0:
-               print("insert",from_date)  
+               #print("insert",from_date)  
                #a['booked_count'] = 0
                a['room_date'] = from_date
                a['room_open'] = 1
-               print("insert a",a)
+               #print("insert a",a)
                gensql('insert','extranet_availableroom',a)
              else:
-               print("update",from_date)  
+               #print("update",from_date)  
                gensql('update','extranet_availableroom',x,y)
           else:
               pass
@@ -137,13 +138,15 @@ def daterange(request):
     to_date = request.json['ed_date']
     from_date = datetime.datetime.strptime(from_date,'%Y-%m-%d').date()
     to_date = datetime.datetime.strptime(to_date,'%Y-%m-%d').date()
- 
-    sell_detail = z
+    
+    z1 = z.copy()
+    sell_detail = z1
     sell_detail['available_count'] = res['available_count']
     sell_detail['booked_count'] = 0
     u_x = {'available_count':res['available_count']}
     while from_date <= to_date:
             z['room_date'] = from_date
+            #print("zzzzz",z)
             count = json.loads(gensql('select','room_to_sell','count(*)',z) )
             if count[0]['count'] == 0:
                 print("insert a",a)
