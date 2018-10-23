@@ -82,7 +82,7 @@ def ratesandavailability(request):
                              join configration on room_to_sell.room_id = configration.room_id where room_date between  \
                              '"+str(from_date)+"' and '"+str(to_date)+"' and  \
                              room_to_sell.business_id='"+req['business_id']+"' and \
-                             room_to_sell.room_id='"+str(plans['room_id'])+"'"))           
+                             room_to_sell.room_id='"+str(plans['room_id'])+"'  order by room_date "))           
            total.append({""+room_k[0]+"":{'room_name': plans['room_name'],'room_to_sell':room_to_sell,'plans':plan_total}})
         else:
            pass
