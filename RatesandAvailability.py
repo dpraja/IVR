@@ -9,7 +9,7 @@ def ratesandavailability(request):
     a = {k:v for k,v in req.items() if v == '' }
     #print(len(a))
     if len(a) != 0:
-       from_date = datetime.datetime.now().date()
+       from_date = datetime.datetime.utcnow().date()
        to_date = from_date +datetime.timedelta(days=15)
     else:
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
