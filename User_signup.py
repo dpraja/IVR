@@ -24,9 +24,9 @@ def User_login(request):
     d = request.json
     print(d)
     a = { k : v for k,v in d.items() if k not in ('user_password') }
-    pw = json.loads(gensql('select','User_login','user_password',a))
+    pw = json.loads(gensql('select','User_login','*',a))
     if pw[0]['user_password'] == d['user_password']: 
-       return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
+       return(json.dumps({"user_name":pw[0]['user_name'],"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
     else:
        return(json.dumps({"ServiceStatus":"Failure","ServiceMessage":"Check Your Password"},indent=2)) 
 
