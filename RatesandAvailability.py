@@ -10,7 +10,7 @@ def ratesandavailability(request):
     #print(len(a))
     if len(a) != 0:
        from_date = datetime.datetime.utcnow().date()
-       to_date = from_date +datetime.timedelta(days=15)
+       to_date = from_date +datetime.timedelta(days=14)
     else:
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
@@ -24,7 +24,7 @@ def ratesandavailability(request):
                             where configration.business_id='"+req['business_id']+"' and room_date \
 	                    between '"+str(from_date)+"' and '"+str(to_date)+"' \
                             order by room_id,rate_plan_id,room_date"))
- 
+    
     #print(res,type(res),len(res))
     
     room_id,colle_rooms,rate_plan_id = [],[],[]
@@ -35,7 +35,7 @@ def ratesandavailability(request):
       #l={k:v for k,v in i.items() if k in('business_id','room_id','room_name','room_date','rate_plan','rate_plan_id','room_open','min_stay','max_stay','room_rate','extra_adult_rate','booked_count',
       #                                    'close_arrival','close_departure','house_close') }
       #print('lll',i['room_id'],i['rate_plan_id'])
-      if i['room_id'] in  room_id :
+      if i['room_id'] in  room_id:
           pass
       else:
           
@@ -44,13 +44,13 @@ def ratesandavailability(request):
           count_plan = 0
           count_type = count_type+1
           room_id.append(i['room_id'])
-          #print("room_iddddd",room_id)    
+          print("room_iddddd",room_id)    
       if i['rate_plan_id'] in rate_plan_id:
          pass
       else:
           count_plan = count_plan+1
           rate_plan_id.append(i['rate_plan_id'])
-          #print("plan_iddddd",rate_plan_id)    
+          print("plan_iddddd",rate_plan_id)    
       k={}
       k['room_plan'+str(count_plan)] = i
       
@@ -82,7 +82,7 @@ def ratesandavailability(request):
                              join configration on room_to_sell.room_id = configration.room_id where room_date between  \
                              '"+str(from_date)+"' and '"+str(to_date)+"' and  \
                              room_to_sell.business_id='"+req['business_id']+"' and \
-                             room_to_sell.room_id='"+str(plans['room_id'])+"'  order by room_date "))           
+                             room_to_sell.room_id='"+str(plans['room_id'])+"' order by room_date "))           
            total.append({""+room_k[0]+"":{'room_name': plans['room_name'],'room_to_sell':room_to_sell,'plans':plan_total}})
         else:
            pass
@@ -90,7 +90,8 @@ def ratesandavailability(request):
         plan_total.append(rooms)
         
     #print(total)
-    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total},indent=2))   
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total,
+                       "from_date":str(from_date),"to_date":str(to_date)},indent=2))   
  
 def daterange(request):
     res = request.json
