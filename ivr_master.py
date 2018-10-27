@@ -448,16 +448,16 @@ def Userlogin():
 def business_signup():
    return Business_signup(request)
 
-@app.route('/Dashboard_report',methods=['GET'])
+@app.route('/Dashboard_report',methods=['POST'])
 def Lastreportrecord_all():
-   return Lastreportrecord()
+   return Lastreportrecord(request)
 
-@app.route('/lastreservationcount',methods=['GET'])
+@app.route('/lastreservationcount',methods=['POST'])
 def lastreservationcount_all():
-   return lastreservationcount()
-@app.route('/lastchannelrecord',methods=['GET'])
+   return lastreservationcount(request)
+@app.route('/lastchannelrecord',methods=['POST'])
 def lastchannelrecord_all():
-   return lastchannelrecord()
+   return lastchannelrecord(request)
 
 @app.route('/update_room_open',methods=['POST'])
 def update_roomopen():
