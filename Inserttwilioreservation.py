@@ -42,7 +42,7 @@ def Inserttwilioreservation(request):
     d['customer_depature_date'] = customer_depature_date
     d['customer_confirmation_number'] = confir
     d['modification'] = "No"
-    d['customer_booked_status'] = "booked"
+    d['customer_booked_status'] = d['customer_booked_status'].title()
     d['customer_room_type'] = roomtype.title()
     d['business_id'] = str(bi_id[0]['business_id'])
     d['booked_date'] = today_date = datetime.datetime.utcnow()
