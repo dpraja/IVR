@@ -45,6 +45,7 @@ def Inserttwilioreservation(request):
     d['customer_booked_status'] = d['customer_booked_status'].title()
     d['customer_room_type'] = roomtype.title()
     d['business_id'] = str(bi_id[0]['business_id'])
+    d['ivr_language'] = request.json['ivr_language']
     d['booked_date'] = today_date = datetime.datetime.utcnow()
     
     sql = gensql('insert','public.ivr_room_customer_booked',d)
