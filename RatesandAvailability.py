@@ -15,6 +15,11 @@ def ratesandavailability(request):
        from_date = datetime.datetime.strptime(req['from_date'],'%Y-%m-%d').date()
        to_date = datetime.datetime.strptime(req['to_date'],'%Y-%m-%d').date()
        
+    Date = []
+    while from_date <= to_date:
+        Date.append(str(from_date))
+        from_date+=datetime.timedelta(days=1)
+    #print(Date)   
     res = json.loads(dbget("SELECT extranet_availableroom.business_id,configration.room_id, configration.room_name ,\
                             room_date, \
                             room_rate, room_open, s_no,   rate_plan.rate_plan_id,rate_plan.rate_plan, \
@@ -91,7 +96,8 @@ def ratesandavailability(request):
         
     #print(total)
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":total,
-                       "from_date":str(from_date),"to_date":str(to_date)},indent=2))   
+                       "from_date":str(from_date),"to_date":str(to_date),"Date":Date},indent=2))   
+ 
  
 def daterange(request):
     res = request.json
