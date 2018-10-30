@@ -139,12 +139,12 @@ def GetRoomOccupancy(request):
     
         return(json.dumps({"Return":"Record Retrieved Sucessfully","Return_Code":"RTS","Status": "Success","Status_Code": "200","Returnvalue":res},indent=2))
 def GetYearbyyeareservationcount(request):
+    business_id = request.json['business_id']
     yearlist = []
     dividendlist,dividendlist_add,fin_list  = [],[],[]
     count_of_year = {}
-    Year1 = json.loads(dbget("select customer_arrival_date from public.ivr_room_customer_booked  order by customer_arrival_date"))
-    Year2 = json.loads(dbget("select arrival_date as customer_arrival_date from public.ivr_resevation  order by arrival_date"))
-    Year1 = Year1 + Year2
+    Year1 = json.loads(dbget("select customer_arrival_date from public.ivr_room_customer_booked where business_id = '"+str(business_id)+"' order by customer_arrival_date"))
+   
     for dividend_dict in Year1:
      for key, value in dividend_dict.items():
         dividendlist.append(value)
