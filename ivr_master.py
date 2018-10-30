@@ -58,6 +58,7 @@ from Getreservationcancelmodification import GetCountryreservation
 from Getreservationcancelmodification import monthreservation
 from Getreservationcancelmodification import futurebooking
 from Getreservationcancelmodification import HistoryBooking
+from Getreservationcancelmodification import GetConvergencereport
 
 from Inserttwilioreservation import Inserttwilioreservation
 from Inserttwilioreservation import InsertArrivalDeparture
@@ -306,12 +307,15 @@ def monthreservation_all():
 @app.route('/select_restriction',methods=['POST'])
 def select_data_restriction():
    return select_restriction(request)
-@app.route('/futurebooking',methods=['GET'])
+@app.route('/futurebooking',methods=['POST'])
 def future_reservation():
-   return futurebooking()
-@app.route('/HistoryBooking',methods=['GET'])
+   return futurebooking(request)
+@app.route('/HistoryBooking',methods=['POST'])
 def HistoryBooking_reservation():
-   return HistoryBooking()
+   return HistoryBooking(request)
+@app.route('/GetConvergencereport',methods=['POST'])
+def GetConvergencereport_all():
+   return GetConvergencereport(request)
 @app.route('/Checkinguest',methods=['POST'])
 def Checkinguest_all():
    return checkinguest(request)
