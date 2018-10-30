@@ -1,6 +1,7 @@
 from sqlwrapper import dbget,gensql,dbput
 import json
 import datetime
+from dateutil import parser
 def fetchroomsavailabilityandprice(request):
     #try:
         d = request.json
@@ -13,37 +14,33 @@ def fetchroomsavailabilityandprice(request):
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
 
-        #d['customer_arrival_date'] = datetime.date(2019, 1, 1)
-        #d['customer_depature_date'] = datetime.date(2019, 1, 3)
-        customer_arrival_date = d['arrival_date']
-        customer_depature_date = d['depature_date']
-        #print(customer_arrival_date,customer_depature_date)
-        today_date = datetime.datetime.utcnow().date()
-        year = str(today_date.year)
-        if int(customer_arrival_date[0:2]) == today_date.month :
-            if int(customer_arrival_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))
-        elif int(customer_arrival_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-        customer_arrival_date = year+'-'+customer_arrival_date[0:2]+'-'+customer_arrival_date[2:]
-        d['customer_arrival_date'] = customer_arrival_date
-        if int(customer_depature_date[0:2]) == today_date.month :
-            if int(customer_depature_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))    
-        elif int(customer_depature_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-        customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
-        d['customer_depature_date'] = customer_depature_date
-        print(customer_arrival_date,customer_depature_date)
-        #print(d)  ,room_rate        
-        print("date",d['customer_arrival_date'],d['customer_depature_date'])
-        nights = datetime.datetime.strptime(customer_arrival_date, "%Y-%m-%d").date() - datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()
         
-        print("nights",customer_arrival_date,type(customer_arrival_date))
+        arr = d['arrival_date']
+        dep = d['depature_date']
+        customer_arrival_date = parser.parse(arr).date().strftime('%Y-%m-%d')
+        customer_depature_date = parser.parse(dep).date().strftime('%Y-%m-%d')
+        customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
+        customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
 
-        d['customer_depature_date'] = datetime.datetime.strptime(customer_depature_date, "%Y-%m-%d").date()-datetime.timedelta(days=1)
+        today_date = datetime.datetime.utcnow().date()
+        if customer_arrival_date < today_date:
+                customer_arrival_date = customer_arrival_date+datetime.timedelta(days=365)
+        if customer_depature_date < today_date:
+                customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
+                    
+        print("arr",customer_arrival_date)
+        print("dep",customer_depature_date)
+                 
+        
+        d['customer_arrival_date'] = customer_arrival_date
+        d['customer_depature_date'] = customer_depature_date
+
+        
+        #nights = customer_depature_date.day - customer_arrival_date.day
+        
+        #print("nights",customer_arrival_date,type(customer_arrival_date))
+
+        d['customer_depature_date'] = customer_depature_date - datetime.timedelta(days=1)
 
         print("d['customer_depature_date']",d['customer_depature_date'])
 
@@ -156,7 +153,6 @@ def fetchroomsavailabilityandprice(request):
         #print("final",final,amount)
         return(json.dumps({"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
                               "Status_Code": "200","total":amount},indent=2))   
-    
     
 def fetchpromotionalmessage(request):
     try: 
