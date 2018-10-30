@@ -39,8 +39,8 @@ def fetchroomsavailabilityandprice(request):
         #nights = customer_depature_date.day - customer_arrival_date.day
         
         #print("nights",customer_arrival_date,type(customer_arrival_date))
-
-        d['customer_depature_date'] = customer_depature_date - datetime.timedelta(days=1)
+        if customer_arrival_date != customer_depature_date:
+            d['customer_depature_date'] = customer_depature_date - datetime.timedelta(days=1)
 
         print("d['customer_depature_date']",d['customer_depature_date'])
 
