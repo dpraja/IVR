@@ -328,7 +328,10 @@ def twiliofetchroomsavailabilityandprice(request):
 
         count_ll = list(map(str, count_l))        
         #print("idssss   ",count_l,count_ll)    
-
+        if len(count_l) == 0:
+              return(json.dumps({"total":{'room_name0':"No Rooms Available For Given Date"},
+                                 "Return_Code":"RRS", "Status": "Success",
+                                 "Status_Code": "200"},indent=2))     
         rates = json.loads(dbget("select extranet_availableroom.room_id, configration.room_name, room_date,\
                                   room_rate,extranet_availableroom.extra_adult_rate,\
                                   room_open, extranet_availableroom.rate_plan_id from extranet_availableroom \
