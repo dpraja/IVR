@@ -8,8 +8,9 @@ from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
     d = request.json
-    #amount = d['amount']
-    d= {k:v for k,v in d.items() if k not in ('TFN')}
+    rate_per_day = request.json['rate_per_day']
+    print("rate_per_day",rate_per_day,type(rate_per_day))
+    d= {k:v for k,v in d.items() if k not in ('TFN','rate_per_day')}
     tfn = request.json['TFN']
     b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
     print(b_id)
