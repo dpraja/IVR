@@ -387,8 +387,8 @@ def GetConvergencereport(request):
    
     
     json_input = [
-                   {"title":"Total","value":booked[0]['count']},
-                   {"title":"booking","value":notbooked[0]['count']}
+                   {"title":"Booked","value":booked[0]['count']},
+                   {"title":"Not Booked","value":notbooked[0]['count']}
                   
                    ]
   
