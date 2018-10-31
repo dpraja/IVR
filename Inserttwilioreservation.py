@@ -125,11 +125,20 @@ def InsertArrivalDeparture(request):
 
 def Modifytwilioreservation(request):
     d = request.json
-    print(d)       
-    a = { k : v for k,v in d.items() if v != '' if k not in ('customer_confirmation_number','customer_arrival_date','customer_depature_date')}
-    print(a)
+    #print(d)
+    
+    a = { k : v for k,v in d.items() if v != '' if k not in ('customer_confirmation_number',
+                                                             'customer_arrival_date','customer_depature_date','rate_per_day')}
+    #print(a)
     e = { k : v for k,v in d.items()  if k in ('customer_confirmation_number')}
-    print(e)
+    #print(e)
+
+    list1 = d['rate_per_day'].replace("total=",'"amount":')
+    list1 = list1.replace("day=",'''"rate_date":"''')
+    list1 = list1.replace(",",'''",''')
+    list1 = list1.replace('}"',"}")    
+    rate_per_day = json.loads(list1)
+    
     customer_arrival_date = d['customer_arrival_date']
     customer_depature_date = d['customer_depature_date']
     
@@ -144,8 +153,8 @@ def Modifytwilioreservation(request):
     if customer_depature_date < today_date:
         customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
             
-    print("arr",customer_arrival_date)
-    print("dep",customer_depature_date)
+    #print("arr",customer_arrival_date)
+    #print("dep",customer_depature_date)
     
     a['customer_arrival_date'] = customer_arrival_date
     a['customer_depature_date'] = customer_depature_date
@@ -154,7 +163,13 @@ def Modifytwilioreservation(request):
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
     print(sql_value)
     
-    
+    dbput("delete from customer_rate_detail where customer_confirmation_number="+e['customer_confirmation_number']+"")
+
+    for rate in rate_per_day:
+        #print(rate)
+        rate['customer_confirmation_number'] = e['customer_confirmation_number']
+        gensql('insert','customer_rate_detail',rate)
+        
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
                         'ReturnCode':'RUS'}], sort_keys=True, indent=4))
 
