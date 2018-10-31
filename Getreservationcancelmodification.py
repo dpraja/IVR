@@ -386,9 +386,9 @@ def GetConvergencereport(request):
     
    
     
-    json_input = [
-                   {"title":"Booked","value":booked[0]['count']},
-                   {"title":"Not Booked","value":notbooked[0]['count']}
+     json_input = [
+                   {"title":"Booked","value":booked[0]['count'],"bullet": "https://www.amcharts.com/lib/images/faces/A04.png"},
+                   {"title":"Not Booked","value":notbooked[0]['count'],"bullet": "https://www.amcharts.com/lib/images/faces/C02.png"}
                   
                    ]
   
