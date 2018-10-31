@@ -7,13 +7,23 @@ from dateutil import parser
 from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
+
     d = request.json
-    rate_per_day = d['rate_per_day']
-    print("rate_per_day",rate_per_day,type(rate_per_day))
+    
+    #print("rate_per_day",d['rate_per_day'][1:-1],type(d['rate_per_day']))
+    
+    list1 = d['rate_per_day'].replace("total=",'"amount":')
+    list1 = list1.replace("day=",'''"rate_date":"''')
+    list1 = list1.replace(",",'''",''')
+    list1 = list1.replace('}"',"}")    
+    rate_per_day = json.loads(list1)
+    #print("rate_per_day",rate_per_day,type(rate_per_day))
+
+    
     d= {k:v for k,v in d.items() if k not in ('TFN','rate_per_day')}
     tfn = request.json['TFN']
     b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
-    print(b_id)
+    #print(b_id)
     bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
     print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
     roomtype = request.json['customer_room_type']
@@ -31,36 +41,27 @@ def Inserttwilioreservation(request):
     if customer_depature_date < today_date:
             customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
             
-    print("arr",customer_arrival_date)
-    print("dep",customer_depature_date)
+    #print("arr",customer_arrival_date)
+    #print("dep",customer_depature_date)
     
     confir = (random.randint(100000,999999))
-    #print(arr_date,dep_date)
-    #arr = arr_date.strftime("%Y-%m-%d")
-    #dep = dep_date.strftime("%Y-%m-%d")
     
     d['customer_arrival_date'] = customer_arrival_date
     d['customer_depature_date'] = customer_depature_date
     d['customer_confirmation_number'] = confir
     d['modification'] = "No"
-    d['customer_booked_status'] = d['customer_booked_status'].lower()
+    d['customer_booked_status'] = d['customer_booked_status'].title()
     d['customer_room_type'] = roomtype.title()
     d['business_id'] = str(bi_id[0]['business_id'])
-    d['ivr_language'] = request.json['ivr_language']
     d['booked_date'] = today_date = datetime.datetime.utcnow()
     
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
-    '''
-    res = json.loads(gensql('select','public.ivr_room_customer_booked','cus_id',d))
-    print(res,type(res))
-    e = {}
-    e['cus_id'] = res[0]['cus_id']
-    for i in amount:
-        e['rate_date'] = i['day']
-        e['amount'] = i['total']
-        gensql('insert','customer_rate_detail',e)
-    '''    
+    
+    for rate in rate_per_day:
+        rate['customer_confirmation_number'] = confir
+        gensql('insert','customer_rate_detail',rate)
+        
     return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS","Status":"Success","Statuscode":200,"confirmation_number":confir}],indent=2))
 
 def InsertArrivalDeparture(request):
