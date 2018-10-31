@@ -81,6 +81,8 @@ from Insert_Ivr_Reservation import Query_Reservation
 from RoomList import select_restriction
 from create_rate_plan import select_rateplanid
 from RatesandAvailability import room_open_update
+from Insert_Ivr_Reservation import Query_Rate_Per_day
+
 
 #Rate_plan
 from create_rate_plan import select_room_types
@@ -466,6 +468,11 @@ def lastchannelrecord_all():
 @app.route('/update_room_open',methods=['POST'])
 def update_roomopen():
    return room_open_update(request)
+
+@app.route('/Query_Rate_Per_day',methods=['POST'])
+def rate_per_day():
+   return Query_Rate_Per_day(request)
+
 
 if __name__ == "__main__":
   app.run(debug=True)
