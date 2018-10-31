@@ -382,13 +382,9 @@ def GetConvergencereport(request):
     notbooked = json.loads(dbget("select count(*) from public.ivr_room_customer_booked where business_id = '"+business_id+"' and customer_arrival_date between '"+date_from+"' and '"+date_to+"'  and customer_booked_status in ('not booked')"))
     print(notbooked)
 
-    
-    
-   
-    
-     json_input = [
-                   {"title":"Booked","value":booked[0]['count'],"bullet": "https://www.amcharts.com/lib/images/faces/A04.png"},
-                   {"title":"Not Booked","value":notbooked[0]['count'],"bullet": "https://www.amcharts.com/lib/images/faces/C02.png"}
+    json_input = [
+                   {"title":"Booked","value":booked[0]['count']},
+                   {"title":"Not Booked","value":notbooked[0]['count']}
                   
                    ]
   
