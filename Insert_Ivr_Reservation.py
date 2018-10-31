@@ -27,3 +27,11 @@ def Query_Reservation(request):
     #print(d)
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","result":d},indent=2))
 
+def Query_Rate_Per_day(request):
+    confi_num = request.json['conf_num']
+    b_id = request.json['business_id']
+    print(request.json)
+    d = json.loads(dbget("select * from customer_rate_detail where \
+                          business_id='"+b_id+"' and customer_confirmation_number='"+confi_num+"' "))
+        
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","result":d},indent=2))
