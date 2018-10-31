@@ -163,7 +163,7 @@ def Modifytwilioreservation(request):
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
     print(sql_value)
     
-    dbput("delete from customer_rate_detail where customer_confirmation_number="+e['customer_confirmation_number']+"")
+    dbput("delete from customer_rate_detail where customer_confirmation_number='"+e['customer_confirmation_number']+"' ")
 
     for rate in rate_per_day:
         #print(rate)
