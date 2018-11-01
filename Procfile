@@ -40,3 +40,5 @@ worker: gunicorn Inserttwilioreservation.py
 worker: gunicorn create_rate_plan.py
 worker: gunicorn User_signup.py
 worker: gunicorn DashboardReport.py
+worker: gunicorn ImageUploadS3.py	
+worker: gunicorn SendEmailWhatsapp.py
