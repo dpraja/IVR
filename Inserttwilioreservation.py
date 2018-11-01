@@ -59,7 +59,9 @@ def Inserttwilioreservation(request):
     print(sql)
     
     for rate in rate_per_day:
+        print(rate)
         rate['customer_confirmation_number'] = confir
+        rate['business_id'] = str(bi_id[0]['business_id'])
         gensql('insert','customer_rate_detail',rate)
         
     return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS",
