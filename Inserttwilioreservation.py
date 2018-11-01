@@ -172,6 +172,7 @@ def Modifytwilioreservation(request):
     for rate in rate_per_day:
         #print(rate)
         rate['customer_confirmation_number'] = e['customer_confirmation_number']
+        rate['business_id'] = str(bi_id[0]['business_id'])
         gensql('insert','customer_rate_detail',rate)
         
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
