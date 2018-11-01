@@ -83,6 +83,8 @@ from create_rate_plan import select_rateplanid
 from RatesandAvailability import room_open_update
 from Insert_Ivr_Reservation import Query_Rate_Per_day
 
+from SendEmailWhatsapp import sendemailwhatsapp
+from ImageUploadS3 import upload_file
 
 #Rate_plan
 from create_rate_plan import select_room_types
@@ -472,6 +474,14 @@ def update_roomopen():
 @app.route('/Query_Rate_Per_day',methods=['POST'])
 def rate_per_day():
    return Query_Rate_Per_day(request)
+
+@app.route('/sendemailwhatsapp',methods=['POST'])
+def emailwhatsapp():
+   return sendemailwhatsapp(request)
+
+@app.route('/upload', methods=['POST'])
+def img():
+   return upload_file(request)
 
 
 if __name__ == "__main__":
