@@ -62,7 +62,9 @@ def Inserttwilioreservation(request):
         rate['customer_confirmation_number'] = confir
         gensql('insert','customer_rate_detail',rate)
         
-    return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS","Status":"Success","Statuscode":200,"confirmation_number":confir}],indent=2))
+    return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS",
+                        "Status":"Success","Statuscode":200,"confirmation_number":confir,
+                        "business_id":bi_id[0]['business_id']}],indent=2))
 
 def InsertArrivalDeparture(request):
     
