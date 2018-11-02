@@ -2,6 +2,8 @@ from sqlwrapper import gensql,dbget,dbput
 from botocore.client import Config
 import boto3
 import json
+import requests
+
 
 def upload_file(request):
     print (type(request.files))
