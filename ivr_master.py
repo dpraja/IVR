@@ -5,7 +5,6 @@ related to IVR application
 import json
 from flask import Flask,request, jsonify
 from flask_cors import CORS
-from flask_sockets import Sockets
 from QueryANITEST import queryanitest
 from QueryANI import queryani
 from UpdateCustomerLangSelected import updatecustomerlangselected
@@ -129,8 +128,6 @@ from DashboardReport import lastreservationcount
 from DashboardReport import lastchannelrecord
 app = Flask(__name__)
 CORS(app)
-
-sockets = Sockets(app)
 
 @app.route("/")
 def hello():
@@ -483,7 +480,7 @@ def rate_per_day():
 def emailwhatsapp():
    return sendemailwhatsapp(request)
 
-@sockets.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def img():
    return upload_file(request)
 
