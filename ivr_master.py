@@ -85,6 +85,7 @@ from Insert_Ivr_Reservation import Query_Rate_Per_day
 
 from SendEmailWhatsapp import sendemailwhatsapp
 from ImageUploadS3 import upload_file
+from ImageUploadS3 import get_aws_keys
 
 #Rate_plan
 from create_rate_plan import select_room_types
@@ -482,6 +483,10 @@ def emailwhatsapp():
 @app.route('/upload', methods=['POST'])
 def img():
    return upload_file(request)
+
+@app.route('/get_aws_keys', methods=['POST'])
+def aws_keys():
+   return get_aws_keys(request)
 
 
 
