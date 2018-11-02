@@ -129,6 +129,8 @@ from DashboardReport import lastchannelrecord
 app = Flask(__name__)
 CORS(app)
 
+sockets = Sockets(app)
+
 @app.route("/")
 def hello():
    return "Welcome to IVR!"
@@ -480,7 +482,7 @@ def rate_per_day():
 def emailwhatsapp():
    return sendemailwhatsapp(request)
 
-@app.route('/upload', methods=['POST'])
+@sockets.route('/upload', methods=['POST'])
 def img():
    return upload_file(request)
 
