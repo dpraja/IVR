@@ -7,6 +7,8 @@ import requests
 
 def upload_file(request):
     print (type(request.files))
+    print("request", request,len(request))
+    '''
     bucket = 'image-upload-rekognition'
     key = 'baladp.jpg'
     image = request.files['Image']
@@ -14,13 +16,6 @@ def upload_file(request):
     print (name)
     client = boto3.client('s3')
 
-    r = requests.post('https://ivrinfocuit.herokuapp.com/get_aws_keys')
-    
-    print (r.json(),type(r.json()))
-
-    res = r.json()
-
-    print(res)
     
     key_id = res['Returnvalue'][0]['img_s3_keyid']
     secret_access_key = res['Returnvalue'][0]['img_s3_key']
@@ -34,7 +29,7 @@ def upload_file(request):
     
     url = client.generate_presigned_url('get_object',Params = {'Bucket':bucket,'Key':key})
     print(url)
-
+    '''
     return (json.dumps({"Status":"Success","Message":"Image Uploaded in S3 Bucket","url":url}))
 
 
