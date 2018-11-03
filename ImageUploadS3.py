@@ -6,31 +6,26 @@ import requests
 
 
 def upload_file(request):
-    print (type(request.files))
-    print("request", request,len(request))
-    '''
-    bucket = 'image-upload-rekognition'
-    key = 'baladp.jpg'
-    image = request.files['Image']
-    name = image.name
-    print (name)
-    client = boto3.client('s3')
+   print type(request.files)
+   name1 = str(request.form['name'])
+   print("FORM DATAAAA",name1,type(name1))
+   list1 = name1.split('|')
+   print(list1,type(list1))
+   #print("FORM DATAAAA",name1,type(name1))
+   image = request.files['Image']
+   name = image.name
+   bucket = 'image-upload-rekognition'
+   key = 'baladp.jpg'
+   print name
+   client = boto3.client('s3')
+   s3 = boto3.resource('s3',region_name='us-east-1',aws_access_key_id=list1[0],aws_secret_access_key=list1[1])
 
-    
-    key_id = res['Returnvalue'][0]['img_s3_keyid']
-    secret_access_key = res['Returnvalue'][0]['img_s3_key']
-
-    print(key_id, secret_access_key)
-    
-    s3 = boto3.resource('s3',region_name='us-east-1',aws_access_key_id=key_id,
-                        aws_secret_access_key=secret_access_key)
-
-    s3.Bucket(bucket).put_object(Key=key,Body=image)
-    
-    url = client.generate_presigned_url('get_object',Params = {'Bucket':bucket,'Key':key})
-    print(url)
-    '''
-    return (json.dumps({"Status":"Success","Message":"Image Uploaded in S3 Bucket","url":url}))
+   s3.Bucket(bucket).put_object(Key=key,Body=request.files['Image'])
+   url = client.generate_presigned_url('get_object',Params = {'Bucket':bucket,'Key':key})
+   print(url)
+   #return (json.dumps([{'URL':url}]))
+   
+   return (json.dumps({"Status":"Image Uploaded in S3 Bucket","url":url}))
 
 
 def get_aws_keys(request):
