@@ -6,7 +6,7 @@ import requests
 
 
 def upload_file(request):
-   print type(request.files)
+   print(type(request.files))
    name1 = str(request.form['name'])
    print("FORM DATAAAA",name1,type(name1))
    list1 = name1.split('|')
@@ -16,7 +16,7 @@ def upload_file(request):
    name = image.name
    bucket = 'image-upload-rekognition'
    key = 'baladp.jpg'
-   print name
+   print(name)
    client = boto3.client('s3')
    s3 = boto3.resource('s3',region_name='us-east-1',aws_access_key_id=list1[0],aws_secret_access_key=list1[1])
 
