@@ -256,14 +256,14 @@ def Smstwilioservice(request):
 def CheckConfirmation(request):
      
      conf_no = request.json['confirmation_number']
-     sql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"'"))
+     #sql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"'"))
      psql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"' and customer_booked_status in ('booked')"))
      print(psql)
-     if sql[0]['count'] > 0 and psql[0]['count'] > 0 :
+     if  psql[0]['count'] > 0 :
          return(json.dumps([{"Return":"Confirmation number already exist","Return_Code":"Valid","Status": "Success","Status_Code": "200"}],indent =2))
      else:
          return(json.dumps([{"Return":"Confirmation number does not exist","Return_Code":"Invalid","Status": "Success","Status_Code": "200"}],indent =2))
-        
+       
         
 def twiliofetchroomsavailabilityandprice(request):
     #try:
