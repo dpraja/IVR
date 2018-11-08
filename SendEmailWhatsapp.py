@@ -32,10 +32,10 @@ def sendemailwhatsapp(request):
                            and ivr_room_customer_booked.customer_confirmation_number='"+str(con_no)+"' "))
      print("d",d)
      #print(d[0]['customer_amount'],type(d[0]['customer_amount']))
-     email = ['infocuit.banupriya@gmail.com','infocuit.daisy@gmail.com']
+     #email = ['infocuit.banupriya@gmail.com','infocuit.daisy@gmail.com']
      
-     #email.append(d[0]['email'])
-     #email.append(d[0]['customer_email'])
+     email.append(d[0]['email'])
+     email.append(d[0]['customer_email'])
      print(email)
      on = d[0]['booked_date']
      print(on[:11], type(on[:11]))
