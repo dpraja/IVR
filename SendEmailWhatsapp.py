@@ -33,7 +33,7 @@ def sendemailwhatsapp(request):
      print("d",d)
      #print(d[0]['customer_amount'],type(d[0]['customer_amount']))
      #email = ['infocuit.banupriya@gmail.com','infocuit.daisy@gmail.com']
-     
+     email = []
      email.append(d[0]['email'])
      email.append(d[0]['customer_email'])
      print(email)
