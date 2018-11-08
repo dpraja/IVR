@@ -22,6 +22,14 @@ def Inserttwilioreservation(request):
     
     d= {k:v for k,v in d.items() if k not in ('TFN','rate_per_day')}
     tfn = request.json['TFN']
+
+    cntry_code = request.json['cntry_code']
+    if cntry_code.find('+') != -1:
+        pass
+    else:
+        cntry_code = '+'+cntry_code
+    print("cntry_code", cntry_code)
+    
     b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
     #print(b_id)
     bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
@@ -54,6 +62,7 @@ def Inserttwilioreservation(request):
     d['customer_room_type'] = roomtype.title()
     d['business_id'] = str(bi_id[0]['business_id'])
     d['booked_date'] = today_date = datetime.datetime.utcnow()
+    d['cntry_code'] = cntry_code
     
     sql = gensql('insert','public.ivr_room_customer_booked',d)
     print(sql)
@@ -150,6 +159,13 @@ def Modifytwilioreservation(request):
     list1 = list1.replace(",",'''",''')
     list1 = list1.replace('}"',"}")    
     rate_per_day = json.loads(list1)
+
+    cntry_code = request.json['cntry_code']
+    if cntry_code.find('+') != -1:
+        pass
+    else:
+        cntry_code = '+'+cntry_code
+    print("cntry_code", cntry_code)
     
     customer_arrival_date = d['customer_arrival_date']
     customer_depature_date = d['customer_depature_date']
@@ -171,6 +187,7 @@ def Modifytwilioreservation(request):
     a['customer_arrival_date'] = customer_arrival_date
     a['customer_depature_date'] = customer_depature_date
     a['booked_date'] = today_date = datetime.datetime.utcnow()
+    a['cntry_code'] = cntry_code
     
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
     print(sql_value)
@@ -242,6 +259,13 @@ def Canceltwilioreservation(request):
 
 def Smstwilioservice(request):
      countrycode = request.json['countrycode']
+
+     
+     if countrycode.find('+') != -1:
+        pass
+     else:
+        countrycode = '+'+countrycode
+     print("countrycode", countrycode)
      #print(countrycode)
      name = 'Customer'
      phone = request.json['phone']
