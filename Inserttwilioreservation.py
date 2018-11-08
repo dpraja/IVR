@@ -188,6 +188,58 @@ def Modifytwilioreservation(request):
                         'ReturnCode':'RUS',"confirmation_number":e['customer_confirmation_number'],
                         "business_id":bi_id[0]['business_id']}], sort_keys=True, indent=4))
 
+def Canceltwilioreservation(request):
+    d = {}
+    conf = request.json['confirmation_number']
+    d['customer_confirmation_number'] = request.json['confirmation_number']
+    #conf = d.get('confirmation_number')
+    #d['customer_confirmation_number'] = conf
+   
+
+    res = (gensql('select','ivr_room_customer_booked','*',d))
+    print(res)
+    #NO_OF_room = res[0]['customer_no_of_rooms']
+    if len(res) == 2 :
+        return(json.dumps([{"Return":"Invalid Confirmation Number","Return_Code":"ICN","Status": "Success",
+                      "Status_Code": "200"}],indent=2))  
+    result  = json.loads(res)
+    data = result[0]
+    date = data['customer_arrival_date']
+    date1 = data['customer_depature_date']
+    arrival_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    depature_date = datetime.datetime.strptime(date1, '%Y-%m-%d').date()
+    str_date = "'"+str(arrival_date)+"'"
+    while arrival_date < depature_date:
+          arrival_date = arrival_date+datetime.timedelta(days=1)
+          str_date += ","+"'"+str(arrival_date)+"'"
+    #print(str_date)    
+    room_type = data['customer_room_type']
+    #print(room_type)
+    no_of_room = data['customer_no_of_rooms']
+    b_id = data['id']
+    #print(no_of_room,b_id)
+    
+    today_date = datetime.datetime.utcnow().date()
+    if arrival_date < today_date:
+       return(json.dumps([{"Return":"Can't Cancel Reservation","Return_Code":"CCR","Status": "Success",
+                      "Status_Code": "200"}],indent=2))
+    s = {}
+    s['customer_booked_status'] = "canceled"    
+    print(gensql('update','ivr_room_customer_booked',s,d))
+    bu_id = json.loads(dbget("select business_id,customer_no_of_rooms,customer_arrival_date,customer_room_type,customer_depature_date from ivr_room_customer_booked where customer_confirmation_number = '"+str(conf)+"' "))
+    #print(bu_id[0]['business_id'])
+    arr = str(bu_id[0]['customer_arrival_date'])
+    end = str(bu_id[0]['customer_depature_date'])
+    print(bu_id[0]['customer_arrival_date'])
+    rm_name = bu_id[0]['customer_room_type']
+    print(arr,type(arr),rm_name)
+    psql = json.loads(dbget("select room_id from configration where room_name = '"+str(rm_name)+"'"))
+    print(psql)
+    print(dbput("update room_to_sell set available_count=available_count+'"+str(bu_id[0]['customer_no_of_rooms'])+"', booked_count=booked_count-1 where\
+          business_id='"+str(bu_id[0]['business_id'])+"' and room_id='"+str(psql[0]['room_id'])+"' and room_date between '"+str(arr)+"' and '"+str(end)+"' "))
+    
+    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Your booking has been cancelled','ReturnCode':'RCS'}], sort_keys=True, indent=4))
+
 def Smstwilioservice(request):
      countrycode = request.json['countrycode']
      #print(countrycode)
@@ -221,7 +273,7 @@ def CheckConfirmation(request):
          return(json.dumps([{"Return":"Confirmation number already exist","Return_Code":"Valid","Status": "Success","Status_Code": "200"}],indent =2))
      else:
          return(json.dumps([{"Return":"Confirmation number does not exist","Return_Code":"Invalid","Status": "Success","Status_Code": "200"}],indent =2))
-       
+        
         
 def twiliofetchroomsavailabilityandprice(request):
     #try:
