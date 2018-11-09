@@ -20,7 +20,7 @@ def upload_file(request):
    client = boto3.client('s3')
    s3 = boto3.resource('s3',region_name='us-east-1',aws_access_key_id=list1[0],aws_secret_access_key=list1[1])
 
-   s3.Bucket(bucket).put_object(Key='Image',Body=request.files['Image'])
+   s3.Bucket(bucket).put_object(Key=key,Body=request.files['Image'])
    
    url = 'https://s3.amazonaws.com/'+bucket+'/'+key
    
