@@ -515,37 +515,18 @@ def twiliocalculatetotalcharges(request):
             
         print("arr",customer_arrival_date)
         print("dep",customer_depature_date)
-        '''
-        print(customer_arrival_date,customer_depature_date)
-        today_date = datetime.datetime.utcnow().date()
-        year = str(today_date.year)
-        if int(customer_arrival_date[0:2]) == today_date.month :
-            if int(customer_arrival_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))
-        elif int(customer_arrival_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-        customer_arrival_date = year+'-'+customer_arrival_date[0:2]+'-'+customer_arrival_date[2:]
         
-        if int(customer_depature_date[0:2]) == today_date.month :
-            if int(customer_depature_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))
-        elif int(customer_depature_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-
-        customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
-        '''
-        #print("arrival",customer_arrival_date,"depature",customer_depature_date,"roomid",customer_room_type,"businessid",bi_id[0]['business_id'])    # CONFIGRATION
+        
         sql = json.loads(dbget("select max_extra_bed.extrabed,extranet_availableroom.extra_adult_rate,extranet_availableroom.rate_plan_id,extranet_availableroom.room_date,extranet_availableroom.room_rate,configration.max_adults \
                                     from configration \
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
                                    where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
         print("sql",sql)
-     
-        #available_rate = json.loads(dbget("select room_id,room_rate,room_date,rate_plan_id from extranet_availableroom where room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"' and room_id='"+str(customer_room_type)+"'"))
-        #print(available_rate)
+        if len(sql) == 0:
+            
+            return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
+        
         s = 0
         total_adult = int(customer_adult)
         max_adult = int(sql[0]['max_adults'])
@@ -563,6 +544,7 @@ def twiliocalculatetotalcharges(request):
         
     
         sumva = 0
+        
         for i in sql:
                 arrival_date = customer_arrival_date
                 depature_date = customer_depature_date
@@ -572,6 +554,7 @@ def twiliocalculatetotalcharges(request):
                 for x in range(deltadates.days + 1):
                    
                    datebetween = arrival_date + datetime.timedelta(x)
+                   
                    if datebetween == conf_date or plan_rate == int(i['rate_plan_id']) :
                       
                       print("hiiiiiiiiiiii",i["extra_adult_rate"],i['room_rate'],i['room_rate'])
