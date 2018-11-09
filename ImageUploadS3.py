@@ -6,7 +6,7 @@ import requests
 
 
 def upload_file(request):
-   print type(request.files)
+   print(type(request.files))
    name1 = str(request.form['name'])
    print("FORM DATAAAA",name1,type(name1))
    list1 = name1.split('|')
@@ -16,16 +16,12 @@ def upload_file(request):
    name = image.filename
    bucket = 'image-upload-rekognition'
    key = name
-   print name
+   print(name)
    client = boto3.client('s3')
    s3 = boto3.resource('s3',region_name='us-east-1',aws_access_key_id=list1[0],aws_secret_access_key=list1[1])
 
    s3.Bucket(bucket).put_object(Key='Image',Body=request.files['Image'])
-'''
-   url = client.generate_presigned_url('get_object',Params = {'Bucket':bucket,'Key':key})
-   print(url)
-   #return (json.dumps([{'URL':url}]))
-'''
+   
    url = 'https://s3.amazonaws.com/'+bucket+'/'+key
    
    return (json.dumps({"Status":"Image Uploaded in S3 Bucket","url":url}))
