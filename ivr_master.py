@@ -121,6 +121,7 @@ from ExtranetConfiguration import SelectBedsizeConfiguration
 from ExtranetConfiguration import SelectRoomamenitieConfiguration
 from ExtranetConfiguration import SelectInclusionsConfiguration
 from ExtranetConfiguration import SelectExtrabed
+from sendemailconfirmation import sendemailconfirmation
 
 #Dashobos
 from DashboardReport import Lastreportrecord
@@ -489,7 +490,9 @@ def aws_keys():
    return get_aws_keys(request)
 
 
-
+@app.route('/sendemailconfirmation',methods=['POST'])
+def sendemailconfirmation_all():
+   return sendemailconfirmation(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
