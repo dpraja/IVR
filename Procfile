@@ -42,3 +42,4 @@ worker: gunicorn User_signup.py
 worker: gunicorn DashboardReport.py
 worker: gunicorn ImageUploadS3.py	
 worker: gunicorn SendEmailWhatsapp.py
+worker: gunicorn sendemailconfirmation.py
