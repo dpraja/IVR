@@ -515,18 +515,23 @@ def twiliocalculatetotalcharges(request):
             
         print("arr",customer_arrival_date)
         print("dep",customer_depature_date)
-        
+        customer_depature_date -= datetime.timedelta(days=1)
+        number_of_nights = customer_depature_date.day - customer_arrival_date.day
+        print(number_of_nights)
         
         sql = json.loads(dbget("select max_extra_bed.extrabed,extranet_availableroom.extra_adult_rate,extranet_availableroom.rate_plan_id,extranet_availableroom.room_date,extranet_availableroom.room_rate,configration.max_adults \
                                     from configration \
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
                                    where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
-        print("sql",sql)
+        print("sql",sql,len(sql))
+
         if len(sql) == 0:
             
             return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
-        
+
+        plan_id = sql[0]['rate_plan_id']
+        #print("plan_id",plan_id)
         s = 0
         total_adult = int(customer_adult)
         max_adult = int(sql[0]['max_adults'])
@@ -544,38 +549,27 @@ def twiliocalculatetotalcharges(request):
         
     
         sumva = 0
-        
+        arrival_date = customer_arrival_date
+        depature_date = customer_depature_date
+
         for i in sql:
-                arrival_date = customer_arrival_date
-                depature_date = customer_depature_date
-                conf_date = datetime.datetime.strptime(i['room_date'], '%Y-%m-%d')
-                print("conf_date",conf_date)
-                deltadates = depature_date - arrival_date
-                for x in range(deltadates.days + 1):
-                   
-                   datebetween = arrival_date + datetime.timedelta(x)
-                   
-                   if datebetween == conf_date or plan_rate == int(i['rate_plan_id']) :
-                      
-                      print("hiiiiiiiiiiii",i["extra_adult_rate"],i['room_rate'],i['room_rate'])
+            
+            if i['rate_plan_id'] == plan_id:    
+
                       r1 = max_adult * total_rooms_count
                       extra_price = (int(customer_adult) - r1) * int(i["extra_adult_rate"])
                       price = total_rooms_count * int(i['room_rate'])
                       total = price + extra_price                        
-                      sumva += total
-                      datelist_rate.append({"day":datebetween.strftime('%Y-%m-%d'),"total":total})
+                      #sumva += total
+                      datelist_rate.append({"day":i['room_date'],"total":total})
                       
-        print("datelist_rate",datelist_rate)
-        print("sumva",sumva)
-       
-        
-        
+              
         def myconverter(o):
                     if isinstance(o, datetime.datetime):
                          return o.__str__()  
  
-        return(json.dumps([{"ServiceMessage":"Success","Total_Amount":sumva,"date_amount":datelist_rate,
-                            "no_of_rooms":total_rooms_count,"number_of_nights":deltadates.days}],indent=2,default=myconverter))
+        return(json.dumps([{"ServiceMessage":"Success","Total_Amount":total*number_of_nights,"date_amount":datelist_rate,
+                            "no_of_rooms":total_rooms_count,"number_of_nights":number_of_nights}],indent=2,default=myconverter))
         
         #return(json.dumps({"ServiceMessage":"Success","Total_Amount":total_amout,"date_month_amount":last_list},indent=2))
         
