@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 import datetime
 from dateutil import parser
 import sys
-def sendemailwhatsapp():
+def sendemailwhatsapp(request):
      #print(name,email,type(email),message,conf_no,arrival,depature, room_type)
      sys.stdout.flush()
      e = request.json
