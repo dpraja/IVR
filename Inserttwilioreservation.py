@@ -492,7 +492,7 @@ def twiliocalculatetotalcharges(request):
         customer_depature_date = request.json["depature_date"]
         customer_room_type = request.json["room_type"] # ROOM_ID
         
-        print(customer_room_type,type(customer_room_type))
+        #print(customer_room_type,type(customer_room_type))
 
         roos_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
        # customer_room_type = customer_room_type.title()
@@ -524,7 +524,7 @@ def twiliocalculatetotalcharges(request):
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
                                    where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
-        print("sql",sql,len(sql))
+        #print("sql",sql,len(sql))
 
         if len(sql) == 0:
             
@@ -554,16 +554,23 @@ def twiliocalculatetotalcharges(request):
 
         for i in sql:
             
-            if i['rate_plan_id'] == plan_id:    
-
-                      r1 = max_adult * total_rooms_count
-                      extra_price = (int(customer_adult) - r1) * int(i["extra_adult_rate"])
-                      price = total_rooms_count * int(i['room_rate'])
-                      total = price + extra_price                        
-                      #sumva += total
-                      datelist_rate.append({"day":i['room_date'],"total":total})
+            if i['rate_plan_id'] == plan_id:
+                
+                #print(i['room_date'],type(i['room_date']))
+                r1 = max_adult * total_rooms_count
+                extra_price = (int(customer_adult) - r1) * int(i["extra_adult_rate"])
+                price = total_rooms_count * int(i['room_rate'])
+                total = price + extra_price
+                add_date = datetime.datetime.strptime(i['room_date'],'%Y-%m-%d').date()+ datetime.timedelta(days=1)
+                
+                datelist_rate.append({"day":""+datetime.datetime.strptime(i['room_date'],'%Y-%m-%d').date().strftime("%d")+""+
+                                      " "+datetime.datetime.strptime(i['room_date'],'%Y-%m-%d').date().strftime("%B")[:3]+""+" - "+
+                                       ""+add_date.strftime("%d")+""+" "+""+add_date.strftime("%B")[:3]+"",
+                                      "total":total})
                       
-              
+        
+        
+        
         def myconverter(o):
                     if isinstance(o, datetime.datetime):
                          return o.__str__()  
