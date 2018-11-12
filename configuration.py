@@ -7,10 +7,13 @@ def config(request):
     res = request.json
     roomtype = request.json['room_name']
     res['room_name'] = roomtype.title()
-    print(res)
-    gensql('insert','configration',res)
-    return(json.dumps({"Return":"Record Inserted Successfully","ReturnCode":"RIS","ReturnMessage":"Success"},indent=2))
-
+    rooms = json.loads(dbget("select count(*) from configration where room_name='"+res['room_name']+"'"))
+    if rooms[0]['count'] == 0:
+       print(res)
+       gensql('insert','configration',res)
+       return(json.dumps({"Return":"Record Inserted Successfully","ReturnCode":"RIS","ReturnMessage":"Success"},indent=2))
+    else:
+       return(json.dumps({"Return":"Room Name Already Exist","ReturnCode":"RNAE","ReturnMessage":"Success"},indent=2))
 def select_config(request):
     d = request.json
     res = json.loads(dbget("select room_id, room_name, max_adults, max_child, room_size.*, bedding_options.* ,max_extra_bed.*,\
