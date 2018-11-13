@@ -10,14 +10,16 @@ import math
 def Inserttwilioreservation(request):
 
     d = request.json
-    
+    no_room = request.json['customer_no_of_rooms']
     #print("rate_per_day",d['rate_per_day'][1:-1],type(d['rate_per_day']))
     
     list1 = d['rate_per_day'].replace("total=",'"amount":')
     list1 = list1.replace("day=",'''"rate_date":"''')
     list1 = list1.replace(",",'''",''')
-    list1 = list1.replace('}"',"}")    
+    list1 = list1.replace('}"',"}")
+    print(list1,type(list1))
     rate_per_day = json.loads(list1)
+    
     #print("rate_per_day",rate_per_day,type(rate_per_day))
 
     
@@ -73,11 +75,19 @@ def Inserttwilioreservation(request):
         rate['customer_confirmation_number'] = confir
         rate['business_id'] = str(bi_id[0]['business_id'])
         gensql('insert','customer_rate_detail',rate)
-        
+    psql = json.loads(dbget("select room_id from configration where room_name = '"+str(d['customer_room_type'])+"'"))
+    print(psql)
+    depature_date1 = customer_depature_date-datetime.timedelta(days=1)
+    print(depature_date1)
+    
+    dbput("update room_to_sell set available_count=available_count-"+str(no_room)+", booked_count=booked_count+"+str(no_room)+" where\
+         business_id='"+str(bi_id[0]['business_id'])+"' and room_id='"+str(psql[0]['room_id'])+"'\
+         and room_date between '"+str(customer_arrival_date)+"' and '"+str(depature_date1)+"' ")
+    
     return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS",
                         "Status":"Success","Statuscode":200,"confirmation_number":confir,
                         "business_id":bi_id[0]['business_id']}],indent=2))
-
+    
 def InsertArrivalDeparture(request):
     
     d = request.json
