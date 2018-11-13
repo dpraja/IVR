@@ -185,6 +185,23 @@ def room_open_update(request):
 
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
                         'ReturnCode':'RUS'}], sort_keys=True, indent=4))    
+
+def room_to_sell_update(request):
+    d = request.json['records']
+    print(d,type(d))
+    
+    for i in d:
+        j = {k:v for k,v in i.items() if k not in ('sell_id')}
+        ids = {k:v for k,v in j.items() if k in ('room_id','business_id','room_date')}
+        
+        values = {k:v for k,v in j.items() if v!=None if k not in ('room_id','business_id','room_date','booked_count','con_room_name')}
+        
+        gensql('update','room_to_sell',values,ids)
+    
+    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
+                        'ReturnCode':'RUS'}], sort_keys=True, indent=4))    
+ 
+
     
 
 
