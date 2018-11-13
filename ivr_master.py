@@ -82,6 +82,7 @@ from RoomList import select_restriction
 from create_rate_plan import select_rateplanid
 from RatesandAvailability import room_open_update
 from Insert_Ivr_Reservation import Query_Rate_Per_day
+from RatesandAvailability import room_to_sell_update
 
 from SendEmailWhatsapp import sendemailwhatsapp
 from ImageUploadS3 import upload_file
@@ -493,6 +494,10 @@ def aws_keys():
 @app.route('/sendemailconfirmation',methods=['POST'])
 def sendemailconfirmation_all():
    return sendemailconfirmation(request)
+
+@app.route('/room_to_sell_update',methods=['POST'])
+def room_sell_update():
+   return room_to_sell_update(request)
 
 if __name__ == "__main__":
   app.run(debug=True)
