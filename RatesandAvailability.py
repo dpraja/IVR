@@ -175,7 +175,7 @@ def room_open_update(request):
     print(d,type(d))
     
     for i in d:
-        j = {k:v for k,v in i.items() if k not in ('s_no','sell_id')}
+        j = {k:v for k,v in i.items() if k not in ('s_no')}
         ids = {k:v for k,v in j.items() if k in ('rate_plan_id','room_id','business_id','room_date')}
         
         values = {k:v for k,v in j.items() if v!=None if k not in ('rate_plan_id','room_id','business_id',
