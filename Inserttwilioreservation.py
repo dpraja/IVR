@@ -476,8 +476,9 @@ def twiliofetchroomsavailabilityandprice(request):
                               "Status_Code": "200","total":amount}],indent=2))  
     
 def twiliocalculatetotalcharges(request):
-   #try:
+  #try:
         tfn = request.json['tfn_num']
+        
         dividen_list = []
         last_list = []
         sumval = 0
@@ -515,17 +516,28 @@ def twiliocalculatetotalcharges(request):
             
         print("arr",customer_arrival_date)
         print("dep",customer_depature_date)
-        customer_depature_date -= datetime.timedelta(days=1)
+        
         number_of_nights = customer_depature_date.day - customer_arrival_date.day
         print(number_of_nights)
-        
+        customer_depature_date -= datetime.timedelta(days=1)
         sql = json.loads(dbget("select max_extra_bed.extrabed,extranet_availableroom.extra_adult_rate,extranet_availableroom.rate_plan_id,extranet_availableroom.room_date,extranet_availableroom.room_rate,configration.max_adults \
                                     from configration \
                                    join extranet_availableroom on extranet_availableroom.room_id = configration.room_id \
                                    join max_extra_bed on max_extra_bed.extrabed_id = configration.maximum_extrabed_id \
-                                   where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"'"))
-        #print("sql",sql,len(sql))
+                                   where configration.room_id  = '"+str(roos_type_id[0]['room_id'])+"' and configration.business_id='"+bi_id[0]['business_id']+"'and extranet_availableroom.room_date between '"+str(customer_arrival_date)+"' and '"+str(customer_depature_date)+"' order by room_date"))
+        print("sql",len(sql))
+     
+            
+        plan_id_list = [v for s in sql for k,v in s.items()  if k == 'rate_plan_id' ]
+        print("ok d",plan_id_list)
+        
+        my_dict = [k for k,v in dict(Counter(plan_id_list)).items() if v == number_of_nights]
 
+        print(my_dict)
+
+        sql = [ s  for s in sql   if s['rate_plan_id'] in my_dict ]
+        print("sql",len(sql))
+        
         if len(sql) == 0:
             
             return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
@@ -582,7 +594,7 @@ def twiliocalculatetotalcharges(request):
         
     #except:
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
-        
+
 def CheckRoomtype(request):
     d = request.json
     print(d)
