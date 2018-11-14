@@ -154,7 +154,7 @@ def Modifytwilioreservation(request):
     a = { k : v for k,v in d.items() if v != '' if k not in ('customer_confirmation_number',
                                                              'customer_arrival_date','customer_depature_date',
                                                              'rate_per_day','TFN')}
-    print(a)
+    #print(a)
     
     tfn = request.json['TFN']
     b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
@@ -199,9 +199,26 @@ def Modifytwilioreservation(request):
     a['customer_depature_date'] = customer_depature_date
     a['booked_date'] = today_date = datetime.datetime.utcnow()
     a['cntry_code'] = cntry_code
+
+    get = json.loads(gensql('select','ivr_room_customer_booked','*',e))
+
+    #print("get",get)
+    
+    depature_date1 = datetime.datetime.strptime(get[0]['customer_depature_date'], '%Y-%m-%d').date()-datetime.timedelta(days=1)
+    
+    r_id = json.loads(dbget("select room_id from configration where room_name = '"+str(get[0]['customer_room_type'])+"'"))
+    print("r",r_id)
+    
+    dbput("update room_to_sell set available_count=available_count+'"+str(get[0]['customer_no_of_rooms'])+"',\
+          booked_count=booked_count-'"+str(get[0]['customer_no_of_rooms'])+"' where\
+          business_id='"+str(get[0]['business_id'])+"' and \
+          room_id='"+str(r_id[0]['room_id'])+"' \
+          and room_date between \
+          '"+str(get[0]['customer_arrival_date'])+"' and '"+str(depature_date1)+"' ")
+    
     
     sql_value = gensql('update','ivr_room_customer_booked',a,e)
-    print(sql_value)
+    #print(sql_value)
     
     dbput("delete from customer_rate_detail where customer_confirmation_number='"+str(e['customer_confirmation_number'])+"'\
            and business_id='"+str(bi_id[0]['business_id'])+"' ")
@@ -212,6 +229,17 @@ def Modifytwilioreservation(request):
         rate['business_id'] = str(bi_id[0]['business_id'])
         gensql('insert','customer_rate_detail',rate)
         
+    depature_date1 = customer_depature_date-datetime.timedelta(days=1)
+    r_id = json.loads(dbget("select room_id from configration where room_name = \
+                            '"+str(a['customer_room_type'])+"'"))
+    print("r",r_id)
+    
+    dbput("update room_to_sell set available_count=available_count-"+a['customer_no_of_rooms']+",\
+           booked_count=booked_count+"+a['customer_no_of_rooms']+" where\
+           business_id='"+str(bi_id[0]['business_id'])+"' and room_id='"+str(r_id[0]['room_id'])+"'\
+           and room_date between '"+str(a['customer_arrival_date'])+"' and '"+str(depature_date1)+"' ")
+    
+
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Record Updated Successfully',
                         'ReturnCode':'RUS',"confirmation_number":e['customer_confirmation_number'],
                         "business_id":bi_id[0]['business_id']}], sort_keys=True, indent=4))
@@ -220,13 +248,9 @@ def Canceltwilioreservation(request):
     d = {}
     conf = request.json['confirmation_number']
     d['customer_confirmation_number'] = request.json['confirmation_number']
-    #conf = d.get('confirmation_number')
-    #d['customer_confirmation_number'] = conf
-   
-
+    
     res = (gensql('select','ivr_room_customer_booked','*',d))
-    print(res)
-    #NO_OF_room = res[0]['customer_no_of_rooms']
+    
     if len(res) == 2 :
         return(json.dumps([{"Return":"Invalid Confirmation Number","Return_Code":"ICN","Status": "Success",
                       "Status_Code": "200"}],indent=2))  
@@ -253,18 +277,19 @@ def Canceltwilioreservation(request):
                       "Status_Code": "200"}],indent=2))
     s = {}
     s['customer_booked_status'] = "canceled"    
-    print(gensql('update','ivr_room_customer_booked',s,d))
+    gensql('update','ivr_room_customer_booked',s,d)
     bu_id = json.loads(dbget("select business_id,customer_no_of_rooms,customer_arrival_date,customer_room_type,customer_depature_date from ivr_room_customer_booked where customer_confirmation_number = '"+str(conf)+"' "))
     #print(bu_id[0]['business_id'])
     arr = str(bu_id[0]['customer_arrival_date'])
     end = str(bu_id[0]['customer_depature_date'])
     print(bu_id[0]['customer_arrival_date'])
     rm_name = bu_id[0]['customer_room_type']
-    print(arr,type(arr),rm_name)
+    #print(arr,type(arr),rm_name)
     psql = json.loads(dbget("select room_id from configration where room_name = '"+str(rm_name)+"'"))
-    print(psql)
-    print(dbput("update room_to_sell set available_count=available_count+'"+str(bu_id[0]['customer_no_of_rooms'])+"', booked_count=booked_count-1 where\
-          business_id='"+str(bu_id[0]['business_id'])+"' and room_id='"+str(psql[0]['room_id'])+"' and room_date between '"+str(arr)+"' and '"+str(end)+"' "))
+    #print(psql)
+    dbput("update room_to_sell set available_count=available_count+'"+str(bu_id[0]['customer_no_of_rooms'])+"',\
+          booked_count=booked_count-'"+str(bu_id[0]['customer_no_of_rooms'])+"' where\
+          business_id='"+str(bu_id[0]['business_id'])+"' and room_id='"+str(psql[0]['room_id'])+"' and room_date between '"+str(arr)+"' and '"+str(end)+"' ")
     
     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Your booking has been cancelled','ReturnCode':'RCS'}], sort_keys=True, indent=4))
 
