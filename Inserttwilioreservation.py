@@ -165,6 +165,17 @@ def Modifytwilioreservation(request):
     e = { k : v for k,v in d.items()  if k in ('customer_confirmation_number')}
     #print(e)
 
+    get = json.loads(gensql('select','ivr_room_customer_booked','*',e))
+
+    #print("get",get)
+    
+    if len(get) == 0:
+        return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Invalid Confirmation Number',
+                        'ReturnCode':'ICN'}], sort_keys=True, indent=4)) 
+    if get[0]['customer_booked_status'] in ('canceled'):
+        return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Can Not Modify This Reservation',
+                        'ReturnCode':'CNM'}], sort_keys=True, indent=4)) 
+                          
     list1 = d['rate_per_day'].replace("total=",'"amount":')
     list1 = list1.replace("day=",'''"rate_date":"''')
     list1 = list1.replace(",",'''",''')
@@ -200,9 +211,6 @@ def Modifytwilioreservation(request):
     a['booked_date'] = today_date = datetime.datetime.utcnow()
     a['cntry_code'] = cntry_code
 
-    get = json.loads(gensql('select','ivr_room_customer_booked','*',e))
-
-    #print("get",get)
     
     depature_date1 = datetime.datetime.strptime(get[0]['customer_depature_date'], '%Y-%m-%d').date()-datetime.timedelta(days=1)
     
@@ -249,11 +257,17 @@ def Canceltwilioreservation(request):
     conf = request.json['confirmation_number']
     d['customer_confirmation_number'] = request.json['confirmation_number']
     
-    res = (gensql('select','ivr_room_customer_booked','*',d))
+    res = json.loads(gensql('select','ivr_room_customer_booked','*',d))
     
-    if len(res) == 2 :
+    if len(res) == 0 :
         return(json.dumps([{"Return":"Invalid Confirmation Number","Return_Code":"ICN","Status": "Success",
-                      "Status_Code": "200"}],indent=2))  
+                      "Status_Code": "200"}],indent=2))
+    
+    if res[0]['customer_booked_status'] in ('canceled','not booked'):
+        return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Can Not Modify This Reservation',
+                        'ReturnCode':'CNM'}], sort_keys=True, indent=4)) 
+
+     
     result  = json.loads(res)
     data = result[0]
     date = data['customer_arrival_date']
@@ -291,7 +305,8 @@ def Canceltwilioreservation(request):
           booked_count=booked_count-'"+str(bu_id[0]['customer_no_of_rooms'])+"' where\
           business_id='"+str(bu_id[0]['business_id'])+"' and room_id='"+str(psql[0]['room_id'])+"' and room_date between '"+str(arr)+"' and '"+str(end)+"' ")
     
-    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Your booking has been cancelled','ReturnCode':'RCS'}], sort_keys=True, indent=4))
+    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Your booking has been cancelled',
+                        'ReturnCode':'RCS'}], sort_keys=True, indent=4))
 
 def Smstwilioservice(request):
      countrycode = request.json['countrycode']
