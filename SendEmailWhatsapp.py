@@ -32,10 +32,10 @@ def sendemailwhatsapp(request):
                            and ivr_room_customer_booked.customer_confirmation_number='"+str(con_no)+"' "))
      print("d",d)
      #print(d[0]['customer_amount'],type(d[0]['customer_amount']))
-     email = ['infocuit.banupriya@gmail.com','infocuit.raja@gmail.com']
+     #email = ['infocuit.santhakumar@gmail.com','infocuit.raja@gmail.com']
      
-     #email.append(d[0]['email'])
-     #email.append(d[0]['customer_email'])
+     email.append(d[0]['email'])
+     email.append(d[0]['customer_email'])
      print(email)
      on = d[0]['booked_date']
      print(on[:11], type(on[:11]))
@@ -99,25 +99,67 @@ def sendemailwhatsapp(request):
             <br>
               <p><b> Dear Customer,</b></p>
               <p style="margin-left:100px">Thank you for Choosing our Hotel, It is our pleasure to confirm your reservation as follows. </p>
+              <table style="width:700px">
+              <tr style="height:10">
+              <td style="width:350px;"><p style="line-height:0.7 ">Arrival</p></td>
+              <td style="width:350px;"><p style="float:center">Guest Name:</p></td>
+              </tr>
               
-              <p style="line-height:0.7;padding-top:20px;"> <span>Arrival</span> <span style="margin-left:25em">Guest Name:</span></p> 
-              <p style="line-height:0.7"><span>"""+str(d[0]['customer_arrival_date'])+"""</span> <span style="margin-left:23em">"""+str(d[0]['customer_name'])+"""</span></p>
-                     
-              <p style="line-height:0.7;padding-top:10px;"><span>Departure</span> <span style="margin-left:23.5em">Preferred Language</span></p>
-              <p style="line-height:0.7"><span>"""+str(d[0]['customer_depature_date'])+"""</span><span style="margin-left:23em">"""+str(d[0]['ivr_language'])+"""</span></p>
+              <tr style="height:10"
+              <td style="width:350px;"><p style="line-height:0.7">"""+str(d[0]['customer_arrival_date'])+"""</p></td>
+              <td style="width:350px;"><p >"""+str(d[0]['customer_name'])+"""</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7;padding-top:10px;">Departure</p></td>
+              <td style="width:350px"><p>Preferred Language</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7">"""+str(d[0]['customer_depature_date'])+"""</p></td>
+              <td style="width:350px"><p >"""+str(d[0]['ivr_language'])+"""</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7;padding-top:10px;">Hotel Name:</p></td>
+              <td style="width:350px"><p >Channel</p></td>
+              </tr>
+
+              <tr>
+              <td style="line-height:0.7;width:350px"><p >"""+str(d[0]['hotel_name'])+"""</p></td>
+              <td style="width:350px"><p>"""+d[0]['channel']+"""</p></td>
+              </tr>
               
-              <p style="line-height:0.7;padding-top:10px;"><span>Hotel Name:</span><span style="margin-left:22.5em">Channel</span></p>
-              <p style="line-height:0.7"><span>"""+str(d[0]['hotel_name'])+"""</span><span style="margin-left:22.5em">"""+d[0]['channel']+"""</span></p>
-              
-              <p style="line-height:0.7;padding-top:10px;"><span>Total</span> Adult <span style="margin-left:23em">Confirmation Number</span></p>
-              <p style="line-height:0.7"><span>"""+str(d[0]['customer_adult'])+"""</span><span style="margin-left:27.5em">"""+d[0]['customer_confirmation_number']+"""</span></p>
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7;padding-top:10px;">Total Adult</p></td>
+              <td style="width:350px"><p >Confirmation Number</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7">"""+str(d[0]['customer_adult'])+"""</p></td>
+              <td style="width:350px"><p >"""+d[0]['customer_confirmation_number']+"""</p></td>
+              </tr>
         
-              <p style="line-height:0.7;padding-top:10px;"><span>Total Child</span><span style="margin-left:23em"> Booked On</span></p>
-              <p style="line-height:0.7"><span>"""+str(d[0]['customer_child'])+"""</span><span style="margin-left:27.5em">"""+booked_on+"""</span></p>   
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7;padding-top:10px;">Total Child</p></td>
+              <td style="width:350px"><p > Booked On</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7">"""+str(d[0]['customer_child'])+"""</p></td>
+              <td style="width:350px"><p >"""+booked_on+"""</p></td>
+              </tr>   
               
-              <p style="line-height:0.7;padding-top:10px;"><span>Total Price</span><span style="margin-left:23em"> No Of Rooms</span></p>
-              <p style="line-height:0.7"><span>"""+str(d[0]['customer_amount'])+"""</span><span style="margin-left:25em">"""+str(d[0]['customer_no_of_rooms'])+"""</span></p>
-            
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7;padding-top:10px;">Total Price</p></td>
+              <td style="width:350px"><p > No Of Rooms</p></td>
+              </tr>
+
+              <tr>
+              <td style="width:350px"><p style="line-height:0.7">"""+str(d[0]['customer_amount'])+"""</p></td>
+              <td style="width:350px"><p >"""+str(d[0]['customer_no_of_rooms'])+"""</p></td>
+              </tr>
+            </table>
                 <hr>
                 <p style="line-height:0.7">Room Type</p>
                 <p style="line-height:0.7">"""+d[0]['customer_room_type']+"""</p> 
