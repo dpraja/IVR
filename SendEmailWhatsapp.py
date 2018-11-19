@@ -12,6 +12,7 @@ def sendemailwhatsapp(request):
      sys.stdout.flush()
      e = request.json
      print(e)
+     email = []
      Hotel_name = 'Kconnect24/7'
      tfn = request.json['TFN']
      con_no = request.json['customer_confirmation_number']
