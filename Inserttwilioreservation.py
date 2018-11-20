@@ -709,3 +709,12 @@ def CheckRoomtype(request):
     else:
         return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
     
+def CheckConfirmation(request):
+    conf = request.json['confirmation']
+    mobile = request.json['mobile']
+    sql = json.loads(dbget("select customer_amount from ivr_room_customer_booked \
+                           where customer_confirmation_number = '"+str(conf)+"' \
+                           and customer_mobile = '"+str(mobile)+"'"))
+    return json.dumps({'Return':'Success','Returncode':sql[0]},indent=2)
+    
+        
