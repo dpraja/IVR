@@ -71,7 +71,7 @@ from InsertCustomerRoomBooking import checkinguest
 from Inserttwilioreservation import twiliofetchroomsavailabilityandprice
 from Inserttwilioreservation import twiliocalculatetotalcharges
 from Inserttwilioreservation import CheckRoomtype
-from Inserttwilioreservation import CheckConfirmation
+from Inserttwilioreservation import CheckConfirmationmobile
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -499,9 +499,9 @@ def sendemailconfirmation_all():
 @app.route('/room_to_sell_update',methods=['POST'])
 def room_sell_update():
    return room_to_sell_update(request)
-@app.route('/CheckConfirmation',methods=['POST'])
-def CheckConfirmation_All():
-   return CheckConfirmation(request)
+@app.route('/CheckConfirmationmobile',methods=['POST'])
+def CheckConfirmation_All_mobile():
+   return CheckConfirmationmobile(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
