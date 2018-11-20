@@ -695,7 +695,7 @@ def CheckConfirmationmobile(request):
     return json.dumps({'Return':'Success','Returncode':"Your Amount is:"+str(sql[0]['customer_amount'])},indent=2)
 def check_phonenumber(request):
     number = request.json['mobile']
-    if int(number.isdigit()) and len(int(number)) == 10:
+    if int(number.isdigit()) and len(number) == 10:
         print("Valid mobile number")
         return json.dumps([{"Return_Code":"Valid","ReturnValue":"Success"}],indent=4)
     else:
