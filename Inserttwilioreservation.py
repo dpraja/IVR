@@ -715,6 +715,6 @@ def CheckConfirmation(request):
     sql = json.loads(dbget("select customer_amount from ivr_room_customer_booked \
                            where customer_confirmation_number = '"+str(conf)+"' \
                            and customer_mobile = '"+str(mobile)+"'"))
-    return json.dumps({'Return':'Success','Returncode':"Your Amount is:"+str(sql[0])},indent=2)
+    return json.dumps({'Return':'Success','Returncode':"Your Amount is:"+str(sql[0]['customer_amount'])},indent=2)
     
         
