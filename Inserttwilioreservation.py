@@ -366,30 +366,7 @@ def twiliofetchroomsavailabilityandprice(request):
         #d['customer_depature_date'] = datetime.date(2019, 1, 3)
         customer_arrival_date = d['arrival_date']
         customer_depature_date = d['depature_date']
-        '''
-        #print(customer_arrival_date,customer_depature_date)
-        today_date = datetime.datetime.utcnow().date()
-        year = str(today_date.year)
-        if int(customer_arrival_date[0:2]) == today_date.month :
-            if int(customer_arrival_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))
-        elif int(customer_arrival_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-        customer_arrival_date = year+'-'+customer_arrival_date[0:2]+'-'+customer_arrival_date[2:]
-        d['customer_arrival_date'] = customer_arrival_date
-        if int(customer_depature_date[0:2]) == today_date.month :
-            if int(customer_depature_date[2:]) < today_date.day :
-               year = str(today_date.year+1)
-               print("year",year,type(year))    
-        elif int(customer_depature_date[0:2]) < today_date.month :
-            year = str(today_date.year+1)
-        customer_depature_date = year+'-'+customer_depature_date[0:2]+'-'+customer_depature_date[2:]
-        d['customer_depature_date'] = customer_depature_date
-        print(customer_arrival_date,customer_depature_date)
-        #print(d)  ,room_rate        
-        print("date",d['customer_arrival_date'],d['customer_depature_date'])
-        '''
+
         customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
         customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
         customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
@@ -500,7 +477,7 @@ def twiliofetchroomsavailabilityandprice(request):
         for bed in beds:    
             for tol in total:
                     
-                if tol['room_id'] == bed['room_id']:    
+                if tol['room_id'] == bed['room_id'] and len(tol['rate_plans']) != 0:    
                    #print(tol,"1111111111111111111111111111111")
                    total_bed = bed['total_bed']
                    extrabed = bed['extrabed']
