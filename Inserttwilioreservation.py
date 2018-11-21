@@ -697,6 +697,7 @@ def CheckConfirmationmobile(request):
     except:
           return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)  
 
+
 def check_phonenumber(request):
     number = request.json['mobile']
     if int(number.isdigit()) and len(number) == 10:
