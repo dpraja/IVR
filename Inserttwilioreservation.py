@@ -687,12 +687,16 @@ def CheckRoomtype(request):
         return(json.dumps([{'Retuen':'Success','Returncode':'InValid'}]))
     
 def CheckConfirmationmobile(request):
-    conf = request.json['confirmation']
-    mobile = request.json['mobile']
-    sql = json.loads(dbget("select customer_amount from ivr_room_customer_booked \
-                           where customer_confirmation_number = '"+str(conf)+"' \
-                           and customer_mobile = '"+str(mobile)+"'"))
-    return json.dumps({'Return':'Success','Returncode':"Your Amount is "+str(sql[0]['customer_amount'])},indent=2)
+    try:
+        conf = request.json['confirmation']
+        mobile = request.json['mobile']
+        sql = json.loads(dbget("select customer_amount from ivr_room_customer_booked \
+                               where customer_confirmation_number = '"+str(conf)+"' \
+                               and customer_mobile = '"+str(mobile)+"'"))
+        return json.dumps({'Return':'Success','Returncode':"Your Amount is "+str(sql[0]['customer_amount'])},indent=2)
+    except:
+          return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)  
+
 def check_phonenumber(request):
     number = request.json['mobile']
     if int(number.isdigit()) and len(number) == 10:
@@ -703,10 +707,13 @@ def check_phonenumber(request):
         return json.dumps([{"Return_Code":"InValid","ReturnValue":"Failure"}],indent=4)
 
 def CheckTotalnights(request):
-    conf = request.json['confirmation']
-    mobile = request.json['mobile']
-    sql = json.loads(dbget("select nights from ivr_room_customer_booked \
-                           where customer_confirmation_number = '"+str(conf)+"' \
-                           and customer_mobile = '"+str(mobile)+"'"))
-    return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)  
-       
+    try:
+        conf = request.json['confirmation']
+        mobile = request.json['mobile']
+        sql = json.loads(dbget("select nights from ivr_room_customer_booked \
+                               where customer_confirmation_number = '"+str(conf)+"' \
+                               and customer_mobile = '"+str(mobile)+"'"))
+        return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)  
+     except:
+         return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)  
+
