@@ -5,9 +5,13 @@ def create_rate_plan(request):
     res = request.json
     print(res)
     a = { k : v for k,v in res.items()  if k not in ('room_types_id','packages_id')}
-    gensql('insert','rate_plan',a)
+    for rm_id in res['room_types_id']:
+        for pl_id in res['packages_id']:
+            a['room_types_id'] = rm_id
+            a['packages_id'] = pl_id
+            gensql('insert','rate_plan',a)
     rate_id = json.loads(gensql('select','rate_plan','max(rate_plan_id) as plan_id',a))
-    print(rate_id)
+    #print(rate_id)
     for i in res['room_types_id']:
         rate_plan ={}
         rate_plan['rate_plan_id'] = rate_id[0]['plan_id']
