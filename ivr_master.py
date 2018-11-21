@@ -73,6 +73,7 @@ from Inserttwilioreservation import twiliocalculatetotalcharges
 from Inserttwilioreservation import CheckRoomtype
 from Inserttwilioreservation import CheckConfirmationmobile
 from Inserttwilioreservation import check_phonenumber
+from Inserttwilioreservation import CheckTotalnights
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -506,6 +507,9 @@ def CheckConfirmation_All_mobile():
 @app.route('/check_phonenumber',methods=['POST'])
 def check_phonenumber_all():
    return check_phonenumber(request)
+@app.route('/CheckTotalnights',methods=['POST'])
+def CheckTotalnights_al():
+   return CheckTotalnights(request)
 if __name__ == "__main__":
   app.run(debug=True)
   #app.run(host="192.168.1.10",port=5000)
