@@ -708,13 +708,13 @@ def check_phonenumber(request):
         return json.dumps([{"Return_Code":"InValid","ReturnValue":"Failure"}],indent=4)
 
 def CheckTotalnights(request):
-    try:
+  try:
         conf = request.json['confirmation']
         mobile = request.json['mobile']
         sql = json.loads(dbget("select nights from ivr_room_customer_booked \
                                where customer_confirmation_number = '"+str(conf)+"' \
                                and customer_mobile = '"+str(mobile)+"'"))
-        return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)  
-     except:
+        return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)
+  except:
          return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)  
 
