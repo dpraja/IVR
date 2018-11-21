@@ -708,5 +708,5 @@ def CheckTotalnights(request):
     sql = json.loads(dbget("select nights from ivr_room_customer_booked \
                            where customer_confirmation_number = '"+str(conf)+"' \
                            and customer_mobile = '"+str(mobile)+"'"))
-    return json.dumps({'Return':'Success','Returncode':"Your Amount is "+str(sql[0]['nights'])},indent=2)  
+    return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)  
        
