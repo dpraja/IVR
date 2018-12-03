@@ -17,6 +17,7 @@ def Inserttwilioreservation(request):
     list1 = list1.replace("day=",'''"rate_date":"''')
     list1 = list1.replace(",",'''",''')
     list1 = list1.replace('}"',"}")
+    list1 = list1.replace('} {','},{')
     list1 = '['+list1+']'
     print(list1,type(list1))
     rate_per_day = json.loads(list1)
