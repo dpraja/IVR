@@ -100,7 +100,7 @@ from create_rate_plan import update_rate_plan
 from create_rate_plan import delete_rate_plan
 from create_rate_plan import select_rate_plan
 from create_rate_plan import select_plan
-
+from create_rate_plan import Insert_Packages
 #SignUp
 
 from User_signup import User_signup
@@ -364,7 +364,9 @@ def selectrateplanid():
 @app.route('/select_plan',methods=['POST'])
 def selectplan():
    return select_plan(request)
-
+@app.route('/Insert_Packages',methods=['POST'])
+def Insert_Packages_all():
+   return Insert_Packages(request)
 
 #configuration
 @app.route('/RoomsizeConfiguration',methods=['POST'])
