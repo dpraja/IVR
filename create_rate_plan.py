@@ -115,9 +115,15 @@ def select_cancellation_policy(request):
     res = json.loads(dbget("select * from cancellation_policy"))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
  
+def Insert_Packages(request):
+    d = request.json
+    gensql('insert','public.packages',d)
+    return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success"},indent=2))
 def select_packages(request):
-    res = json.loads(dbget("select * from packages"))
+    d = request.json
+    res = json.loads(dbget("select * from packages where business_id = '"+d['business_id']+"'"))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
+ 
  
 def select_rateplanid(request):
     business_id = request.json['business_id']
