@@ -26,7 +26,13 @@ def InclusionsConfiguration(request):
     d = request.json
     gensql('insert','inclusions',d)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','Return': 'Record Inserted Successfully','ReturnCode':'RIS'}, sort_keys=True, indent=4))
+
+def ExtrabedConfiguration(request):
+    d = request.json
+    gensql('insert','max_extra_bed',d)
+    return(json.dumps({'Status': 'Success', 'StatusCode': '200','Return': 'Record Inserted Successfully','ReturnCode':'RIS'}, sort_keys=True, indent=4))
     
+   
 def DeleteRoomsizeConfiguration(request):
     
     size_id = request.json['room_size_id']
@@ -62,29 +68,34 @@ def RoomnameConfiguration(request):
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RRS','Result':d}, sort_keys=True, indent=4))
  
  
-def SelectRoomsizeConfiguration():
-    sql = json.loads(dbget("select * from room_size"))
+def SelectRoomsizeConfiguration(request):
+    d = request.json
+    sql = json.loads(dbget("select * from room_size where business_id = '"+d['business_id']+"'"))
     print(sql)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
-def SelectBeddingoptionsConfiguration():
-    sql = json.loads(dbget("select * from bedding_options"))
-    print(sql)
-    return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
- 
-def SelectBedsizeConfiguration():
-    sql = json.loads(dbget("select * from bed_size"))
+def SelectBeddingoptionsConfiguration(request):
+    d = request.json
+    sql = json.loads(dbget("select * from bedding_options where business_id = '"+d['business_id']+"'"))
     print(sql)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
  
-def SelectRoomamenitieConfiguration():
-    sql = json.loads(dbget("select * from room_amenitie"))
+def SelectBedsizeConfiguration(request):
+    d = request.json
+    sql = json.loads(dbget("select * from bed_size where business_id = '"+d['business_id']+"'"))
+    print(sql)
+    return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
+ 
+def SelectRoomamenitieConfiguration(request):
+    d = request.json
+    sql = json.loads(dbget("select * from room_amenitie where business_id = '"+d['business_id']+"'"))
     print(sql)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
 def SelectInclusionsConfiguration():
     sql = json.loads(dbget("select * from inclusions"))
     print(sql)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
-def SelectExtrabed():
-    sql = json.loads(dbget("select * from max_extra_bed"))
+def SelectExtrabed(request):
+    d = request.json
+    sql = json.loads(dbget("select * from max_extra_bed where business_id = '"+d['business_id']+"'"))
     print(sql)
     return(json.dumps({'Status': 'Success', 'StatusCode': '200','ReturnCode':'RTS','Result':sql}, sort_keys=True, indent=4))
