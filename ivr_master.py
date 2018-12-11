@@ -402,24 +402,24 @@ def DeleteRoomamenitieConfiguration_all():
 @app.route('/RoomnameConfiguration',methods=['POST'])
 def Roomname():
    return RoomnameConfiguration(request)
-@app.route('/SelectRoomsizeConfiguration',methods=['GET'])
+@app.route('/SelectRoomsizeConfiguration',methods=['POST'])
 def SelectRoomsizeConfiguration_all():
-   return SelectRoomsizeConfiguration()
-@app.route('/SelectBeddingoptionsConfiguration',methods=['GET'])
+   return SelectRoomsizeConfiguration(request)
+@app.route('/SelectBeddingoptionsConfiguration',methods=['POST'])
 def SelectBeddingoptionsConfiguration_all():
-   return SelectBeddingoptionsConfiguration()
-@app.route('/SelectBedsizeConfiguration',methods=['GET'])
+   return SelectBeddingoptionsConfiguration(request)
+@app.route('/SelectBedsizeConfiguration',methods=['POST'])
 def SelectBedsizeConfiguration_all():
-   return SelectBedsizeConfiguration()
-@app.route('/SelectRoomamenitieConfiguration',methods=['GET'])
+   return SelectBedsizeConfiguration(request)
+@app.route('/SelectRoomamenitieConfiguration',methods=['POST'])
 def SelectRoomamenitieConfiguration_all():
-   return SelectRoomamenitieConfiguration()
+   return SelectRoomamenitieConfiguration(request)
 @app.route('/SelectInclusionsConfiguration',methods=['GET'])
 def SelectInclusionsConfiguration_all():
    return SelectInclusionsConfiguration()
-@app.route('/SelectExtrabed',methods=['GET'])
+@app.route('/SelectExtrabed',methods=['POST'])
 def SelectExtrabed_all():
-   return SelectExtrabed()
+   return SelectExtrabed(request)
 @app.route('/Inserttwilioreservation',methods=['POST'])
 def reservation():
    return Inserttwilioreservation(request)
