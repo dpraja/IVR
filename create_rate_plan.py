@@ -108,7 +108,8 @@ def select_rate_plan(request):
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
 def select_room_types(request):
-    res = json.loads(dbget("select room_id, room_name from configration"))
+    d = request.json
+    res = json.loads(dbget("select room_id, room_name from configration where business_id = '"+d['business_id']+"'"))
     return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Success","Result":res},indent=2))
     
 def select_cancellation_policy(request):
