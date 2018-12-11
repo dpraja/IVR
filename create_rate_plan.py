@@ -71,7 +71,7 @@ def select_rate_plan(request):
                             where rate_plan.business_id='"+business_id+"' "))
     packes = json.loads(dbget("select select_id,rate_plan_id, packages.* from package_select\
                             join packages on package_select.packages_id = packages.packages_id \
-                            where business_id='"+business_id+"' "))
+                            where package_select.business_id='"+business_id+"' "))
     rooms = json.loads(dbget("select select_id, room_type_select.rate_plan_id, configration.room_id, configration.room_name \
                             from room_type_select join \
                             configration on room_type_select.room_id = configration.room_id \
