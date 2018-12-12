@@ -430,7 +430,7 @@ def twiliofetchroomsavailabilityandprice(request):
         beds = json.loads(dbget("select configration.room_id,configration.room_name, bedding_options.total_bed , max_extra_bed.extrabed from configration join \
                                  bedding_options on configration.bedding_options_id = bedding_options.bedding_option_id\
                                  join max_extra_bed on configration.maximum_extrabed_id = max_extra_bed.extrabed_id \
-                                 where  business_id='"+bi_id[0]['business_id']+"' and \
+                                 where  configration.business_id='"+bi_id[0]['business_id']+"' and \
                                  configration.room_id in (%s)" % ",".join(map(str,count_ll))))
         #print("beds",beds)
         #print("adult",adult)
