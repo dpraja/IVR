@@ -525,7 +525,7 @@ def twiliocalculatetotalcharges(request):
         
         #print(customer_room_type,type(customer_room_type))
 
-        roos_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type)+"'"))
+        roos_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type.title())+"'"))
        # customer_room_type = customer_room_type.title()
        # print("roomtype",customer_room_type)
         customer_adult = request.json["adult"]
