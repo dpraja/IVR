@@ -478,7 +478,7 @@ def twiliofetchroomsavailabilityandprice(request):
         count = 0
         for bed in beds:    
             for tol in total:
-                    
+                
                 if tol['room_id'] == bed['room_id'] and len(tol['rate_plans']) != 0:    
                    #print(tol,"1111111111111111111111111111111")
                    total_bed = bed['total_bed']
@@ -489,13 +489,20 @@ def twiliofetchroomsavailabilityandprice(request):
                         for p in plan:
                             room_rate.append(p['room_rate'])
                             extra_adult_rate.append(p['extra_adult_rate'])
-                        r1 = min(room_rate)+min(extra_adult_rate)
-                        #print(r1)
+                            #print("room_rate",room_rate,type(room_rate))
+                            #print("ex", extra_adult_rate,type(extra_adult_rate))
+                        if child == 0: 
+                           r1 = room_rate[0]
+                        else:
+                           r1 = room_rate[0] + extra_adult_rate[0]*child
+                        #print("r1",r1,type(r1))
                         add_amount.append(r1)
+                        #print("add_amount", add_amount,type(add_amount))
                    amount['amount'+""+str(count)+""] = sum(add_amount)     
                    amount['room_id'+""+str(count)+""] = bed['room_id']
                    amount['room_name'+""+str(count)+""] = bed['room_name']
                    count += 1
+                   add_amount = []
             final.append(amount)
     
         #print(total)
