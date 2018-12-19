@@ -483,7 +483,7 @@ def twiliofetchroomsavailabilityandprice(request):
                    extrabed = bed['extrabed']
                    #print("total_bed: ", total_bed,"and ", "extrabed: ", extrabed )
                    rate_plan = tol['rate_plans']
-                   extra_adult = adult - total_bed
+                   extra_adult = int(adult) - int(total_bed)
                    for plan in rate_plan:
                         room_rate, extra_adult_rate =[],[] 
                         for p in plan:
