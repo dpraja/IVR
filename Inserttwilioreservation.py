@@ -359,10 +359,11 @@ def twiliofetchroomsavailabilityandprice(request):
         tfn = request.json['TFN']
         adult = d['adult']
         child = d['child']
+        
         b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
-        print(b_id)#,b_id[0]['id'])
+        #print(b_id)#,b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
-        print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
+        #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
 
         #d['customer_arrival_date'] = datetime.date(2019, 1, 1)
         #d['customer_depature_date'] = datetime.date(2019, 1, 3)
@@ -382,22 +383,21 @@ def twiliofetchroomsavailabilityandprice(request):
         if customer_depature_date < today_date:
             customer_depature_date = customer_depature_date+datetime.timedelta(days=365)
             
-        print("arr",customer_arrival_date)
-        print("dep",customer_depature_date)
+        
         
         nights = customer_depature_date.day - customer_arrival_date.day
         
-        print("nights",customer_arrival_date,type(customer_arrival_date))
+        #print("nights",customer_arrival_date,type(customer_arrival_date))
 
         depature_date1 = customer_depature_date-datetime.timedelta(days=1)
 
-        print("depature_date1",depature_date1)
+        #print("depature_date1",depature_date1)
 
         
         room_to_sell = json.loads(dbget("select * from room_to_sell where room_date between '"+str(customer_arrival_date)+"'\
                                          and '"+str(depature_date1)+"' and business_id='"+bi_id[0]['business_id']+"' "))
         
-        print("room_to_sell",room_to_sell,type(room_to_sell))
+        #print("room_to_sell",room_to_sell,type(room_to_sell))
         
         count_o, count_l = [],[]
         
@@ -425,7 +425,7 @@ def twiliofetchroomsavailabilityandprice(request):
                                   '"+str(customer_arrival_date)+"' and '"+str(depature_date1)+"' and \
                                   extranet_availableroom.business_id = '"+bi_id[0]['business_id']+"' and \
                                   extranet_availableroom.room_id in (%s) order by room_id asc, room_date asc" % ",".join(map(str,count_ll))))
-        print(rates)
+        #print(rates)
 
         beds = json.loads(dbget("select configration.room_id,configration.room_name, bedding_options.total_bed , max_extra_bed.extrabed from configration join \
                                  bedding_options on configration.bedding_options_id = bedding_options.bedding_option_id\
@@ -478,29 +478,29 @@ def twiliofetchroomsavailabilityandprice(request):
         count = 0
         for bed in beds:    
             for tol in total:
-                
                 if tol['room_id'] == bed['room_id'] and len(tol['rate_plans']) != 0:    
-                   #print(tol,"1111111111111111111111111111111")
                    total_bed = bed['total_bed']
                    extrabed = bed['extrabed']
+                   #print("total_bed: ", total_bed,"and ", "extrabed: ", extrabed )
                    rate_plan = tol['rate_plans']
+                   extra_adult = adult - total_bed
                    for plan in rate_plan:
                         room_rate, extra_adult_rate =[],[] 
                         for p in plan:
                             room_rate.append(p['room_rate'])
                             extra_adult_rate.append(p['extra_adult_rate'])
-                            #print("room_rate",room_rate,type(room_rate))
-                            #print("ex", extra_adult_rate,type(extra_adult_rate))
-                        if child == 0: 
-                           r1 = room_rate[0]
+                        #print("extra_adult_rate", extra_adult_rate, type(extra_adult_rate))    
+                        if extra_adult != 0 and extra_adult > 0:
+                           r1 = float(room_rate[0] + extra_adult_rate[0]*extra_adult)
                         else:
-                           r1 = room_rate[0] + extra_adult_rate[0]*child
+                           r1 = room_rate[0] 
                         #print("r1",r1,type(r1))
                         add_amount.append(r1)
                         #print("add_amount", add_amount,type(add_amount))
                    amount['amount'+""+str(count)+""] = sum(add_amount)     
                    amount['room_id'+""+str(count)+""] = bed['room_id']
                    amount['room_name'+""+str(count)+""] = bed['room_name']
+                   print("amount", amount)
                    count += 1
                    add_amount = []
             final.append(amount)
