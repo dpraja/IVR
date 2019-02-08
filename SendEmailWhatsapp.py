@@ -8,14 +8,18 @@ import datetime
 from dateutil import parser
 import sys
 def sendemailwhatsapp(request):
+     if request.method == 'GET':
+          tfn = '+'+request.args['TFN']
+          con_no = request.args['customer_confirmation_number']
+     if request.method == 'POST':
+          tfn = request.json['TFN']
+          con_no = request.json['customer_confirmation_number']
      #print(name,email,type(email),message,conf_no,arrival,depature, room_type)
      sys.stdout.flush()
-     e = request.json
-     print(e)
+     #e = request.json
+     #print(e)
      email = []
      Hotel_name = 'Kconnect24/7'
-     tfn = request.json['TFN']
-     con_no = request.json['customer_confirmation_number']
      print(con_no,type(con_no))    
      b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
      #print(b_id)

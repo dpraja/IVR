@@ -8,11 +8,24 @@ from dateutil import parser
 from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
-
-    d = request.json
-    no_room = request.json['customer_no_of_rooms']
+    if request.method == 'GET':
+        no_room = request.args['customer_no_of_rooms']
+        roomtype = request.args['customer_room_type']
+        arr = request.args['customer_arrival_date']
+        dep = request.args['customer_depature_date']
+        no_room = request.args['customer_no_of_rooms']
+        tfn = request.args['TFN']
+        cntry_code = request.args['cntry_code']
+    if request.method == 'POST':
+        d = request.json
+        tfn = request.json['TFN']
+        no_room = request.json['customer_no_of_rooms']
+        roomtype = request.json['customer_room_type']
+        arr = request.json['customer_arrival_date']
+        dep = request.json['customer_depature_date']
+        roomtype = request.json['customer_room_type']
+        cntry_code = request.json['cntry_code']
     #print("rate_per_day",d['rate_per_day'][1:-1],type(d['rate_per_day']))
-    
     list1 = d['rate_per_day'].replace("total=",'"amount":')
     list1 = list1.replace("day=",'''"rate_date":"''')
     list1 = list1.replace(",",'''",''')
@@ -26,9 +39,9 @@ def Inserttwilioreservation(request):
 
     
     d= {k:v for k,v in d.items() if k not in ('TFN','rate_per_day')}
-    tfn = request.json['TFN']
+    #tfn = request.json['TFN']
 
-    cntry_code = request.json['cntry_code']
+    
     if cntry_code.find('+') != -1:
         pass
     else:
@@ -39,9 +52,8 @@ def Inserttwilioreservation(request):
     #print(b_id)
     bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
     print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
-    roomtype = request.json['customer_room_type']
-    arr = request.json['customer_arrival_date']
-    dep = request.json['customer_depature_date']
+    
+    
     
     customer_arrival_date = parser.parse(arr).date().strftime('%Y-%m-%d')
     customer_depature_date = parser.parse(dep).date().strftime('%Y-%m-%d')
@@ -91,9 +103,14 @@ def Inserttwilioreservation(request):
                         "business_id":bi_id[0]['business_id']}],indent=2))
     
 def InsertArrivalDeparture(request):
-    
-    d = request.json
-    print(d)
+    if request.method == 'GET':
+        data1 = request.args['customer_arrival_date']
+        data2 = request.args['customer_depature_date']
+    if request.method == 'POST':
+        d = request.json
+        print(d)
+        data1 = d.get('customer_arrival_date')
+        data2 = d.get('customer_depature_date')
     try:
         #e = { k : v for k,v in d.items() if v = '' }       
         #print(e)
@@ -107,8 +124,8 @@ def InsertArrivalDeparture(request):
         dep_date = datetime.datetime.strptime(depature, '%Y-%m-%d').date()
         print("str1", arr_date,dep_date,type(arr_date))
         '''
-        data1 = d.get('customer_arrival_date')
-        data2 = d.get('customer_depature_date')
+        #data1 = d.get('customer_arrival_date')
+        #data2 = d.get('customer_depature_date')
         date1 = parser.parse(data1).date().strftime('%d-%m-%Y')
         date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
         arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
@@ -150,7 +167,31 @@ def InsertArrivalDeparture(request):
         
 
 def Modifytwilioreservation(request):
-    d = request.json
+    if request.method == 'GET':
+        d= {}
+        tfn=request.args['TFN']
+        d['customer_confirmation_number']=request.args['customer_confirmation_number']
+        d['customer_arrival_date']=request.args['customer_arrival_date']
+        d['customer_depature_date']=request.args['customer_depature_date']
+        d['rate_per_day']=request.args['rate_per_day']
+        d['customer_name']=request.args['customer_name']
+        d['customer_email']=request.args['customer_email']
+        d['customer_adult']=request.args['customer_adult']
+        d['customer_child']=request.args['customer_child']
+        d['customer_room_type']=request.args['customer_room_type']
+        d['customer_mobile']=request.args['customer_mobile']
+        d['cntry_code']=request.args['cntry_code']
+        d['channel']=request.args['channel']
+        d['customer_pickup_drop']=request.args['customer_pickup_drop']
+        d['customer_no_of_rooms']=request.args['customer_no_of_rooms']
+        d['customer_amount']=request.args['customer_amount']
+        d['modification']=request.args['modification']
+        d['customer_booked_status']=request.args['customer_booked_status']
+        d['nights']=request.args['nights']
+        d['ivr_language']=request.args['ivr_language']
+    if request.method == 'POST':
+        d = request.json
+        tfn = request.json['TFN']
     #print(d)
     
     a = { k : v for k,v in d.items() if v != '' if k not in ('customer_confirmation_number',
@@ -158,7 +199,7 @@ def Modifytwilioreservation(request):
                                                              'rate_per_day','TFN')}
     #print(a)
     
-    tfn = request.json['TFN']
+    
     b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
     #print(b_id)
     bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
@@ -255,9 +296,13 @@ def Modifytwilioreservation(request):
                         "business_id":bi_id[0]['business_id']}], sort_keys=True, indent=4))
 
 def Canceltwilioreservation(request):
+    if request.method == 'GET':
+        conf = request.args['confirmation_number']
+    if request.method == 'POST':
+        conf = request.json['confirmation_number']
     d = {}
-    conf = request.json['confirmation_number']
-    d['customer_confirmation_number'] = request.json['confirmation_number']
+    #conf = request.json['confirmation_number']
+    d['customer_confirmation_number'] = conf
     
     res = json.loads(gensql('select','ivr_room_customer_booked','*',d))
     
@@ -311,70 +356,90 @@ def Canceltwilioreservation(request):
                         'ReturnCode':'RCS'}], sort_keys=True, indent=4))
 
 def Smstwilioservice(request):
-     countrycode = request.json['countrycode']
+    if request.method == 'GET':
+        countrycode = request.args['countrycode']
+        print("countrycode", countrycode)
+        #print(countrycode)
+        name = 'Customer'
+        phone = request.args['phone']
+        message = request.args['message']
+        conf_no = request.args['conf_no']
+        hotel_name = 'Konnect'
+        arrival = request.args['arrival']
+        depature = request.args['depature']
+        room_type = request.args['room_type']
+    if request.method == 'POST':
+        countrycode = request.json['countrycode']
+        print("countrycode", countrycode)
+        #print(countrycode)
+        name = 'Customer'
+        phone = request.json['phone']
+        message = request.json['message']
+        conf_no = request.json['conf_no']
+        hotel_name = 'Konnect'
+        arrival = request.json['arrival']
+        depature = request.json['depature']
+        room_type = request.json['room_type']
 
-     
-     if countrycode.find('+') != -1:
+    if countrycode.find('+') != -1:
         pass
-     else:
+    else:
         countrycode = '+'+countrycode
-     print("countrycode", countrycode)
-     #print(countrycode)
-     name = 'Customer'
-     phone = request.json['phone']
-     message = request.json['message']
-     conf_no = request.json['conf_no']
-     hotel_name = 'Konnect'
-     arrival = request.json['arrival']
-     depature = request.json['depature']
-     room_type = request.json['room_type']
-     all_message = ("Dear "+name+", "+message+".  Confirmation Number is "+conf_no+", Arrival Date: "+arrival+", Depature Date:"+depature+", Room Type:"+room_type+". by "+hotel_name+"")
-     url = "https://control.msg91.com/api/sendhttp.php?authkey=195833ANU0xiap5a708d1f&mobiles="+phone+"&message="+all_message+"&sender=Infoit&route=4&country="+countrycode+""
-     req = urllib.request.Request(url)
-     with urllib.request.urlopen(req) as response:
-         the_page = response.read()
-         the_page = the_page[1:]
-         print(the_page)
-         the_page = str(the_page)
-     sql = dbput("update ivr_room_customer_booked set send_sms = 'success' where customer_confirmation_number = '"+conf_no+"'")
-     print(sql)
-     return(json.dumps([{"Return":"SMS Sent Successfully","Return_Code":"SSS","Status": "Success","Status_Code": "200","Key":the_page}],indent =2))
+    all_message = ("Dear "+name+", "+message+".  Confirmation Number is "+conf_no+", Arrival Date: "+arrival+", Depature Date:"+depature+", Room Type:"+room_type+". by "+hotel_name+"")
+    url = "https://control.msg91.com/api/sendhttp.php?authkey=195833ANU0xiap5a708d1f&mobiles="+phone+"&message="+all_message+"&sender=Infoit&route=4&country="+countrycode+""
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        the_page = response.read()
+        the_page = the_page[1:]
+        print(the_page)
+        the_page = str(the_page)
+    sql = dbput("update ivr_room_customer_booked set send_sms = 'success' where customer_confirmation_number = '"+conf_no+"'")
+    print(sql)
+    return(json.dumps([{"Return":"SMS Sent Successfully","Return_Code":"SSS","Status": "Success","Status_Code": "200","Key":the_page}],indent =2))
 
 def CheckConfirmation(request):
+    if request.method == 'GET':
+        conf_no = request.args['confirmation_number']
+        
+    if request.method == 'POST':
+         conf_no = request.json['confirmation_number']
      
-     conf_no = request.json['confirmation_number']
-     #sql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"'"))
-     psql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"' and customer_booked_status in ('booked')"))
-     print(psql)
-     if  psql[0]['count'] != 0 :
+    #sql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"'"))
+    psql = json.loads(dbget("select count(*) from ivr_room_customer_booked where customer_confirmation_number='"+conf_no+"' and customer_booked_status in ('booked')"))
+    print(psql)
+    if  psql[0]['count'] != 0 :
          return(json.dumps([{"Return":"Confirmation number already exist","Return_Code":"Valid","Status": "Success","Status_Code": "200"}],indent =2))
-     else:
+    else:
          return(json.dumps([{"Return":"Confirmation number does not exist","Return_Code":"Invalid","Status": "Success","Status_Code": "200"}],indent =2))
         
         
 def twiliofetchroomsavailabilityandprice(request):
     #try:
-        d = request.json
-        print(d)
-        tfn = request.json['TFN']
+        if request.method == 'GET':
+            d={}
+            tfn = request.args['TFN']
+            d['adult']=request.args['adult']
+            d['child']=request.args['child']
+            d['arrival_date']= request.args['arrival_date']
+            d['depature_date']=request.args['depature_date']
+        if request.method == 'POST':    
+            d = request.json
+            print(d)
+            tfn = request.json['TFN']
         adult = d['adult']
         child = d['child']
-        
         b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
         #print(b_id)#,b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         #print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
-
         #d['customer_arrival_date'] = datetime.date(2019, 1, 1)
         #d['customer_depature_date'] = datetime.date(2019, 1, 3)
         customer_arrival_date = d['arrival_date']
         customer_depature_date = d['depature_date']
-
         customer_arrival_date = parser.parse(customer_arrival_date).date().strftime('%Y-%m-%d')
         customer_depature_date = parser.parse(customer_depature_date).date().strftime('%Y-%m-%d')
         customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
         customer_depature_date = datetime.datetime.strptime(customer_depature_date, '%Y-%m-%d').date()
-
         today_date = datetime.datetime.utcnow().date()
         if customer_arrival_date < today_date:
             #year = customer_arrival_date.year
@@ -513,9 +578,21 @@ def twiliofetchroomsavailabilityandprice(request):
                               "Status_Code": "200","total":amount}],indent=2))  
     
 def twiliocalculatetotalcharges(request):
-  #try:
-        tfn = request.json['tfn_num']
-        
+    #try:
+        if request.method == 'GET':
+            tfn = request.args['tfn_num']
+            customer_arrival_date = request.args["arrival_date"]
+            customer_depature_date = request.args["depature_date"]
+            customer_room_type = request.args["room_type"] # ROOM_ID
+            customer_adult = request.args["adult"]
+            customer_child = request.args["child"]
+        if request.method == 'POST':
+            tfn = request.json['tfn_num']
+            customer_arrival_date = request.json["arrival_date"]
+            customer_depature_date = request.json["depature_date"]
+            customer_room_type = request.json["room_type"] # ROOM_ID
+            customer_adult = request.json["adult"]
+            customer_child = request.json["child"]
         dividen_list = []
         last_list = []
         sumval = 0
@@ -526,17 +603,11 @@ def twiliocalculatetotalcharges(request):
         print(b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
-        customer_arrival_date = request.json["arrival_date"]
-        customer_depature_date = request.json["depature_date"]
-        customer_room_type = request.json["room_type"] # ROOM_ID
         
         #print(customer_room_type,type(customer_room_type))
-
         roos_type_id = json.loads(dbget("select room_id from configration where room_name = '"+str(customer_room_type.title())+"'"))
        # customer_room_type = customer_room_type.title()
        # print("roomtype",customer_room_type)
-        customer_adult = request.json["adult"]
-        customer_child = request.json["child"]
         print("adults",customer_adult,type(customer_adult))
         d,e,d1,d2 = {},[],{},{}
         
@@ -633,10 +704,16 @@ def twiliocalculatetotalcharges(request):
        # return(json.dumps({"ServiceStatus":"Success","ServiceMessage":"Failure"}))
 
 def CheckRoomtype(request):
-    d = request.json
-    print(d)
-    tfn = d['TFN']
-
+    if request.method == 'GET':
+        tfn = '+'+request.args['TFN']
+        d={}
+        d['customer_arrival_date']= request.args['customer_arrival_date']
+        d['customer_depature_date']=request.args['customer_depature_date']
+        d['customer_room_type'] = request.args['customer_room_type']
+    if request.method == 'POST':
+        d = request.json
+        print(d)
+        tfn = d['TFN']
     customer_arrival_date = d['customer_arrival_date']
     customer_depature_date = d['customer_depature_date']
     #d = {k:v for k,v in d.items() if k not in ('TFN')}

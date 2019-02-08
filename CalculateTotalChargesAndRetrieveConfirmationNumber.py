@@ -6,7 +6,21 @@ import math
 
 def calculatetotalcharges(request):
     #try:
-        tfn = request.json['tfn_num']
+        if request.method == 'GET':
+                d = {}
+                tfn = '+'+request.args['tfn_num']
+                customer_adult = request.args['adult']
+                customer_child = request.args['child']
+                customer_arrival_date = request.args['arrival_date']
+                customer_depature_date = request.args['depature_date']
+                customer_room_type = request.args["room_type"] # ROOM_ID
+        if request.method == 'POST':
+                tfn = request.json['tfn_num']
+                customer_adult = request.json["adult"]
+                customer_child = request.json["child"]
+                customer_arrival_date = request.json["arrival_date"]
+                customer_depature_date = request.json["depature_date"]
+                customer_room_type = request.json["room_type"] # ROOM_ID
         dividen_list = []
         last_list = []
         sumval = 0
@@ -17,14 +31,14 @@ def calculatetotalcharges(request):
         print(b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
-        customer_arrival_date = request.json["arrival_date"]
-        customer_depature_date = request.json["depature_date"]
-        customer_room_type = request.json["room_type"] # ROOM_ID
+        #customer_arrival_date = request.json["arrival_date"]
+        #customer_depature_date = request.json["depature_date"]
+        #customer_room_type = request.json["room_type"] # ROOM_ID
         print(customer_room_type,type(customer_room_type))
        # customer_room_type = customer_room_type.title()
        # print("roomtype",customer_room_type)
-        customer_adult = request.json["adult"]
-        customer_child = request.json["child"]
+        #customer_adult = request.json["adult"]
+        #customer_child = request.json["child"]
         print("adults",customer_adult,type(customer_adult))
         d,e,d1,d2 = {},[],{},{}
         print(customer_arrival_date,customer_depature_date)

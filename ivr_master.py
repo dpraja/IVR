@@ -159,7 +159,7 @@ def FetchRooms():
 @app.route('/FetchPromotionalMessage',methods=['GET','POST'])
 def FetchPromotionalMessage():
    return fetchpromotionalmessage(request)
-@app.route('/CalculateTotalCharges',methods=['POST'])
+@app.route('/CalculateTotalCharges',methods=['POST','GET'])
 def CalculateTotalCharges():
    return calculatetotalcharges(request)
 @app.route('/UpdatedCustomerProfile',methods=['POST'])
@@ -423,31 +423,31 @@ def SelectExtrabed_all():
 @app.route('/Inserttwilioreservation',methods=['POST'])
 def reservation():
    return Inserttwilioreservation(request)
-@app.route('/InsertArrivalDeparture',methods=['POST'])
+@app.route('/InsertArrivalDeparture',methods=['POST','GET'])
 def InsertArrivalDeparture_all():
    return InsertArrivalDeparture(request)
 
 
-@app.route('/Modifytwilioreservation',methods=['POST'])
+@app.route('/Modifytwilioreservation',methods=['POST','GET'])
 def Modifytwilioreservation_all():
    return Modifytwilioreservation(request)
-@app.route('/Canceltwilioreservation',methods=['POST'])
+@app.route('/Canceltwilioreservation',methods=['POST','GET'])
 def Canceltwilioreservation_all():
    return Canceltwilioreservation(request)
-@app.route('/Smstwilioservice',methods=['POST'])
+@app.route('/Smstwilioservice',methods=['POST','GET'])
 def Smstwilioservice_all():
    return Smstwilioservice(request)
-@app.route('/CheckConfirmation',methods=['POST'])
+@app.route('/CheckConfirmation',methods=['POST','GET'])
 def CheckConfirmation_all():
    return CheckConfirmation(request)
-@app.route('/twiliofetchroomsavailabilityandprice',methods=['POST'])
+@app.route('/twiliofetchroomsavailabilityandprice',methods=['POST','GET'])
 def twilio_fetchdetails():
    return twiliofetchroomsavailabilityandprice(request)
-@app.route('/twiliocalculatetotalcharges',methods=['POST'])
+@app.route('/twiliocalculatetotalcharges',methods=['POST','GET'])
 def twiliocalculatetotalcharges_show():
    return twiliocalculatetotalcharges(request)
 
-@app.route('/CheckRoomtype',methods=['POST'])
+@app.route('/CheckRoomtype',methods=['POST','GET'])
 def CheckRoomtype_all():
    return CheckRoomtype(request)
 #User_Signup
@@ -483,7 +483,7 @@ def update_roomopen():
 def rate_per_day():
    return Query_Rate_Per_day(request)
 
-@app.route('/sendemailwhatsapp',methods=['POST'])
+@app.route('/sendemailwhatsapp',methods=['POST','GET'])
 def emailwhatsapp():
    return sendemailwhatsapp(request)
 

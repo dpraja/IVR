@@ -4,19 +4,31 @@ import datetime
 from dateutil import parser
 def fetchroomsavailabilityandprice(request):
     #try:
-        d = request.json
-        print(d)
-        tfn = request.json['TFN']
-        adult = d['adult']
-        child = d['child']
+        if request.method == 'GET':
+            d = {}
+            print("hii")
+            tfn = '+'+request.args['TFN']
+            print("tfn",tfn)
+            d['adult'] = request.args['adult']
+            d['child'] = request.args['child']
+            arr = request.args['arrival_date']
+            dep = request.args['depature_date']
+        if request.method == 'POST':
+            d = request.json
+            print(d)
+            tfn = request.json['TFN']
+            adult = d['adult']
+            child = d['child']
+            arr = d['arrival_date']
+            dep = d['depature_date']
         b_id = json.loads(dbget("select id from ivr_dialed_number where dialed_number='"+tfn+"' "))
         print(b_id)#,b_id[0]['id'])
         bi_id = json.loads(dbget("select business_id from ivr_hotel_list where id='"+str(b_id[0]['id'])+"' "))
         print(bi_id[0]['business_id'],type(bi_id[0]['business_id']))
 
         
-        arr = d['arrival_date']
-        dep = d['depature_date']
+        #arr = d['arrival_date']
+        #dep = d['depature_date']
         customer_arrival_date = parser.parse(arr).date().strftime('%Y-%m-%d')
         customer_depature_date = parser.parse(dep).date().strftime('%Y-%m-%d')
         customer_arrival_date = datetime.datetime.strptime(customer_arrival_date, '%Y-%m-%d').date()
@@ -154,8 +166,7 @@ def fetchroomsavailabilityandprice(request):
         #print(add_amount)
         amount['count'] = count
         #print("final",final,amount)
-        return(json.dumps({"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success",
-                              "Status_Code": "200","total":amount},indent=2))   
+        return(json.dumps({"Return":"Record Retrieved Successfully","Return_Code":"RRS", "Status": "Success","Status_Code": "200","total":amount},indent=2))   
     
 def fetchpromotionalmessage(request):
     try: 
