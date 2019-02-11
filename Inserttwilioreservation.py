@@ -104,15 +104,17 @@ def Inserttwilioreservation(request):
     
 def InsertArrivalDeparture(request):
     
-    d = request.json
-    if request.method == 'GET':
-        data1 = request.args['customer_arrival_date']
-        data2 = request.args['customer_depature_date']
-    if request.method == 'POST':
-        #print(d)
-        data1 = d.get('customer_arrival_date')
-        data2 = d.get('customer_depature_date')
-    try:
+        
+        if request.method == 'GET':
+          d = {}  
+          data1 = request.args['customer_arrival_date']
+          data2 = request.args['customer_depature_date']
+        if request.method == 'POST':
+          d = request.json
+         #print(d)
+          data1 = d.get('customer_arrival_date')
+          data2 = d.get('customer_depature_date')
+    #try:
         #e = { k : v for k,v in d.items() if v = '' }       
         #print(e)
         today_date = datetime.datetime.utcnow().date()
@@ -153,8 +155,8 @@ def InsertArrivalDeparture(request):
         else:
             
              return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'arrival date must be scheduled atleast one day in advance','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
-    except:
-         return(json.dumps([{'Status': 'Success', 'StatusCode': '200','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
+    #except:
+         #return(json.dumps([{'Status': 'Success', 'StatusCode': '200','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
 
         
 
