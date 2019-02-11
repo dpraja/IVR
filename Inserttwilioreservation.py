@@ -9,7 +9,6 @@ from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
     if request.method == 'GET':
-        d={}
         no_room = request.args['customer_no_of_rooms']
         roomtype = request.args['customer_room_type']
         arr = request.args['customer_arrival_date']
@@ -105,6 +104,7 @@ def Inserttwilioreservation(request):
     
 def InsertArrivalDeparture(request):
     if request.method == 'GET':
+        d={}
         data1 = request.args['customer_arrival_date']
         data2 = request.args['customer_depature_date']
     if request.method == 'POST':
