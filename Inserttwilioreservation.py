@@ -103,12 +103,12 @@ def Inserttwilioreservation(request):
                         "business_id":bi_id[0]['business_id']}],indent=2))
     
 def InsertArrivalDeparture(request):
+    
+    d = request.json
     if request.method == 'GET':
-        d={}
         data1 = request.args['customer_arrival_date']
         data2 = request.args['customer_depature_date']
     if request.method == 'POST':
-        d = request.json
         print(d)
         data1 = d.get('customer_arrival_date')
         data2 = d.get('customer_depature_date')
@@ -117,16 +117,7 @@ def InsertArrivalDeparture(request):
         #print(e)
         today_date = datetime.datetime.utcnow().date()
         print(today_date)
-        '''
-        arrival = e['arrival']
-        depature = e['departure']
-        print(arrival,depature,type(arrival))
-        arr_date = datetime.datetime.strptime(arrival, '%Y-%m-%d').date()
-        dep_date = datetime.datetime.strptime(depature, '%Y-%m-%d').date()
-        print("str1", arr_date,dep_date,type(arr_date))
-        '''
-        #data1 = d.get('customer_arrival_date')
-        #data2 = d.get('customer_depature_date')
+        
         date1 = parser.parse(data1).date().strftime('%d-%m-%Y')
         date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
         arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
