@@ -109,15 +109,15 @@ def InsertArrivalDeparture(request):
         data1 = request.args['customer_arrival_date']
         data2 = request.args['customer_depature_date']
     if request.method == 'POST':
-        print(d)
+        #print(d)
         data1 = d.get('customer_arrival_date')
         data2 = d.get('customer_depature_date')
     try:
         #e = { k : v for k,v in d.items() if v = '' }       
         #print(e)
         today_date = datetime.datetime.utcnow().date()
-        print(today_date)
-        
+        #print(today_date)
+        print("arr-dep", data1,'-',date2)
         date1 = parser.parse(data1).date().strftime('%d-%m-%Y')
         date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
         arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
@@ -126,7 +126,7 @@ def InsertArrivalDeparture(request):
         dep_date = dep_date.strftime("%Y-%m-%d")
         arr_date = datetime.datetime.strptime(arr_date, '%Y-%m-%d').date()   #convert string to datetime format
         dep_date = datetime.datetime.strptime(dep_date, '%Y-%m-%d').date()
-        print(arr_date,dep_date)
+        print("arr-dep",arr_date,"-",dep_date)
         
         today_date = datetime.datetime.utcnow().date()
         if arr_date < today_date:
@@ -135,7 +135,7 @@ def InsertArrivalDeparture(request):
             dep_date = dep_date+datetime.timedelta(days=365)
             
         restrict_days =  today_date + datetime.timedelta(days=90)
-        print(restrict_days)
+        print("restrict_days",restrict_days)
         #charges_end_date = datetime.datetime.strptime(data2, '%Y-%m-%d').date()
         #print("str2",charges_begin_date,charges_end_date,type(charges_end_date))
         d['arrival'] = arr_date
