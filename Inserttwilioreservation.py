@@ -9,6 +9,7 @@ from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
     if request.method == 'GET':
+        d={}
         no_room = request.args['customer_no_of_rooms']
         roomtype = request.args['customer_room_type']
         arr = request.args['customer_arrival_date']
