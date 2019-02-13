@@ -420,7 +420,7 @@ def SelectInclusionsConfiguration_all():
 @app.route('/SelectExtrabed',methods=['POST'])
 def SelectExtrabed_all():
    return SelectExtrabed(request)
-@app.route('/Inserttwilioreservation',methods=['POST'])
+@app.route('/Inserttwilioreservation',methods=['POST','GET'])
 def reservation():
    return Inserttwilioreservation(request)
 @app.route('/InsertArrivalDeparture',methods=['POST','GET'])
