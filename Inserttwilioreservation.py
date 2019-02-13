@@ -14,7 +14,7 @@ def Inserttwilioreservation(request):
         arr = request.args['customer_arrival_date']
         dep = request.args['customer_depature_date']
         no_room = request.args['customer_no_of_rooms']
-        tfn = request.args['TFN']
+        tfn = '+'+request.args['TFN']
         cntry_code = request.args['cntry_code']
     if request.method == 'POST':
         d = request.json
@@ -165,7 +165,7 @@ def InsertArrivalDeparture(request):
 def Modifytwilioreservation(request):
     if request.method == 'GET':
         d= {}
-        tfn=request.args['TFN']
+        tfn='+'+request.args['TFN']
         d['customer_confirmation_number']=request.args['customer_confirmation_number']
         d['customer_arrival_date']=request.args['customer_arrival_date']
         d['customer_depature_date']=request.args['customer_depature_date']
@@ -413,7 +413,7 @@ def twiliofetchroomsavailabilityandprice(request):
     #try:
         if request.method == 'GET':
             d={}
-            tfn = request.args['TFN']
+            tfn = '+'+request.args['TFN']
             d['adult']=request.args['adult']
             d['child']=request.args['child']
             d['arrival_date']= request.args['arrival_date']
@@ -576,7 +576,7 @@ def twiliofetchroomsavailabilityandprice(request):
 def twiliocalculatetotalcharges(request):
     #try:
         if request.method == 'GET':
-            tfn = request.args['tfn_num']
+            tfn = '+'+request.args['tfn_num']
             customer_arrival_date = request.args["arrival_date"]
             customer_depature_date = request.args["depature_date"]
             customer_room_type = request.args["room_type"] # ROOM_ID
