@@ -9,13 +9,27 @@ from decimal import Decimal
 import math
 def Inserttwilioreservation(request):
     if request.method == 'GET':
+        d = {}
         no_room = request.args['customer_no_of_rooms']
         roomtype = request.args['customer_room_type']
         arr = request.args['customer_arrival_date']
         dep = request.args['customer_depature_date']
-        no_room = request.args['customer_no_of_rooms']
         tfn = '+'+request.args['TFN']
         cntry_code = request.args['cntry_code']
+        d['channel'] = request.args['channel']
+        d['customer_booked_status'] = request.args['customer_booked_status']
+        d['modification'] = request.args['modification']
+        d['ivr_language'] = request.args['ivr_language']
+        d['rate_per_day'] = request.args['rate_per_day']
+        d['customer_adult'] = request.args['customer_adult']
+        d['customer_child'] = request.args['customer_child']
+        d['customer_name'] = request.args['customer_name']
+        d['customer_email'] = request.args['customer_email']
+        d['customer_mobile'] = request.args['customer_mobile']
+        d['customer_pickup_drop'] = request.args['customer_pickup_drop']
+        d['customer_amount'] = request.args['customer_amount']
+        d['nights'] = request.args['nights']
+        
     if request.method == 'POST':
         d = request.json
         tfn = request.json['TFN']
@@ -103,25 +117,31 @@ def Inserttwilioreservation(request):
                         "business_id":bi_id[0]['business_id']}],indent=2))
     
 def InsertArrivalDeparture(request):
-    
-        
-    
-        if request.method == 'GET':
-          d = {} 
-          data1 = request.args['customer_arrival_date']
-          data2 = request.args['customer_depature_date']
-          
-        if request.method == 'POST':
-          d = request.json  
-          print(d)
-          data1 = d.get('customer_arrival_date')
-          data2 = d.get('customer_depature_date')
-    #try:
+    if request.method == 'GET':
+        d = {}
+        data1 = request.args['customer_arrival_date']
+        data2 = request.args['customer_depature_date']
+        print(data1,data2)
+    if request.method == 'POST':
+        d = request.json
+        print(d)
+        data1 = d.get('customer_arrival_date')
+        data2 = d.get('customer_depature_date')
+    try:
         #e = { k : v for k,v in d.items() if v = '' }       
         #print(e)
         today_date = datetime.datetime.utcnow().date()
         print(today_date)
-        
+        '''
+        arrival = e['arrival']
+        depature = e['departure']
+        print(arrival,depature,type(arrival))
+        arr_date = datetime.datetime.strptime(arrival, '%Y-%m-%d').date()
+        dep_date = datetime.datetime.strptime(depature, '%Y-%m-%d').date()
+        print("str1", arr_date,dep_date,type(arr_date))
+        '''
+        #data1 = d.get('customer_arrival_date')
+        #data2 = d.get('customer_depature_date')
         date1 = parser.parse(data1).date().strftime('%d-%m-%Y')
         date2 = parser.parse(data2).date().strftime('%d-%m-%Y')    
         arr_date = datetime.datetime.strptime(date1, '%d-%m-%Y').date()     #datetime format
@@ -140,13 +160,14 @@ def InsertArrivalDeparture(request):
             
         restrict_days =  today_date + datetime.timedelta(days=90)
         print(restrict_days)
-        
+        #charges_end_date = datetime.datetime.strptime(data2, '%Y-%m-%d').date()
+        #print("str2",charges_begin_date,charges_end_date,type(charges_end_date))
         d['arrival'] = arr_date
         d['departure'] = dep_date
         if arr_date >= today_date:
             if  dep_date >= arr_date :    
                 if dep_date <= restrict_days:
-        
+                   #sql_value = gensql('insert','reservation',d)
                    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'Given dates are valid','ReturnCode':'Valid'}], sort_keys=True, indent=4))
                 else:   
                    return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'departure date should not exceed 90 days than arrival','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
@@ -156,16 +177,15 @@ def InsertArrivalDeparture(request):
         else:
             
              return(json.dumps([{'Status': 'Success', 'StatusCode': '200','Return': 'arrival date must be scheduled atleast one day in advance','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
-    #except:
-    #     return(json.dumps([{'Status': 'Success', 'StatusCode': '200','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
+    except:
+         return(json.dumps([{'Status': 'Success', 'StatusCode': '200','ReturnCode':'Invalid'}], sort_keys=True, indent=4))
 
- 
         
 
 def Modifytwilioreservation(request):
     if request.method == 'GET':
         d= {}
-        tfn='+'+request.args['TFN']
+        tfn=request.args['TFN']
         d['customer_confirmation_number']=request.args['customer_confirmation_number']
         d['customer_arrival_date']=request.args['customer_arrival_date']
         d['customer_depature_date']=request.args['customer_depature_date']
@@ -413,7 +433,7 @@ def twiliofetchroomsavailabilityandprice(request):
     #try:
         if request.method == 'GET':
             d={}
-            tfn = '+'+request.args['TFN']
+            tfn = request.args['TFN']
             d['adult']=request.args['adult']
             d['child']=request.args['child']
             d['arrival_date']= request.args['arrival_date']
