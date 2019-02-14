@@ -21,6 +21,7 @@ def dbput(sql):
       cur = con.cursor()
     except psycopg2.Error :
        return (json.dumps({'Status': 'Failure','Message':'DB connection Error'}, sort_keys=True, indent=4))
+    print("put", sql) 
     cur.execute(sql)
     con.commit()
     return sql
@@ -30,6 +31,7 @@ def dbget(sql):
       cur = con.cursor()
      except psycopg2.Error :
        return (json.dumps({'Status': 'Failure','Message':'DB connection Error'}, sort_keys=True, indent=4))
+     print("get", sql)
      cur.execute(sql)
      def myconverter(o):
             if isinstance(o, datetime.date):
