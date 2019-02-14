@@ -29,6 +29,15 @@ def Inserttwilioreservation(request):
         d['customer_pickup_drop'] = request.args['customer_pickup_drop']
         d['customer_amount'] = request.args['customer_amount']
         d['nights'] = request.args['nights']
+        print("abc",d['rate_per_day'])
+        list1 = d['rate_per_day'].replace("total",'amount')
+        list1 = list1.replace("day",'rate_date')
+        #list1 = list1.replace(",",'''",''')
+        list1 = list1.replace('}"',"}")
+        list1 = list1.replace('}{','},{')
+        list1 = '['+list1+']'
+        print(list1,type(list1))
+        rate_per_day = json.loads(list1)
         
     if request.method == 'POST':
         d = request.json
@@ -40,14 +49,14 @@ def Inserttwilioreservation(request):
         roomtype = request.json['customer_room_type']
         cntry_code = request.json['cntry_code']
     #print("rate_per_day",d['rate_per_day'][1:-1],type(d['rate_per_day']))
-    list1 = d['rate_per_day'].replace("total=",'"amount":')
-    list1 = list1.replace("day=",'''"rate_date":"''')
-    list1 = list1.replace(",",'''",''')
-    list1 = list1.replace('}"',"}")
-    list1 = list1.replace('}{','},{')
-    list1 = '['+list1+']'
-    print(list1,type(list1))
-    rate_per_day = json.loads(list1)
+        list1 = d['rate_per_day'].replace("total=",'"amount":')
+        list1 = list1.replace("day=",'''"rate_date":"''')
+        list1 = list1.replace(",",'''",''')
+        list1 = list1.replace('}"',"}")
+        list1 = list1.replace('}{','},{')
+        list1 = '['+list1+']'
+        print(list1,type(list1))
+        rate_per_day = json.loads(list1)
     
     #print("rate_per_day",rate_per_day,type(rate_per_day))
 
@@ -115,7 +124,7 @@ def Inserttwilioreservation(request):
     return(json.dumps([{"Return":"Record Inserted Succcessfully","Returncode":"RIS",
                         "Status":"Success","Statuscode":200,"confirmation_number":confir,
                         "business_id":bi_id[0]['business_id']}],indent=2))
-    
+       
 def InsertArrivalDeparture(request):
     if request.method == 'GET':
         d = {}
