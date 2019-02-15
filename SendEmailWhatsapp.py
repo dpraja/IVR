@@ -75,7 +75,7 @@ def sendemailwhatsapp(request):
      for receiver in email:
 
           if len(receiver)==0:
-               break
+               continue
           #print(sender,type(sender),receiver,type(receiver))
           subject = "Hotel Booking"
           msg = MIMEMultipart()
