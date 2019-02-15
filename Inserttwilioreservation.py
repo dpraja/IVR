@@ -442,7 +442,7 @@ def twiliofetchroomsavailabilityandprice(request):
     #try:
         if request.method == 'GET':
             d={}
-            tfn = request.args['TFN']
+            tfn = '+'+request.args['TFN']
             d['adult']=request.args['adult']
             d['child']=request.args['child']
             d['arrival_date']= request.args['arrival_date']
