@@ -846,7 +846,7 @@ def graphical_rep():
     autopct='%1.1f%%', shadow=True, startangle=140)
      
     plt.axis('equal')
-    plt.show()
-    return "hello"
+    #plt.show()
+    return (plt.show())
 
 
