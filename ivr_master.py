@@ -74,6 +74,7 @@ from Inserttwilioreservation import CheckRoomtype
 from Inserttwilioreservation import CheckConfirmationmobile
 from Inserttwilioreservation import check_phonenumber
 from Inserttwilioreservation import CheckTotalnights
+from Inserttwilioreservation import graphical_rep
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -131,6 +132,9 @@ from sendemailconfirmation import sendemailconfirmation
 from DashboardReport import Lastreportrecord
 from DashboardReport import lastreservationcount
 from DashboardReport import lastchannelrecord
+
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -512,7 +516,15 @@ def check_phonenumber_all():
 @app.route('/CheckTotalnights',methods=['POST'])
 def CheckTotalnights_al():
    return CheckTotalnights(request)
+
+#-----------chart-----------------#
+@app.route('/piechart',methods=['POST'])
+def piechart_report():
+   return graphical_rep()
+
+
 if __name__ == "__main__":
-  app.run(debug=True)
-  #app.run(host="192.168.1.10",port=5000)
+   app.run(host="192.168.1.33",port=5000)
+  #app.run(debug=True)
+  
    
