@@ -847,5 +847,6 @@ def graphical_rep():
      
     plt.axis('equal')
     plt.show()
+    return "hello"
 
 
