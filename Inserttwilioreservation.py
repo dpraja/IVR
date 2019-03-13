@@ -7,6 +7,7 @@ import urllib
 from dateutil import parser
 from decimal import Decimal
 import math
+import matplotlib.pyplot as plt
 def Inserttwilioreservation(request):
     if request.method == 'GET':
         d = {}
@@ -827,5 +828,24 @@ def CheckTotalnights(request):
                                and customer_mobile = '"+str(mobile)+"'"))
         return json.dumps({'Return':'Success','Returncode':"Your total number of  night's "+str(sql[0]['nights'])},indent=2)
   except:
-         return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)  
+         return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)
+
+
+
+def graphical_rep():
+    
+ 
+# Data to plot
+    labels = 'Reservation', 'Modification', 'Cancel'
+    sizes = [50, 10, 2]
+    colors = ['gold', 'yellowgreen', 'lightcoral']
+    explode = (0.1, 0, 0)  # explode 1st slice
+     
+    # Plot
+    plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+    autopct='%1.1f%%', shadow=True, startangle=140)
+     
+    plt.axis('equal')
+    plt.show()
+
 
