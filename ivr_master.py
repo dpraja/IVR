@@ -518,7 +518,7 @@ def CheckTotalnights_al():
    return CheckTotalnights(request)
 
 #-----------chart-----------------#
-@app.route('/piechart',methods=['POST'])
+@app.route('/piechart',methods=['GET'])
 def piechart_report():
    return graphical_rep()
 
