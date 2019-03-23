@@ -830,7 +830,20 @@ def CheckTotalnights(request):
   except:
          return json.dumps({'Return':'Failure','Returncode':"Record Does not exist"},indent=2)
 
-
+def get_statuscount(request):
+    mobile = request.args['mobile']
+    print(mobile)
+    sql = json.loads(dbget("select count(customer_booked_status) as reservation,(select count(modification) from public.ivr_room_customer_booked\
+    where customer_mobile='"+str(mobile)+"'and modification in ('yes','Yes') group by modification) as modificationcount,(select count(customer_booked_status)\
+    from public.ivr_room_customer_booked where customer_booked_status = 'cancel' and customer_mobile='"+str(mobile)+"') as cancel from public.ivr_room_customer_booked\
+    where customer_mobile='"+str(mobile)+"' and  customer_booked_status = 'booked'\
+    group by customer_booked_status"))
+    psql = sql[0]
+    dic = {"reservation":psql['reservation'] if psql['reservation'] is not None else 0,
+           "modification":psql['modificationcount'] if psql['modificationcount'] is not None else 0,
+           "cancel":psql['cancel'] if psql['cancel'] is not None else 0}
+    
+    return json.dumps({'Return':'Success','ouput':dic},indent=2)
 
 def graphical_rep():
     
@@ -846,7 +859,8 @@ def graphical_rep():
     autopct='%1.1f%%', shadow=True, startangle=140)
      
     plt.axis('equal')
-    #plt.show()
-    return (plt.show())
+    plt.show()
+    plt.savefig('mygraph.png')
+    
 
 
