@@ -75,6 +75,7 @@ from Inserttwilioreservation import CheckConfirmationmobile
 from Inserttwilioreservation import check_phonenumber
 from Inserttwilioreservation import CheckTotalnights
 from Inserttwilioreservation import graphical_rep
+from Inserttwilioreservation import get_statuscount
 # add changes
 from RatesandAvailability import daterange
 from RoomList import restriction
@@ -521,6 +522,10 @@ def CheckTotalnights_al():
 @app.route('/piechart',methods=['GET'])
 def piechart_report():
    return graphical_rep()
+#-------Count------------------#
+@app.route('/gupshup_statuscount',methods=['GET'])
+def statuscount():
+   return get_statuscount(request)
 
 
 if __name__ == "__main__":
