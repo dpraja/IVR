@@ -13,7 +13,7 @@ def updategupshupreservation(request):
         
         dbput("update  ivr_room_customer_booked set id_proof='"+str(id_proof)+"' where customer_mobile='"+(customer_mobile)+"'")
         print("mohan")
-        return(json.dumps({"Message":"Record Updated Successfully","Message_Code":"RUS","Service_Status":"Success"},indent=4))
+        return(json.dumps({"Message":"Record Updated Successfully","Message_Code":"RUS","Service_Status":"Success","id_proof":id_proof},indent=4))
         
     except:
         return(json.dumps({"Message":"Recored Updated UnSuccessfully","Message_Code":"RUUS","Service":"Failure"},indent=4))
