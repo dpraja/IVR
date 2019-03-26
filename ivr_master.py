@@ -529,7 +529,7 @@ def statuscount():
    return get_statuscount(request)
 
 #----------------gupshupproof----#
-@app.route('/gupshup_proof',methods=['GET'])
+@app.route('/gupshup_proof',methods=['GET','POST'])
 def imagegup():
    return updategupshupreservation(request)
 
