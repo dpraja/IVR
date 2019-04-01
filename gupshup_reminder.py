@@ -47,7 +47,7 @@ if __name__ == "__main__":
     app.run(host="192.168.1.3",port=5000)
 
 
-schedule.every().day.at("19:33").do(reminder)
+schedule.every().day.at("19:55").do(reminder)
 while True:
     schedule.run_pending() 
     time.sleep(1)
