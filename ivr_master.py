@@ -134,7 +134,7 @@ from sendemailconfirmation import sendemailconfirmation
 from DashboardReport import Lastreportrecord
 from DashboardReport import lastreservationcount
 from DashboardReport import lastchannelrecord
-from gupshup_reminder import reminder
+
 
 
 app = Flask(__name__)
@@ -533,9 +533,7 @@ def statuscount():
 def imagegup():
    return updategupshupreservation(request)
 #-----------reminder--------#
-@app.route('/gupshup_reminder',methods=['GET'])
-def gupshup_reminder():
-   return reminder()
+
 
 
 
