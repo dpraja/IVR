@@ -5,8 +5,8 @@ import json
 import datetime
 import time
 from flask import Flask,request,jsonify
-app = Flask(__name__)
-@app.route('/reminder',methods=['GET'])
+#app = Flask(__name__)
+#@app.route('/reminder',methods=['GET'])
 
 def reminder():
     print('wait')
@@ -43,11 +43,11 @@ def reminder():
         print('no recored')
 
 
-if __name__ == "__main__":
-    app.run(host="192.168.1.3",port=5000)
+#if __name__ == "__main__":
+    #app.run(host="192.168.1.3",port=5000)
 
 
-schedule.every().day.at("19:55").do(reminder)
+schedule.every().day.at("20:10").do(reminder)
 while True:
     schedule.run_pending() 
     time.sleep(1)
