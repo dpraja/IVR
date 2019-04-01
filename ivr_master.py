@@ -533,7 +533,7 @@ def statuscount():
 def imagegup():
    return updategupshupreservation(request)
 #-----------reminder--------#
-@app.route('/reminder',methods=['GET'])
+@app.route('/gupshup_reminder',methods=['GET'])
 def gupshup_reminder():
    return reminder()
 
