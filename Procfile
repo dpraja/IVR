@@ -44,3 +44,4 @@ worker: gunicorn ImageUploadS3.py
 worker: gunicorn SendEmailWhatsapp.py
 worker: gunicorn sendemailconfirmation.py
 worker: gunicorn gupshupproof.py
+worker: gunicorn gupshup_reminder.py
