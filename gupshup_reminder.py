@@ -47,7 +47,7 @@ def reminder():
     #app.run(host="192.168.1.3",port=5000)
 
 
-schedule.every().day.at("20:10").do(reminder)
+schedule.every().day.at("20:20").do(reminder)
 while True:
     schedule.run_pending() 
     time.sleep(1)
