@@ -38,10 +38,10 @@ def reminder(request):
             response = requests.post('https://api.gupshup.io/sm/api/v1/msg', headers=headers, data=data)
 
             print('sucess')
-        return 'sucess'
+        return(json.dumps({"Message":"Sucessfully","Message_Code":"SSS","Key":the_page},indent =3))
     else:
         print('no recored')
-        return 'success'
+        return(json.dumps({"Message":"Record not found","Message_Code":"RNF","Key":the_page},indent =3))
 
 
 #if __name__ == "__main__":
