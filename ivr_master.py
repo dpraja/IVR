@@ -537,7 +537,7 @@ def imagegup():
 
 @app.route('/reminder',methods=['GET'])
 def gupshup_reminder():
-   return reminder()
+   return reminder(request)
 
 
 if __name__ == "__main__":
