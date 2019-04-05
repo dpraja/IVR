@@ -1,5 +1,6 @@
 import requests
 from sqlwrapper import gensql,dbget,dbput
+import schedule
 import json
 import datetime
 import time
@@ -7,7 +8,7 @@ from flask import Flask,request,jsonify
 #app = Flask(__name__)
 #@app.route('/reminder',methods=['GET'])
 
-def reminder():
+def reminder(request):
     print('wait')
     date = (datetime.datetime.now()).strftime("%Y-%m-%d")
     sql = json.loads(dbget("select customer_mobile from public.ivr_room_customer_booked where customer_arrival_date = '"+str(date)+"'"))
@@ -40,6 +41,7 @@ def reminder():
         return 'sucess'
     else:
         print('no recored')
+        return 'success'
 
 
 #if __name__ == "__main__":
