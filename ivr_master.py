@@ -134,6 +134,7 @@ from sendemailconfirmation import sendemailconfirmation
 from DashboardReport import Lastreportrecord
 from DashboardReport import lastreservationcount
 from DashboardReport import lastchannelrecord
+from gupshup_reminder import reminder
 
 
 
@@ -534,7 +535,9 @@ def imagegup():
    return updategupshupreservation(request)
 #-----------reminder--------#
 
-
+@app.route('/reminder',methods=['GET'])
+def gupshup_reminder():
+   return reminder()
 
 
 if __name__ == "__main__":
