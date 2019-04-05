@@ -1,6 +1,5 @@
 import requests
 from sqlwrapper import gensql,dbget,dbput
-import schedule
 import json
 import datetime
 import time
@@ -47,8 +46,4 @@ def reminder():
     #app.run(host="192.168.1.3",port=5000)
 
 
-schedule.every().day.at("20:20").do(reminder)
-while True:
-    schedule.run_pending() 
-    time.sleep(1)
 
