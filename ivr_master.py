@@ -523,7 +523,7 @@ def CheckTotalnights_al():
 #-----------chart-----------------#
 @app.route('/piechart',methods=['GET'])
 def piechart_report():
-   return graphical_rep()
+   return graphical_rep(request)
 #-------Count------------------#
 @app.route('/gupshup_statuscount',methods=['GET'])
 def statuscount():
